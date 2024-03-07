@@ -1,7 +1,21 @@
-Le projet "Fil De Fer" (FDF) est un projet graphique de base où vous devez créer une représentation graphique en 3D d'un terrain en relief en reliant des points dans l'espace à l'aide de segments. Vous utiliserez pour cela la bibliothèque graphique MiniLibX, développée en interne, qui fournit des outils basiques pour ouvrir une fenêtre, créer des images, et gérer des événements clavier et souris. Le but est de s'initier à la programmation graphique, à savoir placer des points dans un espace tridimensionnel, les relier entre eux et observer la scène depuis un certain point de vue à travers une projection isométrique.
+MiniRT (Mini RayTracer) est un projet de programmation graphique qui vise à créer un moteur de rendu 3D simplifié en utilisant le ray tracing. Ce projet est écrit en C et utilise la bibliothèque MiniLibX pour l'affichage, offrant une introduction pratique aux principes de base de la synthèse d'images par lancer de rayons et à la programmation graphique. Le but est de générer des images photoréalistes en traçant le parcours de la lumière et en simulant ses interactions avec des objets virtuels dans une scène 3D.
+Caractéristiques principales :
 
-Les coordonnées du terrain seront lues à partir d'un fichier .fdf qui contient une grille de points, où chaque point possède une position horizontale (x), une position verticale (y), et une valeur qui détermine son altitude (z). Votre programme doit être capable d'interpréter ces données et de générer une image en fenêtre qui illustre le relief en utilisant une projection isométrique.
+    Rendu 3D basé sur le ray tracing : utilise l'algorithme de lancer de rayons pour calculer les couleurs des pixels en fonction de la lumière et des matériaux dans la scène.
+    Gestion de différentes formes géométriques : supporte le rendu de sphères, plans et cylindres comme objets primitifs de la scène.
+    Illumination et ombres : intègre un modèle d'illumination simple pour simuler les effets de lumière diffuse, spéculaire et ambiante, ainsi que les ombres portées par les objets.
+    Gestion de la caméra : permet de positionner et d'orienter la caméra dans la scène pour contrôler la perspective de vue.
+    Chargement de scène depuis un fichier : lit une description textuelle de la scène à partir d'un fichier .rt, qui spécifie les objets, leurs propriétés et la configuration de la caméra et de l'éclairage.
 
-Les exigences principales incluent une gestion fluide de la fenêtre, la possibilité de fermer le programme proprement via la touche ESC ou le bouton de fermeture de la fenêtre, et l'utilisation exclusive de la MiniLibX pour les aspects graphiques. Vous êtes également encouragés à utiliser votre propre libft pour faciliter certaines tâches comme la lecture des fichiers et le traitement des chaînes de caractères.
+Technologies utilisées :
 
-Des fonctionnalités bonus comme l'implémentation de projections supplémentaires, le zoom, la translation, la rotation, ou tout autre ajout créatif sont également suggérées pour enrichir le projet.
+    Langage C : choix du C pour sa proximité avec le système, ses performances et son contrôle sur la mémoire, essentiels pour un moteur de rendu.
+    MiniLibX : une bibliothèque graphique développée à l'École 42, utilisée pour créer des fenêtres et dessiner des pixels à l'écran sous des environnements Unix/Linux.
+
+Défis et apprentissages :
+
+    Mathématiques pour la 3D : approfondissement des connaissances en géométrie 3D, vecteurs et algèbre linéaire nécessaires pour le calcul des intersections rayon-objet et des effets d'illumination.
+    Optimisation des performances : exploration des techniques d'optimisation pour améliorer la vitesse de rendu, essentielle dans le ray tracing qui est naturellement gourmand en calculs.
+    Compréhension des principes de la lumière : étude des interactions entre la lumière et les matériaux pour produire des images réalistes.
+
+MiniRT représente une étape fondamentale dans l'apprentissage de la synthèse d'images et de la programmation graphique, fournissant une base solide pour explorer des techniques de rendu plus avancées.
