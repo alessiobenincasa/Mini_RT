@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   keys.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:27:19 by albeninc          #+#    #+#             */
-/*   Updated: 2024/01/08 15:27:22 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/08 00:07:31 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "mini_rt.h"
 
 void	handle_parte_one(int keysym, t_vars *vars)
 {

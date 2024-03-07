@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   menu.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:40 by albeninc          #+#    #+#             */
-/*   Updated: 2024/01/08 15:33:09 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/08 00:07:33 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "mini_rt.h"
 
 void	projection_type(t_vars *vars)
 {

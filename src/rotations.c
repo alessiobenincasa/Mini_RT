@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   rotations.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:17 by albeninc          #+#    #+#             */
-/*   Updated: 2024/01/08 16:48:32 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/08 00:07:34 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "mini_rt.h"
 
 t_point	init_point(int x, int y, int z)
 {

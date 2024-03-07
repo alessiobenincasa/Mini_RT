@@ -3,104 +3,75 @@
 /*                                                        :::      ::::::::   */
 /*   check_map.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:21:35 by albeninc          #+#    #+#             */
-/*   Updated: 2024/01/08 16:30:34 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/08 00:16:49 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "mini_rt.h"
 
-void	check_empty(t_vars *vars, char *line)
+void	init_scene_state(t_scene_state *state)
 {
-	if (line == NULL)
-	{
-		write(1, "Empty File. Try again please.\n", 31);
-		ft_close (vars);
-	}
+	state->ambient_light_found = 0;
+	state->camera_found = 0;
 }
 
-int	detect_non_digit(t_vars *vars, char *line)
+int	validate_scene_element(char **words, int nwords, t_scene_state *state)
 {
-	char	**temp;
-	int		i;
-	int		col_size;
-
-	col_size = 0;
-	if (!line)
-		return (0);
-	temp = ft_split(line, ' ');
-	while (temp[col_size])
+	if (ft_strcmp(words[0], "A") == 0)
 	{
-		i = 0;
-		while (temp[col_size][i] && temp[col_size][i] != '\n')
+		if (state->ambient_light_found)
 		{
-			if (temp[col_size][i] == ',')
-				break ;
-			if (temp[col_size][i] == '-' && i == 0)
-				i++;
-			if (!ft_isdigit(temp[col_size][i]))
-				free_split(temp, 1, vars);
-			i++;
+			printf("Erreur : Plusieurs lumières ambiantes trouvées.\n");
+			return (0);
 		}
-		col_size++;
+		state->ambient_light_found = 1;
 	}
-	free_split(temp, 2, vars);
-	return (col_size);
-}
-
-int	check_map_digits(int fd, t_vars *vars)
-{
-	char	*line;
-	int		col_size;
-	int		line_size;
-	int		size_col;
-
-	line = get_next_line(fd);
-	check_empty(vars, line);
-	col_size = detect_non_digit(vars, line);
-	line_size = 0;
-	while (line)
+	else if (ft_strcmp(words[0], "C") == 0)
 	{
-		free(line);
-		line = get_next_line(fd);
-		if (line)
-			size_col = detect_non_digit(vars, line);
-		if (col_size != size_col)
+		if (state->camera_found)
 		{
-			free(line);
-			write (1, "The map is neither square nor rectangular.\n", 44);
-			exit(0);
+			printf("Erreur : Plusieurs caméras trouvées.\n");
+			return (0);
 		}
+		state->camera_found = 1;
 	}
-	free(line);
 	return (1);
 }
 
-int	check_map(t_vars *vars)
+int	validate_scene(char *filename)
 {
-	int	fd;
+	FILE *file = fopen(filename, "r");
+	char line[1024];
+	char *words;
+	int nwords;
+	t_scene_state state;
+	init_scene_state(&state);
 
-	if (!strcmp_fdf(vars->map_file[vars->map_number]))
+	if (!file)
 	{
-		write(1, "That file is not a .fdf file\n", 30);
-		ft_close (vars);
+		perror("Erreur lors de l'ouverture du fichier");
+		return (0);
 	}
-	else
+
+	while (fgets(line, sizeof(line), file))
 	{
-		fd = open(vars->map_file[vars->map_number], O_RDONLY);
-		if (fd == -1)
+		split_line_into_words(line, words, &nwords);
+		if (!validate_scene_element(words, nwords, &state))
 		{
-			write(1, "That file is not in the repository.\n", 37);
-			ft_close (vars);
+			fclose(file);
+			return (0);
 		}
-		else if (check_map_digits(fd, vars))
-		{
-			close(fd);
-			fd = open(vars->map_file[vars->map_number], O_RDONLY);
-		}
-		return (fd);
 	}
-	return (0);
+
+	fclose(file);
+	if (!state.ambient_light_found || !state.camera_found)
+	{
+		printf("Erreur : Il manque des éléments essentiels (lumière ambiante,
+			caméra, etc.).\n");
+		return (0);
+	}
+	return (1);
 }

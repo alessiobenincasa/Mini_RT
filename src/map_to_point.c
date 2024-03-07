@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   map_to_point.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:38:45 by albeninc          #+#    #+#             */
-/*   Updated: 2024/01/08 15:57:17 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/08 00:07:33 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "mini_rt.h"
 
 void	screen_dimensions(t_point a, t_vars *vars)
 {

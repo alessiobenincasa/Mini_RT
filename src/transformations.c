@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   transformations.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:08 by albeninc          #+#    #+#             */
-/*   Updated: 2024/01/08 15:42:25 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/08 00:07:35 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "mini_rt.h"
 
 t_point	isometric_projection(t_point a, t_vars *vars)
 {

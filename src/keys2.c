@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   keys2.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:27:28 by albeninc          #+#    #+#             */
-/*   Updated: 2024/01/08 15:43:05 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/08 00:07:29 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "mini_rt.h"
 
 void	handle_offset(int keysym, t_vars *vars)
 {
