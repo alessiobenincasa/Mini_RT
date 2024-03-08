@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/08 19:47:59 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/08 20:51:48 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ typedef struct s_camera
 {
 	t_vector	position;
 	t_vector	orientation;
-	int			fov;
+	double		fov;
 }				t_camera;
 
 typedef struct s_light
@@ -109,6 +109,15 @@ typedef struct s_vars
 int				validate_scene(char *filename);
 void			parse_scene(char *filename);
 void			my_mlx_pixel_put(t_vars *vars, int x, int y, int color);
-int	make_color(float percent, int flag, int r, int g)
+int				make_color(float percent, int flag, int r, int g);
+t_vector		vector_add(t_vector a, t_vector b);
+
+t_vector		vector_sub(t_vector a, t_vector b);
+
+t_vector		vector_scale(t_vector v, double s);
+double			dot(t_vector a, t_vector b);
+double			norm(t_vector v);
+
+t_vector		normalize(t_vector v);
 
 #endif
