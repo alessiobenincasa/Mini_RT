@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/08 16:22:16 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/08 19:27:34 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,12 @@ typedef struct s_cylinder
 	double		height;
 	int color[3]; // RGB
 }				t_cylinder;
+
+typedef struct s_ray
+{
+	t_vector	origin;
+	t_vector	direction;
+}				t_ray;
 
 int				validate_scene(char *filename);
 void			parse_scene(char *filename);
