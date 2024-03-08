@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 19:23:44 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/08 19:24:19 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/08 19:52:34 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,13 @@ char	**split_line_into_words(char *line, int *nwords)
 	char	**words;
 	char	word[256];
 	int		i;
+	int		j;
+	int		count;
 
-	i = 0, j;
-	i = 0, j = 0, count;
 	words = malloc(1024 * sizeof(char *));
-	i = 0, j = 0, count = 0;
+	i = 0;
+	j = 0;
+	count = 0;
 	if (!words)
 	{
 		perror("Memory allocation failed for words");
@@ -114,7 +116,7 @@ int	validate_scene(char *filename)
 	close(fd);
 	if (!state.ambient_light_found || !state.camera_found)
 	{
-		printf("Erreur : Il manque des éléments essentiels (lumière ambiante, caméra, etc.).\n ");
+		printf("Erreur : Il manque des éléments essentiels (lumière ambiante, caméra, etc.) .\n ");
 		return (0);
 	}
 	return (1);
