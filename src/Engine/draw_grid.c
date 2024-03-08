@@ -6,12 +6,11 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:54 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/08 19:15:32 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/08 19:40:56 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_rt.h"
-#include "grid.h"
 
 t_point	transformations(t_vars *vars, t_point a)
 {

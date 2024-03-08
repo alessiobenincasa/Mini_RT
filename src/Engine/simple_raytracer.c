@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:38:45 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/08 19:19:52 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/08 19:49:38 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,12 @@ float	intersect_ray_sphere(t_ray ray, t_sphere sphere)
 	float		t1;
 	float		t2;
 	float		t;
+	float		c;
 
 	oc = vector_sub(ray.origin, sphere.center);
 	a = dot(ray.direction, ray.direction);
 	b = 2.0 * dot(oc, ray.direction);
-	float c = dot(oc, oc) - sphere.diameter * sphere.diameter / 4;
+	c = dot(oc, oc) - sphere.diameter * sphere.diameter / 4;
 	discriminant = b * b - 4 * a * c;
 	if (discriminant < 0)
 		return (INFINITY);
@@ -71,8 +72,45 @@ float	intersect_ray_sphere(t_ray ray, t_sphere sphere)
 	}
 }
 
-void put_pixel(int x, int y, int color[3]);
+void	render(t_vars *vars, t_sphere sphere)
 {
+	t_ray	ray;
+	float	t;
+    int y;
+    int x;
 
-    //Utiliser la MLX pour afficher les pixels. premiere partie simplifier du projet.
+    y = 0;
+    x = 0;
+	while (y < HEIGHT)
+	{
+		while (x < WIDTH)
+		{
+			ray.origin = (t_vector){0, 0, 0};
+			ray.direction = normalize((t_vector){x - WIDTH / 2, y - HEIGHT / 2,
+					-WIDTH / (2 * tan(M_PI / 6))});
+			t = intersect_ray_sphere(ray, sphere);
+			if (t < INFINITY)
+			{
+				my_mlx_pixel_put(vars, x, y, sphere.color);
+			}
+            x++;
+		}
+        y++;
+	}
+}
+
+int	main(void)
+{
+	t_vars vars;
+	t_sphere sphere = {{0, 0, -50}, 20, 0xFF0000};
+
+	vars.mlx = mlx_init();
+	vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniRT");
+	vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
+	vars.img.addr = mlx_get_data_addr(vars.img.img_ptr,
+			&vars.img.bits_per_pixel, &vars.img.line_length, &vars.img.endian);
+	render(&vars, sphere);
+	mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
+	mlx_loop(vars.mlx);
+	return (0);
 }

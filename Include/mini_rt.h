@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/08 19:27:34 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/08 19:47:59 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,10 @@
 # include <string.h>
 # include <unistd.h>
 
-# define WINDOW_WIDTH 1920
-# define WINDOW_HEIGHT 1200
+# define WIDTH 1920
+# define HEIGHT 1200
 # define MLX_ERROR 1
+# define M_PI 3.14159265358979323846
 
 typedef struct s_scene_state
 {
@@ -89,7 +90,25 @@ typedef struct s_ray
 	t_vector	direction;
 }				t_ray;
 
+typedef struct s_img
+{
+	void		*img_ptr;
+	char		*addr;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+}				t_img;
+
+typedef struct s_vars
+{
+	void		*mlx;
+	void		*win;
+	t_img		img;
+}				t_vars;
+
 int				validate_scene(char *filename);
 void			parse_scene(char *filename);
+void			my_mlx_pixel_put(t_vars *vars, int x, int y, int color);
+int	make_color(float percent, int flag, int r, int g)
 
 #endif
