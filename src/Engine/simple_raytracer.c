@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:38:45 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/08 19:18:31 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/08 19:19:52 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,5 +74,5 @@ float	intersect_ray_sphere(t_ray ray, t_sphere sphere)
 void put_pixel(int x, int y, int color[3]);
 {
 
-    //Utiliser la MLX pour afficher les pixels.
+    //Utiliser la MLX pour afficher les pixels. premiere partie simplifier du projet.
 }
