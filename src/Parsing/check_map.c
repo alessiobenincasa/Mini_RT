@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:21:35 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/08 00:16:49 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/08 16:22:26 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,7 @@ int	validate_scene(char *filename)
 	fclose(file);
 	if (!state.ambient_light_found || !state.camera_found)
 	{
-		printf("Erreur : Il manque des éléments essentiels (lumière ambiante,
-			caméra, etc.).\n");
+		printf("Erreur : Il manque des éléments essentiels (lumière ambiante, caméra, etc.).\n");
 		return (0);
 	}
 	return (1);

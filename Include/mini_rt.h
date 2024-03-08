@@ -6,17 +6,17 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/08 00:15:21 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/08 16:22:16 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINI_RT_H
 # define MINI_RT_H
 
-# include "../Libft/libft.h"
 # include "../minilibx/mlx.h"
 # include "X11/X.h"
 # include "X11/keysym.h"
+# include "libft/libft.h"
 # include <errno.h>
 # include <fcntl.h>
 # include <math.h>
@@ -29,12 +29,11 @@
 # define WINDOW_HEIGHT 1200
 # define MLX_ERROR 1
 
-
 typedef struct s_scene_state
 {
-	int	ambient_light_found;
-	int	camera_found;
-}					t_scene_state;
+	int			ambient_light_found;
+	int			camera_found;
+}				t_scene_state;
 
 typedef struct s_vector
 {
@@ -83,5 +82,8 @@ typedef struct s_cylinder
 	double		height;
 	int color[3]; // RGB
 }				t_cylinder;
+
+int				validate_scene(char *filename);
+void			parse_scene(char *filename);
 
 #endif

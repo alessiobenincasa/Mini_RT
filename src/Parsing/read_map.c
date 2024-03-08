@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 16:02:57 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/08 00:11:12 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/08 17:20:03 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 void	parse_scene(char *filename)
 {
 	FILE		*file;
-	char		line[1024];
+	char		*line;
+	int			fd;
 	char		identifier[3];
 	t_ambient	ambient;
 	t_camera	camera;
@@ -23,35 +24,38 @@ void	parse_scene(char *filename)
 	t_sphere	sphere;
 	t_plane		plane;
 	t_cylinder	cylinder;
+	char		**words;
 
-	file = fopen(filename, "r");
-	if (!file)
+	file = open(filename, "r");
+	if (fd == -1)
 	{
 		perror("Error opening file");
 		exit(EXIT_FAILURE);
 	}
-	while (fgets(line, sizeof(line), file))
+	while ((line = get_next_line(fd)) != NULL)
 	{
-		if (sscanf(line, "%2s", identifier) == 1)
+		words = ft_split(line, ' ');
+		if (words[0] != NULL)
 		{
-			if (ft_strcmp(identifier, "A") == 0)
+			if (ft_strcmp(words[0], "A") == 0)
 			{
 			}
-			else if (ft_strcmp(identifier, "C") == 0)
+			else if (ft_strcmp(words[0], "C") == 0)
 			{
 			}
-			else if (ft_strcmp(identifier, "L") == 0)
+			else if (ft_strcmp(words[0], "L") == 0)
 			{
 			}
-			else if (ft_strcmp(identifier, "sp") == 0)
+			else if (ft_strcmp(words[0], "sp") == 0)
 			{
 			}
-			else if (ft_strcmp(identifier, "pl") == 0)
+			else if (ft_strcmp(words[0], "pl") == 0)
 			{
 			}
-			else if (ft_strcmp(identifier, "cy") == 0)
+			else if (ft_strcmp(words[0], "cy") == 0)
 			{
 			}
+			free_double_array(words);
 		}
 	}
 	fclose(file);
