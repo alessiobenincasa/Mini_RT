@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+         #
+#    By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/08 16:18:07 by albeninc          #+#    #+#              #
-#    Updated: 2024/03/08 16:18:12 by albeninc         ###   ########.fr        #
+#    Updated: 2024/03/12 14:20:46 by svolodin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 # Include directories
-INCLUDES = -IInclude -ILibft/includes -Iminilibx
+INCLUDES = -IInclude -Ilibft/includes -Iminilibx
 
 # Recursively find all .c files in src directory and its subdirectories
 SRCS_DIR = src
@@ -25,10 +25,10 @@ OBJS_DIR = objs
 OBJS = $(patsubst $(SRCS_DIR)/%.c, $(OBJS_DIR)/%.o, $(SRCS))
 
 LIB_MINILIBX = -Lminilibx -lmlx -lXext -lX11 -lm -lz
-LIB_LIBFT = Libft/libft.a
+LIB_LIBFT = libft/libft.a
 
 MINILIBX = minilibx/
-LIBFT = Libft/
+LIBFT = libft/
 
 # Colors
 GREEN = \033[0;32m
