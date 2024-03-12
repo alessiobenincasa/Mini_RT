@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:38:45 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/12 17:18:12 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/12 18:38:50 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,30 +71,54 @@ float	intersect_ray_sphere(t_ray ray, t_sphere sphere)
 		return (t > 0 ? t : INFINITY);
 	}
 }
-void render(t_vars *vars, t_sphere sphere) {
-    t_ray ray;
-    float t;
-    int color;
-    int y = 0;
-    int x;
 
-    while (y < HEIGHT) {
-        x = 0; 
-        while (x < WIDTH) {
-            ray.origin = (t_vector){0, 0, 0};
-            ray.direction = normalize((t_vector){x - WIDTH / 2, y - HEIGHT / 2, -WIDTH / (2 * tan(M_PI / 6))});
-            t = intersect_ray_sphere(ray, sphere);
+void	render(t_vars *vars, t_sphere sphere, t_light light)
+{
+	t_ray		ray;
+	float		t;
+	int			color;
+	int			y;
+	int			x;
+	t_vector	intersection_point;
+	t_vector	normal;
+	t_vector	light_dir;
+	double		diff;
+	int			r;
+	int			g;
+	int			b;
 
-            if (t < INFINITY) {
-                float percent = fmin(t / 100, 1.0);
-                color = make_color(percent, 1, sphere.color[0], sphere.color[1]);
-            } else {
-                color = create_trgb(0, 20, 20, 20); 
-            }
-
-            my_mlx_pixel_put(vars, x, y, color);
-            x++;
-        }
-        y++;
-    }
+	
+	y = 0;
+	while (y < HEIGHT)
+	{
+		x = 0;
+		while (x < WIDTH)
+		{
+			ray.origin = (t_vector){0, 0, 0};
+			ray.direction = normalize((t_vector){x - WIDTH / 2, y - HEIGHT / 2,
+					-WIDTH / (2 * tan(M_PI / 6))});
+			t = intersect_ray_sphere(ray, sphere);
+			if (t < INFINITY)
+			{
+				intersection_point = vector_add(ray.origin,
+						vector_scale(ray.direction, t));
+				normal = normalize(vector_sub(intersection_point,
+							sphere.center));
+				light_dir = normalize(vector_sub(light.position,
+							intersection_point));
+				diff = fmax(dot(normal, light_dir), 0.0);
+				r = fmin(sphere.color[0] * diff * light.intensity, 255);
+				g = fmin(sphere.color[1] * diff * light.intensity, 255);
+				b = fmin(sphere.color[2] * diff * light.intensity, 255);
+				color = create_trgb(0, r, g, b);
+			}
+			else
+			{
+				color = create_trgb(0, 20, 20, 20);
+			}
+			my_mlx_pixel_put(vars, x, y, color);
+			x++;
+		}
+		y++;
+	}
 }
