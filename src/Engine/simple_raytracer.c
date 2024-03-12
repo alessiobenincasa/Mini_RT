@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:38:45 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/08 20:01:40 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/12 17:18:12 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,30 +71,30 @@ float	intersect_ray_sphere(t_ray ray, t_sphere sphere)
 		return (t > 0 ? t : INFINITY);
 	}
 }
-
-void	render(t_vars *vars, t_sphere sphere)
-{
-	t_ray	ray;
-	float	t;
-    int y;
+void render(t_vars *vars, t_sphere sphere) {
+    t_ray ray;
+    float t;
+    int color;
+    int y = 0;
     int x;
 
-    y = 0;
-    x = 0;
-	while (y < HEIGHT)
-	{
-		while (x < WIDTH)
-		{
-			ray.origin = (t_vector){0, 0, 0};
-			ray.direction = normalize((t_vector){x - WIDTH / 2, y - HEIGHT / 2,
-					-WIDTH / (2 * tan(M_PI / 6))});
-			t = intersect_ray_sphere(ray, sphere);
-			if (t < INFINITY)
-			{
-				my_mlx_pixel_put(vars, x, y, sphere.color);
-			}
+    while (y < HEIGHT) {
+        x = 0; 
+        while (x < WIDTH) {
+            ray.origin = (t_vector){0, 0, 0};
+            ray.direction = normalize((t_vector){x - WIDTH / 2, y - HEIGHT / 2, -WIDTH / (2 * tan(M_PI / 6))});
+            t = intersect_ray_sphere(ray, sphere);
+
+            if (t < INFINITY) {
+                float percent = fmin(t / 100, 1.0);
+                color = make_color(percent, 1, sphere.color[0], sphere.color[1]);
+            } else {
+                color = create_trgb(0, 20, 20, 20); 
+            }
+
+            my_mlx_pixel_put(vars, x, y, color);
             x++;
-		}
+        }
         y++;
-	}
+    }
 }

@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 20:00:02 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/08 20:00:30 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/12 17:18:59 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void	init_scene_state(t_scene_state *state)
 
 int	validate_scene_element(char **words, int nwords, t_scene_state *state)
 {
+    (void)nwords;
+    
 	if (ft_strcmp(words[0], "A") == 0)
 	{
 		if (state->ambient_light_found)

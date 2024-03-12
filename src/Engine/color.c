@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/08 00:05:42 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/12 17:08:34 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	my_mlx_pixel_put(t_vars *vars, int x, int y, int color)
 {
 	char	*dst;
 
-	if (!(x < 0 || y < 0 || x >= vars->screen.max_x || y >= vars->screen.max_y))
+	if (!(x < 0 || y < 0 || x >= WIDTH || y >= HEIGHT))
 	{
 		dst = vars->img.addr + (y * vars->img.line_length + \
 		x * (vars->img.bits_per_pixel / 8));

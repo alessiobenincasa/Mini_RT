@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/08 20:51:48 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/12 17:15:11 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,9 @@ t_vector		vector_sub(t_vector a, t_vector b);
 t_vector		vector_scale(t_vector v, double s);
 double			dot(t_vector a, t_vector b);
 double			norm(t_vector v);
+void			render(t_vars *vars, t_sphere sphere);
 
 t_vector		normalize(t_vector v);
+int				create_trgb(int t, int r, int g, int b);
 
 #endif
