@@ -125,7 +125,7 @@ int	mlx_destroy_display(void *mlx_ptr);
 int	mlx_hook(void *win_ptr, int x_event, int x_mask,
                  int (*funct)(), void *param);
 
-int	mlx_do_key_autorepeatoff(void *mlx_ptr);
+int	mlx_do_key_autorepeft_atoff(void *mlx_ptr);
 int	mlx_do_key_autorepeaton(void *mlx_ptr);
 int	mlx_do_sync(void *mlx_ptr);
 

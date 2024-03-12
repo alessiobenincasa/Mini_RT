@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 11:56:27 by svolodin          #+#    #+#             */
-/*   Updated: 2024/02/21 17:30:08 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/12 16:40:57 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char				*ft_strstr(char *str, char *to_find);
 char				*ft_strnstr(const char *haystack, const char *needle,
 						size_t len);
 int					ft_isspecial(char symbol);
-int					ft_atoi(const char *str);
+int					ft_ft_atoi(const char *str);
 void				*ft_calloc(size_t nitems, size_t size);
 char				*ft_strdup(const char *s);
 char				*ft_strcpy(char *dest, const char *src);

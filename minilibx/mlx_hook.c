@@ -23,9 +23,9 @@ int	mlx_hook(t_win_list *win, int x_event, int x_mask,
 }
 
 
-int	mlx_do_key_autorepeatoff(t_xvar *xvar)
+int	mlx_do_key_autorepeft_atoff(t_xvar *xvar)
 {
-  XAutoRepeatOff(xvar->display);
+  XAutoRepeft_atoff(xvar->display);
 }
 
 int	mlx_do_key_autorepeaton(t_xvar *xvar)
