@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/13 13:36:06 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/13 13:58:50 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,8 +129,6 @@ typedef struct s_vars
 	t_img		img;
 }				t_vars;
 
-int				validate_scene(char *filename);
-void			parse_scene(char *filename);
 void			my_mlx_pixel_put(t_vars *vars, int x, int y, int color);
 int				make_color(float percent, int flag, int r, int g);
 t_vector		vector_add(t_vector a, t_vector b);
@@ -146,16 +144,16 @@ t_vector		normalize(t_vector v);
 int				create_trgb(int t, int r, int g, int b);
 
 //*----------------------- 👁️ 𝙋𝘼𝙍𝙎𝙀 👁️ -----------------------*//
-// todo               ~~~   parse errors  ~~~                *//
+// todo              ~~~  parse errors  ~~~                  *//
 int				invalid_input(int ac, char **av);
 void			error(char *str);
 
-// todo               ~~~    data init    ~~~                *//
+// todo              ~~~   data init    ~~~                  *//
 void			*init_data(t_scene_data *scene_data, int ac, char **av);
 int				get_identifier(char *line, t_identifier_type *type);
 
 
 void			print_identifier_type(t_identifier_type type);
-
+double			ft_atof(const char *str);
 
 #endif
