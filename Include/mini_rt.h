@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/13 11:59:57 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/13 13:36:06 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ typedef struct s_scene_data
 {
 	t_camera	camera;
 	t_ambient	ambient_light;
+	t_sphere	sphere;
 }				t_scene_data;
 //*---------------------- ⚙️ 𝙎𝙏𝙍𝙐𝘾𝙏𝙎 ⚙️ -----------------------*//
 
@@ -143,5 +144,18 @@ void			render(t_vars *vars, t_sphere sphere, t_light light);
 
 t_vector		normalize(t_vector v);
 int				create_trgb(int t, int r, int g, int b);
+
+//*----------------------- 👁️ 𝙋𝘼𝙍𝙎𝙀 👁️ -----------------------*//
+// todo               ~~~   parse errors  ~~~                *//
+int				invalid_input(int ac, char **av);
+void			error(char *str);
+
+// todo               ~~~    data init    ~~~                *//
+void			*init_data(t_scene_data *scene_data, int ac, char **av);
+int				get_identifier(char *line, t_identifier_type *type);
+
+
+void			print_identifier_type(t_identifier_type type);
+
 
 #endif
