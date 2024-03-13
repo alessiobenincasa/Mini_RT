@@ -1,5 +1,6 @@
 {
-    "files.associations": {
-        "mini_rt.h": "c"
-    }
+  "files.associations": {
+    "mini_rt.h": "c",
+    "libft.h": "c"
+  }
 }

@@ -3,19 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   mini_rt.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/12 18:41:54 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/13 10:40:58 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINI_RT_H
 # define MINI_RT_H
 
-# include "../minilibx/mlx.h"
-# include "X11/X.h"
-# include "X11/keysym.h"
+# include "mlx.h"
 # include "libft/libft.h"
 # include <errno.h>
 # include <fcntl.h>
@@ -25,10 +23,10 @@
 # include <string.h>
 # include <unistd.h>
 
-# define WIDTH 1920
-# define HEIGHT 1200
+# define WIDTH 960
+# define HEIGHT 680
 # define MLX_ERROR 1
-# define M_PI 3.14159265358979323846
+// # define M_PI 3.14159265358979323846
 
 typedef struct s_scene_state
 {

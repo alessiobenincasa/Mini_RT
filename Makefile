@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+         #
+#    By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/08 16:18:07 by albeninc          #+#    #+#              #
-#    Updated: 2024/03/12 17:32:34 by albeninc         ###   ########.fr        #
+#    Updated: 2024/03/13 10:39:52 by svolodin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,20 +15,17 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 # Include directories
-INCLUDES = -IInclude -Ilibft/srcs/includes -Iminilibx
+INCLUDES = -IInclude -IInclude/libft/srcs/includes -Iminilibx_macos
 
+# Library paths and linking flags
+LIB_MINILIBX = -Lminilibx_macos -lmlx -framework OpenGL -framework AppKit
+LIB_LIBFT = -LInclude/libft -lft
 # Recursively find all .c files in src directory and its subdirectories
 SRCS_DIR = src
 SRCS = $(shell find $(SRCS_DIR) -name '*.c')
 
 OBJS_DIR = objs
 OBJS = $(patsubst $(SRCS_DIR)/%.c, $(OBJS_DIR)/%.o, $(SRCS))
-
-LIB_MINILIBX = -Lminilibx -lmlx -lXext -lX11 -lm -lz
-LIB_LIBFT = Include/libft/libft.a
-
-MINILIBX = minilibx/
-LIBFT = Include/libft/
 
 # Colors
 GREEN = \033[0;32m
@@ -48,8 +45,8 @@ all: $(NAME)
 
 $(NAME): lib $(OBJS)
 	@echo "$(GREEN)\nLinking...$(RESET)"
-	$(CC) $(CFLAGS) $(OBJS) $(LIB_MINILIBX) $(LIB_LIBFT) -o $(NAME)
-	@echo "$(GREEN)\n$(NAME) compiled successfully!$(RESET)"
+	$(CC) $(OBJS) $(LIB_MINILIBX) $(LIB_LIBFT) $(INCLUDES) -o $(NAME)
+	@echo "$(GREEN)$(NAME) compiled successfully!$(RESET)"
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
 	@mkdir -p $(dir $@)
@@ -57,19 +54,18 @@ $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 lib:
-	@make -C $(MINILIBX)
-	@make -C $(LIBFT)
+	@make -C minilibx_macos
+	@make -C Include/libft
 
 clean:
+	@make -C minilibx_macos clean
+	@make -C Include/libft clean
 	@rm -rf $(OBJS_DIR)
-	@make clean -C $(MINILIBX)
-	@make clean -C $(LIBFT)
-	@echo "$(GREEN)Object files cleaned.$(RESET)"
+	@echo "$(YELLOW)Objects and libraries cleaned.$(RESET)"
 
 fclean: clean
 	@rm -f $(NAME)
-	@make fclean -C $(LIBFT)
-	@echo "$(GREEN)$(NAME) removed.$(RESET)"
+	@echo "$(YELLOW)$(NAME) removed.$(RESET)"
 
 re: fclean all
 
