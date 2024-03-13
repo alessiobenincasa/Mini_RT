@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/12 18:41:54 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/13 16:34:16 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ typedef struct s_plane
 typedef struct s_cylinder
 {
 	t_vector	center;
-	t_vector	normal;
+	t_vector	direction;
 	double		diameter;
 	double		height;
 	int color[3]; // RGB
@@ -111,9 +111,10 @@ void			parse_scene(char *filename);
 void			my_mlx_pixel_put(t_vars *vars, int x, int y, int color);
 int				make_color(float percent, int flag, int r, int g);
 t_vector		vector_add(t_vector a, t_vector b);
+void			render_cylinder_basic(t_vars *vars, t_cylinder cylinder);
 
 t_vector		vector_sub(t_vector a, t_vector b);
-
+t_vector		vector_cross(t_vector a, t_vector b);
 t_vector		vector_scale(t_vector v, double s);
 double			dot(t_vector a, t_vector b);
 double			norm(t_vector v);

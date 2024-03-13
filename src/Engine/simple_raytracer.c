@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:38:45 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/12 18:38:50 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/13 15:35:27 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,15 @@
 t_vector	vector_add(t_vector a, t_vector b)
 {
 	return ((t_vector){a.x + b.x, a.y + b.y, a.z + b.z});
+}
+t_vector	vector_cross(t_vector a, t_vector b)
+{
+	t_vector	result;
+
+	result.x = a.y * b.z - a.z * b.y;
+	result.y = a.z * b.x - a.x * b.z;
+	result.z = a.x * b.y - a.y * b.x;
+	return (result);
 }
 
 t_vector	vector_sub(t_vector a, t_vector b)
@@ -87,7 +96,6 @@ void	render(t_vars *vars, t_sphere sphere, t_light light)
 	int			g;
 	int			b;
 
-	
 	y = 0;
 	while (y < HEIGHT)
 	{
