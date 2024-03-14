@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/14 10:05:01 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 14:21:35 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,8 +162,13 @@ double			ft_atof(const char *str);
 int				skip_spaces(char *str);
 char			*strdup_upto_whitespace(const char *s);
 
-// todo              ~~~   shape data   ~~~                  *//
+// todo              ~~~   get shapes   ~~~                  *//
 t_sphere		*get_sphere_data(char *line);
+
+// todo              ~~~   add shapes   ~~~                  *//
+int				add_shape_data(t_identifier_type type, t_scene_data *scene_data, char *line);
+
+
 
 
 void			print_identifier_type(t_identifier_type type);

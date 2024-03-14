@@ -6,16 +6,20 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:27:10 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/14 10:57:16 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 14:21:09 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_rt.h"
 
+int	is_shape(t_identifier_type	type)
+{
+	return (type == SPHERE || type == CYLINDER || type == PLANE);
+}
+
 static int	add_to_struct(t_scene_data *scene_data, char *line)
 {
 	t_identifier_type	type;
-	t_sphere 			*sphere;
 
 	if (get_identifier(line, &type, scene_data) != 0)
 	{
@@ -23,19 +27,12 @@ static int	add_to_struct(t_scene_data *scene_data, char *line)
 		return (1);
 	}
 	print_identifier_type(type);
-	if (type == SPHERE)
+	if (is_shape(type))
 	{
-        sphere = get_sphere_data(line);
-        if (!sphere)
-            return (1);
-        t_list *new_node = ft_lstnew(sphere);
-        if (!new_node)
-            return (free(sphere), 1);
-        if (scene_data->shapes == NULL)
-            scene_data->shapes = new_node;
-        else
-            ft_lstadd_back(&(scene_data->shapes), new_node);
-    }
+		if (add_shape_data(type, scene_data, line) != 0)
+			return (error("Problem adding shape to list"), 1);
+		return (0);
+	}
 	return (0);
 }
 
