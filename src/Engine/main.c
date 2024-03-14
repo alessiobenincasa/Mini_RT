@@ -5,17 +5,16 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/02 16:17:19 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/13 16:33:32 by albeninc         ###   ########.fr       */
+/*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
+/*   Updated: 2024/03/14 16:58:20 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_rt.h"
 
-
 t_cylinder	init_cylinder(void)
 {
-	t_cylinder cylinder;
+	t_cylinder	cylinder;
 
 	cylinder.center.x = 50.0;
 	cylinder.center.y = 0.0;
@@ -31,19 +30,22 @@ t_cylinder	init_cylinder(void)
 	return (cylinder);
 }
 
-
 int	main(void)
 {
-	t_vars		vars;
-	t_cylinder cylinder;
+	t_vars	vars;
+	t_plane	plane;
 
-	cylinder = init_cylinder();
+	plane.point = (t_vector){0.0, 0.0, 0.0};
+	plane.normal = (t_vector){0.0, 1.0, 0.0};
+	plane.color[0] = 255;
+	plane.color[1] = 0;
+	plane.color[2] = 255;
 	vars.mlx = mlx_init();
-	vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniRT");
+	vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniRT - Plane");
 	vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
 	vars.img.addr = mlx_get_data_addr(vars.img.img_ptr,
 			&vars.img.bits_per_pixel, &vars.img.line_length, &vars.img.endian);
-	render_cylinder_basic(&vars, cylinder);
+	render_plane(&vars, plane);
 	mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
 	mlx_loop(vars.mlx);
 	return (0);

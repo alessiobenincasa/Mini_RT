@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/13 16:34:16 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/14 16:23:54 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,8 @@ void			my_mlx_pixel_put(t_vars *vars, int x, int y, int color);
 int				make_color(float percent, int flag, int r, int g);
 t_vector		vector_add(t_vector a, t_vector b);
 void			render_cylinder_basic(t_vars *vars, t_cylinder cylinder);
+void			render_plane(t_vars *vars, t_plane plane);
+float			intersect_ray_plane(t_ray ray, t_plane plane);
 
 t_vector		vector_sub(t_vector a, t_vector b);
 t_vector		vector_cross(t_vector a, t_vector b);
