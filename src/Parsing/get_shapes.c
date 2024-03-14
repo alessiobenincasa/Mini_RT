@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_shapes_data.c                                  :+:      :+:    :+:   */
+/*   get_shapes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 09:18:39 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/14 14:37:10 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 16:33:40 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,11 @@ t_sphere	*get_sphere_data(char *line)
 	free(value);
 	line += skip_spaces(line);
 	value = strdup_upto_whitespace(line);
-	parse_colors(value, sphere->color);
+	if (parse_colors(value, sphere->color) != 0)
+	{
+		free(value);
+		return (error("RGB Colors for Sphere are incorrect"), NULL);
+	}
 	free(value);
-
 	return (sphere);
 }

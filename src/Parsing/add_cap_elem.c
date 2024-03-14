@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:16:03 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/14 16:16:54 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 16:34:16 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,26 @@ static int	add_camera_to_list(t_scene_data *scene_data, char *line)
 		return (error("Orientation Incorrect"), 1);
 	value = strdup_upto_whitespace(line);
 	scene_data->camera.fov = ft_atof(value);
+	free(value);
 	if (scene_data->camera.fov < 0 || scene_data->camera.fov > 180)
 		return (error("FOV Incorrect"), 1);
+	return (0);
+}
+
+static int	add_amblight_to_list(t_scene_data *scene_data, char *line)
+{
+	char	*value;
+
+	value = strdup_upto_whitespace(line);
+	scene_data->ambient_light.ratio = ft_atof(value);
+	line += ft_strlen(value);
+	line += skip_spaces(line);
+	free(value);
+	if (scene_data->ambient_light.ratio < 0 || scene_data->ambient_light.ratio > 1)
+		return (error("Ambient light ratio incorrect"), 1);
+	value = strdup_upto_whitespace(line);
+	if (parse_colors(value, scene_data->ambient_light.color) != 0)
+		return (error("Incorrect RGB values for ambient light"), 1);
 	return (0);
 }
 
@@ -53,6 +71,13 @@ int	add_capital_element(t_identifier_type type, t_scene_data *scene_data,
 	{
 		if (add_camera_to_list(scene_data, line) != 0)
 			return (error("Failed to add camera to list"), 1);
+		print_camera(&(scene_data->camera));
+	}
+	if (type == AMBIENT_LIGHT)
+	{
+		if (add_amblight_to_list(scene_data, line) != 0)
+			return (error("Failed to add ambient light to list"), 1);
+		print_ambient(&(scene_data->ambient_light));
 	}
 	return (0);
 }

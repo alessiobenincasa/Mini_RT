@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 09:13:29 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/14 09:13:59 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 16:25:53 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	parse_coordinates(char *input, t_vector *vec)
 	}
 }
 
-void	parse_colors(char *input, int colors[3])
+int	parse_colors(char *input, int colors[3])
 {
 	char	*token;
 	int		i;
@@ -50,4 +50,11 @@ void	parse_colors(char *input, int colors[3])
 		token = ft_strtok(NULL, ',');
 		i++;
 	}
+	if (colors[0] < 0 || colors[0] > 255)
+		return (1);
+	else if (colors[1] < 0 || colors[1] > 255)
+		return (2);
+	else if (colors[2] < 0 || colors[2] > 255)
+		return (3);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:29:59 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/14 16:06:43 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 16:30:22 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,18 @@ void	print_sphere(const t_sphere *sphere)
 	printf("Diameter: %f\n", sphere->diameter);
 	printf("Color: (%d, %d, %d)\n", sphere->color[0], sphere->color[1],
 		sphere->color[2]);
+	printf("---------------\n");
+	printf("\033[0m");
+}
+
+void	print_ambient(const t_ambient *ambient)
+{
+	printf("\033[31m");
+	printf("---------------\n");
+	printf("Ambient:\n");
+	printf("Ratio: %f\n", ambient->ratio);
+	printf("Color: (%d, %d, %d)\n", ambient->color[0], ambient->color[1],
+		ambient->color[2]);
 	printf("---------------\n");
 	printf("\033[0m");
 }

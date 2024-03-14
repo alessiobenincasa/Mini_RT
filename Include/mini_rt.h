@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/14 16:17:55 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 16:30:37 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ int				get_identifier(char **line, t_identifier_type *type,
 
 // todo              ~~~ value extract  ~~~                  *//
 void			parse_coordinates(char *input, t_vector *vec);
-void			parse_colors(char *input, int colors[3]);
+int				parse_colors(char *input, int colors[3]);
 
 // todo              ~~~     utils      ~~~                  *//
 double			ft_atof(const char *str);
@@ -176,5 +176,6 @@ int				add_capital_element(t_identifier_type type,
 void			print_camera(const t_camera *camera);
 void			print_identifier_type(t_identifier_type type);
 void			print_sphere(const t_sphere *sphere);
+void			print_ambient(const t_ambient *ambient);
 
 #endif
