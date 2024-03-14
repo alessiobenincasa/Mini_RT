@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:28:21 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/14 09:25:31 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 14:30:38 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ static char	*extract_identifier(const char *line)
 	return (id);
 }
 
-int	get_identifier(char *line, t_identifier_type *type, t_scene_data *scene_data)
+int	get_identifier(char **line, t_identifier_type *type, t_scene_data *scene_data)
 {
 	char	*identifier;
 
-	identifier = extract_identifier(line);
+	identifier = extract_identifier(*line);
 	if (!identifier)
 		return (error("Unknown type identifier"), 1);
 	if (ft_strcmp(identifier, "A") == 0)
@@ -56,5 +56,7 @@ int	get_identifier(char *line, t_identifier_type *type, t_scene_data *scene_data
 		return (free(identifier), 1);
 	if (*type == SPHERE || *type == CYLINDER || *type == PLANE)
 		(scene_data->shape_count)++;
+	*line += ft_strlen(identifier);
+	*line += skip_spaces(*line);
 	return (free(identifier), 0);
 }

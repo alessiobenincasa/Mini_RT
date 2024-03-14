@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:17:19 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/14 10:23:21 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 16:11:46 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	render_shapes(t_vars *vars, t_scene_data *scene_data)
 	current = scene_data->shapes;
 	while (current)
 	{
+		print_sphere(current->content);
 		render(vars, *(t_sphere *)(current->content), light);
 		current = current->next;
 	}

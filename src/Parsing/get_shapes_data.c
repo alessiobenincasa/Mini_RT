@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 09:18:39 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/14 10:04:09 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 14:37:10 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,6 @@ t_sphere	*get_sphere_data(char *line)
 	t_sphere	*sphere;
 
 	sphere = malloc(sizeof(t_sphere));
-	while (ft_isalpha(*line))
-		line++;
-	line += skip_spaces(line);
 	value = strdup_upto_whitespace(line);
 	line += ft_strlen(value);
 	parse_coordinates(value, &(sphere->center));
