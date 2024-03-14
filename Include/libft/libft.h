@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 11:56:27 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/12 17:01:26 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/14 09:10:48 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char				*ft_strstr(char *str, char *to_find);
 char				*ft_strnstr(const char *haystack, const char *needle,
 						size_t len);
 int					ft_isspecial(char symbol);
-int					atoi(const char *str);
+int					ft_atoi(const char *str);
 void				*ft_calloc(size_t nitems, size_t size);
 char				*ft_strdup(const char *s);
 char				*ft_strcpy(char *dest, const char *src);
@@ -95,6 +95,8 @@ void				ft_lstiter(t_list *lst, void (*f)(void *));
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 						void (*del)(void *));
 void				*ft_realloc(void *ptr, size_t newsize);
+char				*ft_strtok(char *str, char sepa);
+
 // ft_printf
 int					ft_printf(const char *s, ...);
 int					pf_putchar(char c);

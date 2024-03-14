@@ -6,60 +6,11 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:27:10 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/13 14:00:38 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 09:18:55 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_rt.h"
-
-char	*ft_strdup_space(const char *s)
-{
-	size_t	len;
-	size_t	i;
-	char	*result;
-
-	len = 0;
-	while (s[len] && s[len] != ' ')
-		len++;
-	result = malloc((len + 1) * sizeof(char));
-	if (!result)
-		return (NULL);
-	i = -1;
-	while (++i < len)
-		result[i] = s[i];
-	result[i] = '\0';
-	return (result);
-}
-
-void parse_coordinates(char *input, t_vector *vec)
-{
-    char *token;
-    int i = 0;
-
-    token = strtok(input, ",");
-    while (token != NULL)
-    {
-        if (i == 0) vec->x = ft_atof(token);
-        if (i == 1) vec->y = ft_atof(token);
-        if (i == 2) vec->z = ft_atof(token);
-        
-        token = strtok(NULL, ",");
-        i++;
-    }
-}
-
-void	get_sphere_data(t_scene_data *scene_data, char *line)
-{
-	char 	*value;
-	t_sphere sphere;
-	
-	sphere = scene_data->sphere;
-	while (ft_isalpha(*line) || *line == ' ')
-		line++;
-	value = ft_strdup_space(line);
-	line += ft_strlen(value);
-	parse_coordinates(value, &sphere.center);
-}
 
 static int	add_to_struct(t_scene_data *scene_data, char *line)
 {

@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/13 13:58:50 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 09:19:49 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,8 +152,19 @@ void			error(char *str);
 void			*init_data(t_scene_data *scene_data, int ac, char **av);
 int				get_identifier(char *line, t_identifier_type *type);
 
+// todo              ~~~ value extract  ~~~                  *//
+void			parse_coordinates(char *input, t_vector *vec);
+void			parse_colors(char *input, int colors[3]);
+
+// todo              ~~~     utils      ~~~                  *//
+double			ft_atof(const char *str);
+int				skip_spaces(char *str);
+char			*strdup_upto_whitespace(const char *s);
+
+// todo              ~~~   shape data   ~~~                  *//
+void			get_sphere_data(t_scene_data *scene_data, char *line);
+
 
 void			print_identifier_type(t_identifier_type type);
-double			ft_atof(const char *str);
 
 #endif
