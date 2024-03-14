@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:17:19 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/13 13:31:48 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 09:36:47 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,14 @@ int	main(int ac, char **av)
 
 	if (init_data(&scene_data, ac, av) == NULL)
 		return (1);
+	printf("shape count : %d\n", scene_data.shape_count);
 	vars.mlx = mlx_init();
 	vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniRT");
 	vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
 	vars.img.addr = mlx_get_data_addr(vars.img.img_ptr,
 			&vars.img.bits_per_pixel, &vars.img.line_length, &vars.img.endian);
-	// render(&vars, sphere, light);
+	if (scene_data.shape_count > 0)
+		render(&vars, scene_data.sphere, light);
 	mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
 	mlx_loop(vars.mlx);
 	return (0);

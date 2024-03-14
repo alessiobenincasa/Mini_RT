@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   data_elements.c                                    :+:      :+:    :+:   */
+/*   data_identifiers.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:28:21 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/13 13:29:10 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 09:25:31 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,13 @@ static char	*extract_identifier(const char *line)
 	return (id);
 }
 
-int	get_identifier(char *line, t_identifier_type *type)
+int	get_identifier(char *line, t_identifier_type *type, t_scene_data *scene_data)
 {
 	char	*identifier;
 
-	(void)type;
 	identifier = extract_identifier(line);
 	if (!identifier)
-	{
-		error("Unknown type identifier");
-		return (1);
-	}
+		return (error("Unknown type identifier"), 1);
 	if (ft_strcmp(identifier, "A") == 0)
 		*type = AMBIENT_LIGHT;
 	else if (ft_strcmp(identifier, "C") == 0)
@@ -58,5 +54,7 @@ int	get_identifier(char *line, t_identifier_type *type)
 		*type = PLANE;
 	else
 		return (free(identifier), 1);
+	if (*type == SPHERE || *type == CYLINDER || *type == PLANE)
+		(scene_data->shape_count)++;
 	return (free(identifier), 0);
 }

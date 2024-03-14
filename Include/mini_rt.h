@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/14 09:19:49 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 09:25:54 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ typedef struct s_scene_data
 	t_camera	camera;
 	t_ambient	ambient_light;
 	t_sphere	sphere;
+	int			shape_count;
 }				t_scene_data;
 //*---------------------- ⚙️ 𝙎𝙏𝙍𝙐𝘾𝙏𝙎 ⚙️ -----------------------*//
 
@@ -150,7 +151,7 @@ void			error(char *str);
 
 // todo              ~~~   data init    ~~~                  *//
 void			*init_data(t_scene_data *scene_data, int ac, char **av);
-int				get_identifier(char *line, t_identifier_type *type);
+int				get_identifier(char *line, t_identifier_type *type, t_scene_data *scene_data);
 
 // todo              ~~~ value extract  ~~~                  *//
 void			parse_coordinates(char *input, t_vector *vec);

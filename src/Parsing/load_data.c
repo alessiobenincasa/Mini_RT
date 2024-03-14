@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:27:10 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/14 09:18:55 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 09:33:50 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ static int	add_to_struct(t_scene_data *scene_data, char *line)
 {
 	t_identifier_type	type;
 
-	(void)scene_data;
-	if (get_identifier(line, &type) != 0)
+	if (get_identifier(line, &type, scene_data) != 0)
 	{
 		error("Unknown identifier encountered");
 		return (1);
@@ -32,6 +31,7 @@ static int	load_scene_data(t_scene_data *scene_data, int fd)
 {
 	char	*line;
 
+	scene_data->shape_count = 0;
 	line = get_next_line(fd);
 	while (line)
 	{
@@ -42,7 +42,7 @@ static int	load_scene_data(t_scene_data *scene_data, int fd)
 			line = get_next_line(fd);
 			continue ;
 		}
-		if (add_to_struct(scene_data, line) != 0)
+		if (add_to_struct(scene_data, line))
 			return (free(line), 1);
 		free(line);
 		line = get_next_line(fd);
@@ -60,5 +60,5 @@ void	*init_data(t_scene_data *scene_data, int ac, char **av)
 	if (load_scene_data(scene_data, fd))
 		return (NULL);
 	close(fd);
-	return ((int *)0);
+	return ((int *)1);
 }
