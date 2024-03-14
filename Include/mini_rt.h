@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/14 16:07:09 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 16:17:55 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ typedef struct s_ray
 }				t_ray;
 
 //*---------------------- ⚙️ 𝙎𝙏𝙍𝙐𝘾𝙏𝙎 ⚙️ -----------------------*//
-typedef enum	s_identifier_type
+typedef enum s_identifier_type
 {
 	AMBIENT_LIGHT,
 	CAMERA,
@@ -151,7 +151,8 @@ void			error(char *str);
 
 // todo              ~~~   data init    ~~~                  *//
 void			*init_data(t_scene_data *scene_data, int ac, char **av);
-int				get_identifier(char **line, t_identifier_type *type, t_scene_data *scene_data);
+int				get_identifier(char **line, t_identifier_type *type,
+					t_scene_data *scene_data);
 
 // todo              ~~~ value extract  ~~~                  *//
 void			parse_coordinates(char *input, t_vector *vec);
@@ -165,11 +166,13 @@ char			*strdup_upto_whitespace(const char *s);
 // todo              ~~~   get shapes   ~~~                  *//
 t_sphere		*get_sphere_data(char *line);
 
-// todo              ~~~   add shapes   ~~~                  *//
-int				add_shape_data(t_identifier_type type, t_scene_data *scene_data, char *line);
+// todo              ~~~  add elements  ~~~                  *//
+int				add_shape_data(t_identifier_type type, t_scene_data *scene_data,
+					char *line);
+int				add_capital_element(t_identifier_type type,
+					t_scene_data *scene_data, char *line);
 
-
-
+// todo              ~~~     print      ~~~                  *//
 void			print_camera(const t_camera *camera);
 void			print_identifier_type(t_identifier_type type);
 void			print_sphere(const t_sphere *sphere);
