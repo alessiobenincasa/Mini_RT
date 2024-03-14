@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:16:03 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/14 16:34:16 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 16:42:56 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,42 @@ static int	add_amblight_to_list(t_scene_data *scene_data, char *line)
 	line += ft_strlen(value);
 	line += skip_spaces(line);
 	free(value);
-	if (scene_data->ambient_light.ratio < 0 || scene_data->ambient_light.ratio > 1)
+	if (scene_data->ambient_light.ratio < 0
+		|| scene_data->ambient_light.ratio > 1)
 		return (error("Ambient light ratio incorrect"), 1);
 	value = strdup_upto_whitespace(line);
 	if (parse_colors(value, scene_data->ambient_light.color) != 0)
+	{
+		free(value);
 		return (error("Incorrect RGB values for ambient light"), 1);
+	}
+	free(value);
+	return (0);
+}
+
+static int	add_light_to_list(t_scene_data *scene_data, char *line)
+{
+	char	*value;
+
+	value = strdup_upto_whitespace(line);
+	parse_coordinates(value, &(scene_data->light.position));
+	line += ft_strlen(value);
+	line += skip_spaces(line);
+	free(value);
+	value = strdup_upto_whitespace(line);
+	scene_data->light.intensity = ft_atof(value);
+	line += ft_strlen(value);
+	line += skip_spaces(line);
+	free(value);
+	if (scene_data->light.intensity < 0 || scene_data->light.intensity > 1)
+		return (error("Light intensity value incorrect"), 1);
+	value = strdup_upto_whitespace(line);
+	if (parse_colors(value, scene_data->light.color) != 0)
+	{
+		free(value);
+		return (error("Incorrect RGB values for light"), 1);
+	}
+	free(value);
 	return (0);
 }
 
@@ -78,6 +109,12 @@ int	add_capital_element(t_identifier_type type, t_scene_data *scene_data,
 		if (add_amblight_to_list(scene_data, line) != 0)
 			return (error("Failed to add ambient light to list"), 1);
 		print_ambient(&(scene_data->ambient_light));
+	}
+	if (type == LIGHT)
+	{
+		if (add_light_to_list(scene_data, line) != 0)
+			return (error("Failed to add light to list"), 1);
+		print_light(&(scene_data->light));
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/14 16:30:37 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 16:44:38 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,9 @@ typedef enum s_identifier_type
 
 typedef struct s_scene_data
 {
-	t_camera	camera;
 	t_ambient	ambient_light;
+	t_camera	camera;
+	t_light		light;
 	t_list		*shapes;
 	int			shape_count;
 }				t_scene_data;
@@ -177,5 +178,6 @@ void			print_camera(const t_camera *camera);
 void			print_identifier_type(t_identifier_type type);
 void			print_sphere(const t_sphere *sphere);
 void			print_ambient(const t_ambient *ambient);
+void 			print_light(const t_light *light);
 
 #endif

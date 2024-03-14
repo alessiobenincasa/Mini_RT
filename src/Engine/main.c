@@ -6,14 +6,11 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:17:19 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/14 16:11:46 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 16:43:30 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_rt.h"
-
-t_light	light = {.position = {-40.0, 50.0, 0.0}, .intensity = 0.6, .color = {10,
-		0, 255}};
 
 void	render_shapes(t_vars *vars, t_scene_data *scene_data)
 {
@@ -23,7 +20,7 @@ void	render_shapes(t_vars *vars, t_scene_data *scene_data)
 	while (current)
 	{
 		print_sphere(current->content);
-		render(vars, *(t_sphere *)(current->content), light);
+		render(vars, *(t_sphere *)(current->content), scene_data->light);
 		current = current->next;
 	}
 }
