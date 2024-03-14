@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:17:19 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/14 09:36:47 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 10:23:21 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,18 @@
 
 t_light	light = {.position = {-40.0, 50.0, 0.0}, .intensity = 0.6, .color = {10,
 		0, 255}};
+
+void	render_shapes(t_vars *vars, t_scene_data *scene_data)
+{
+	t_list	*current;
+
+	current = scene_data->shapes;
+	while (current)
+	{
+		render(vars, *(t_sphere *)(current->content), light);
+		current = current->next;
+	}
+}
 
 int	main(int ac, char **av)
 {
@@ -28,8 +40,7 @@ int	main(int ac, char **av)
 	vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
 	vars.img.addr = mlx_get_data_addr(vars.img.img_ptr,
 			&vars.img.bits_per_pixel, &vars.img.line_length, &vars.img.endian);
-	if (scene_data.shape_count > 0)
-		render(&vars, scene_data.sphere, light);
+	render_shapes(&vars, &scene_data);
 	mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
 	mlx_loop(vars.mlx);
 	return (0);

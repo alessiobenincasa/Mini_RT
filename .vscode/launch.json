@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/oldault/Documents/42_seperate_gits/miniRT",
+      "program": "/Users/oldault/Documents/42_seperate_gits/miniRT/build/Debug/outDebug"
+    }
+  ]
+}
