@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:20:40 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/14 16:59:17 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/14 17:29:31 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,8 @@ float intersect_ray_plane(t_ray ray, t_plane plane) {
 
 void render_plane(t_vars *vars, t_plane plane) {
     int color;
-    int y = 0;
-    int x;
-    while (y < HEIGHT) {
-        x = 0;
-        while (x < WIDTH) {
+    for (int y = 0; y < HEIGHT; ++y) {
+        for (int x = 0; x < WIDTH; ++x) {
             t_ray ray = {
                 .origin = {0, 0, 0},
                 .direction = normalize((t_vector){
@@ -44,9 +41,7 @@ void render_plane(t_vars *vars, t_plane plane) {
                 color = create_trgb(0, 20, 20, 20);
             }
             my_mlx_pixel_put(vars, x, y, color);
-            x++;
         }
-        y++;
     }
 }
 

@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/14 16:23:54 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/14 18:34:59 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ typedef struct s_vars
 	void		*mlx;
 	void		*win;
 	t_img		img;
+	t_camera	camera;
 }				t_vars;
 
 int				validate_scene(char *filename);
@@ -114,6 +115,7 @@ t_vector		vector_add(t_vector a, t_vector b);
 void			render_cylinder_basic(t_vars *vars, t_cylinder cylinder);
 void			render_plane(t_vars *vars, t_plane plane);
 float			intersect_ray_plane(t_ray ray, t_plane plane);
+float	intersect_ray_sphere(t_ray ray, t_sphere sphere);
 
 t_vector		vector_sub(t_vector a, t_vector b);
 t_vector		vector_cross(t_vector a, t_vector b);
@@ -121,8 +123,11 @@ t_vector		vector_scale(t_vector v, double s);
 double			dot(t_vector a, t_vector b);
 double			norm(t_vector v);
 void			render(t_vars *vars, t_sphere sphere, t_light light);
+void render_scene(t_vars *vars, t_sphere sphere, t_plane plane, t_light light);
 
 t_vector		normalize(t_vector v);
 int				create_trgb(int t, int r, int g, int b);
-
+void render_scene_with_sphere_and_plane(t_vars *vars, t_sphere sphere, t_plane plane, t_light light);
+int adjust_color_by_light(int *color, double light_intensity);
+int	key_hook(int keycode, t_vars *vars);
 #endif

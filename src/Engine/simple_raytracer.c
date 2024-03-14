@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:38:45 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/13 15:35:27 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/14 17:33:05 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,14 @@ t_vector	normalize(t_vector v)
 	n = norm(v);
 	return (vector_scale(v, 1 / n));
 }
+
+int adjust_color_by_light(int *color, double light_intensity) {
+    int r = fmin(color[0] * light_intensity, 255);
+    int g = fmin(color[1] * light_intensity, 255);
+    int b = fmin(color[2] * light_intensity, 255);
+    return create_trgb(0, r, g, b);
+}
+
 
 float	intersect_ray_sphere(t_ray ray, t_sphere sphere)
 {
