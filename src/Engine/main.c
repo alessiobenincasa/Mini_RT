@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/15 01:43:04 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/15 10:41:32 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,28 +66,23 @@ int key_hook(int keycode, t_vars *vars)
     return 0;
 }
 
-int main(void)
+int	main(int ac, char **av)
 {
-    t_vars vars;
-    g_sphere = (t_sphere){
-        .center = {0, 0, -20},
-        .diameter = 10.0,
-        .color = {255, 0, 0}
-    };
+    t_vars          vars;
+	t_scene_data	scene_data;
 
-    g_plane = (t_plane){
-        .point = {0.0, -5.0, 0.0},
-        .normal = {0.0, 1.0, 0.0},
-        .color = {0, 255, 0}
-    };
+	if (init_data(&scene_data, ac, av) == NULL)
+		return (1);
+	printf("shape count : %d\n", scene_data.shape_count);
 
-    g_light = (t_light){
-        .position = {-20.0, 20.0, 20.0},
-        .intensity = 0.7,
-        .color = {255, 255, 255}
-    };
     vars.camera.fov = 90;
     
+    g_light = scene_data.light;
+    print_sphere((t_sphere *)scene_data.shapes->content);
+    print_plane((t_plane *)scene_data.shapes->next->content);
+    g_sphere = *(t_sphere *)scene_data.shapes->content;
+    g_plane = *(t_plane *)scene_data.shapes->next->content;
+
     vars.mlx = mlx_init();
     vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniRT - Scene");
     vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);

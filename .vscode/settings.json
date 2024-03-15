@@ -1,5 +1,6 @@
 {
     "files.associations": {
         "mini_rt.h": "c"
-    }
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
