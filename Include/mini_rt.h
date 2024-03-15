@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/15 16:59:28 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/15 17:16:48 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,7 @@ int				parse_colors(char *input, int colors[3]);
 double			ft_atof(const char *str);
 int				skip_spaces(char *str);
 char			*strdup_upto_whitespace(const char *s);
+void			get_next_value(char **value, char **line);
 
 // todo              ~~~   get shapes   ~~~                  *//
 t_sphere		*get_sphere_data(char *line);

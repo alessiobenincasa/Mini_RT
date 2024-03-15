@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 09:18:39 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/15 16:53:50 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/15 17:16:31 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,24 +25,23 @@ int	check_coordinates(t_vector vec)
 
 t_sphere	*get_sphere_data(char *line)
 {
-	char		*value;
 	t_sphere	*sphere;
+	char		*value;
 
 	sphere = malloc(sizeof(t_sphere));
-	value = strdup_upto_whitespace(line);
-	line += ft_strlen(value);
+	if (!sphere)
+		return (NULL);
+	get_next_value(&value, &line);
 	parse_coordinates(value, &(sphere->center));
 	free(value);
-	line += skip_spaces(line);
-	value = strdup_upto_whitespace(line);
+	get_next_value(&value, &line);
 	sphere->diameter = ft_atof(value);
-	line += ft_strlen(value);
 	free(value);
-	line += skip_spaces(line);
-	value = strdup_upto_whitespace(line);
+	get_next_value(&value, &line);
 	if (parse_colors(value, sphere->color) != 0)
 	{
 		free(value);
+		free(sphere);
 		return (error("RGB Colors for Sphere are incorrect"), NULL);
 	}
 	free(value);
@@ -51,26 +50,25 @@ t_sphere	*get_sphere_data(char *line)
 
 t_plane	*get_plane_data(char *line)
 {
-	char	*value;
 	t_plane	*plane;
+	char	*value;
 
 	plane = malloc(sizeof(t_plane));
-	value = strdup_upto_whitespace(line);
-	line += ft_strlen(value);
-	line += skip_spaces(line);
+	if (!plane)
+		return (NULL);
+	get_next_value(&value, &line);
 	parse_coordinates(value, &(plane->point));
 	free(value);
-	value = strdup_upto_whitespace(line);
-	line += ft_strlen(value);
-	line += skip_spaces(line);
+	get_next_value(&value, &line);
 	parse_coordinates(value, &(plane->normal));
 	free(value);
 	if (check_coordinates(plane->normal) != 0)
-		return (error("Plane normalized vector value incorrect"), NULL);
-	value = strdup_upto_whitespace(line);
+		return (free(plane), error("Plane vector value incorrect"), NULL);
+	get_next_value(&value, &line);
 	if (parse_colors(value, plane->color) != 0)
 	{
 		free(value);
+		free(plane);
 		return (error("RGB Colors for Plane are incorrect"), NULL);
 	}
 	free(value);
@@ -79,36 +77,31 @@ t_plane	*get_plane_data(char *line)
 
 t_cylinder	*get_cylinder_data(char *line)
 {
-	char		*value;
 	t_cylinder	*cylinder;
+	char		*value;
 
 	cylinder = malloc(sizeof(t_cylinder));
-	value = strdup_upto_whitespace(line);
-	line += ft_strlen(value);
-	line += skip_spaces(line);
+	if (!cylinder)
+		return (NULL);
+	get_next_value(&value, &line);
 	parse_coordinates(value, &(cylinder->center));
 	free(value);
-	value = strdup_upto_whitespace(line);
-	line += ft_strlen(value);
-	line += skip_spaces(line);
+	get_next_value(&value, &line);
 	parse_coordinates(value, &(cylinder->direction));
 	free(value);
 	if (check_coordinates(cylinder->direction) != 0)
-		return (error("Plane normalized vector value incorrect"), NULL);
-	value = strdup_upto_whitespace(line);
-	line += ft_strlen(value);
-	line += skip_spaces(line);
+		return (free(cylinder), error("Cylinder vector value incorrect"), NULL);
+	get_next_value(&value, &line);
 	cylinder->diameter = ft_atof(value);
 	free(value);
-	value = strdup_upto_whitespace(line);
-	line += ft_strlen(value);
-	line += skip_spaces(line);
+	get_next_value(&value, &line);
 	cylinder->height = ft_atof(value);
 	free(value);
-	value = strdup_upto_whitespace(line);
+	get_next_value(&value, &line);
 	if (parse_colors(value, cylinder->color) != 0)
 	{
 		free(value);
+		free(cylinder);
 		return (error("RGB Colors for Plane are incorrect"), NULL);
 	}
 	free(value);
