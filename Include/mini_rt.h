@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/14 16:44:38 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 18:37:03 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,5 +179,6 @@ void			print_identifier_type(t_identifier_type type);
 void			print_sphere(const t_sphere *sphere);
 void			print_ambient(const t_ambient *ambient);
 void 			print_light(const t_light *light);
+void			print_plane(const t_plane *plane);
 
 #endif
