@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cylindre.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:37:14 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/13 16:37:19 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/15 10:02:39 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ float	intersect_ray_cylinder(t_ray ray, t_cylinder cylinder)
 
 	oc = vector_sub(ray.origin, cylinder.center);
 	d = ray.direction;
-	v = cylinder.direction;
+	v = cylinder.center;
 	r = cylinder.diameter / 2;
 	w = vector_cross(d, v);
 	u = vector_cross(oc, v);
