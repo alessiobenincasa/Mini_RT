@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/15 10:36:54 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/15 16:59:28 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ typedef struct s_cylinder
 	t_vector	direction;
 	double		diameter;
 	double		height;
-	int color[3]; // RGB
+	int 		color[3];
 }				t_cylinder;
 
 typedef struct s_ray
@@ -177,6 +177,7 @@ char			*strdup_upto_whitespace(const char *s);
 // todo              ~~~   get shapes   ~~~                  *//
 t_sphere		*get_sphere_data(char *line);
 t_plane			*get_plane_data(char *line);
+t_cylinder		*get_cylinder_data(char *line);
 
 // todo              ~~~  add elements  ~~~                  *//
 int				add_shape_data(t_identifier_type type, t_scene_data *scene_data,
@@ -191,5 +192,6 @@ void			print_sphere(const t_sphere *sphere);
 void			print_ambient(const t_ambient *ambient);
 void 			print_light(const t_light *light);
 void			print_plane(const t_plane *plane);
+void			print_cylinder(const t_cylinder *cylinder);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:29:59 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/15 10:45:57 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/15 16:58:58 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,16 +71,18 @@ void	print_ambient(const t_ambient *ambient)
 	printf("\033[0m");
 }
 
-void print_light(const t_light *light)
+void	print_light(const t_light *light)
 {
-    printf("\033[33m");
+	printf("\033[33m");
 	printf("---------------\n");
-    printf("Light:\n");
-    printf("Position: (%f, %f, %f)\n", light->position.x, light->position.y, light->position.z);
-    printf("Intensity: %f\n", light->intensity);
-    printf("Color: (%d, %d, %d)\n", light->color[0], light->color[1], light->color[2]);
+	printf("Light:\n");
+	printf("Position: (%f, %f, %f)\n", light->position.x, light->position.y,
+		light->position.z);
+	printf("Intensity: %f\n", light->intensity);
+	printf("Color: (%d, %d, %d)\n", light->color[0], light->color[1],
+		light->color[2]);
 	printf("---------------\n");
-    printf("\033[0m");
+	printf("\033[0m");
 }
 
 void	print_plane(const t_plane *plane)
@@ -94,6 +96,22 @@ void	print_plane(const t_plane *plane)
 		plane->normal.z);
 	printf("Color: (%d, %d, %d)\n", plane->color[0], plane->color[1],
 		plane->color[2]);
+	printf("---------------\n");
+	printf("\033[0m");
+}
+void	print_cylinder(const t_cylinder *cylinder)
+{
+	printf("\033[36m");
+	printf("---------------\n");
+	printf("Cylinder Properties:\n");
+	printf("Center: (%.2f, %.2f, %.2f)\n", cylinder->center.x, cylinder->center.y,
+		cylinder->center.z);
+	printf("Direction: (%.2f, %.2f, %.2f)\n", cylinder->direction.x,
+		cylinder->direction.y, cylinder->direction.z);
+	printf("Diameter: %.2f\n", cylinder->diameter);
+	printf("Height: %.2f\n", cylinder->height);
+	printf("Color: RGB(%d, %d, %d)\n", cylinder->color[0], cylinder->color[1],
+		cylinder->color[2]);
 	printf("---------------\n");
 	printf("\033[0m");
 }

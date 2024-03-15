@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:11:43 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/15 10:36:27 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/15 16:59:39 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,22 @@ static int	add_plane_to_list(t_scene_data *scene_data, char *line)
 	return (0);
 }
 
+static int	add_cylinder_to_list(t_scene_data *scene_data, char *line)
+{
+	t_cylinder 	*cylinder;
+	t_list		*new_node;
+	
+	cylinder = get_cylinder_data(line);
+	if (!cylinder)
+		return (1);
+	print_cylinder(cylinder);
+	new_node = ft_lstnew(cylinder);
+	if (!new_node)
+		return (free(cylinder), 1);
+	add_shape_to_list(scene_data, new_node);
+	return (0);
+}
+
 int	add_shape_data(t_identifier_type type, t_scene_data *scene_data, char *line)
 {
 	if (type == SPHERE)
@@ -57,10 +73,17 @@ int	add_shape_data(t_identifier_type type, t_scene_data *scene_data, char *line)
 		if (add_sphere_to_list(scene_data, line) != 0)
 			return (error("Failed to add sphere"), 1);
     }
-	if (type == PLANE)
+	else if (type == PLANE)
 	{
 		if (add_plane_to_list(scene_data, line) != 0)
 			return (error("Failed to add plane"), 1);
     }
+	else if (type == CYLINDER)
+	{
+		if (add_cylinder_to_list(scene_data, line) != 0)
+			return (error("Failed to add cylinder"), 1);
+    }
+	else
+		return (error("Tried to add unknown shape"), 1);
 	return (0);
 }

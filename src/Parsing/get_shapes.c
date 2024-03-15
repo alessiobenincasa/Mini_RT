@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 09:18:39 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/15 10:40:13 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/15 16:53:50 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,10 @@ t_sphere	*get_sphere_data(char *line)
 	return (sphere);
 }
 
-t_plane		*get_plane_data(char *line)
+t_plane	*get_plane_data(char *line)
 {
-	char		*value;
-	t_plane		*plane;
+	char	*value;
+	t_plane	*plane;
 
 	plane = malloc(sizeof(t_plane));
 	value = strdup_upto_whitespace(line);
@@ -75,4 +75,42 @@ t_plane		*get_plane_data(char *line)
 	}
 	free(value);
 	return (plane);
+}
+
+t_cylinder	*get_cylinder_data(char *line)
+{
+	char		*value;
+	t_cylinder	*cylinder;
+
+	cylinder = malloc(sizeof(t_cylinder));
+	value = strdup_upto_whitespace(line);
+	line += ft_strlen(value);
+	line += skip_spaces(line);
+	parse_coordinates(value, &(cylinder->center));
+	free(value);
+	value = strdup_upto_whitespace(line);
+	line += ft_strlen(value);
+	line += skip_spaces(line);
+	parse_coordinates(value, &(cylinder->direction));
+	free(value);
+	if (check_coordinates(cylinder->direction) != 0)
+		return (error("Plane normalized vector value incorrect"), NULL);
+	value = strdup_upto_whitespace(line);
+	line += ft_strlen(value);
+	line += skip_spaces(line);
+	cylinder->diameter = ft_atof(value);
+	free(value);
+	value = strdup_upto_whitespace(line);
+	line += ft_strlen(value);
+	line += skip_spaces(line);
+	cylinder->height = ft_atof(value);
+	free(value);
+	value = strdup_upto_whitespace(line);
+	if (parse_colors(value, cylinder->color) != 0)
+	{
+		free(value);
+		return (error("RGB Colors for Plane are incorrect"), NULL);
+	}
+	free(value);
+	return (cylinder);
 }
