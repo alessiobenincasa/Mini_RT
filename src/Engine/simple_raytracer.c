@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simple_raytracer.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:38:45 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/14 10:37:06 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/14 17:33:05 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,15 @@
 t_vector	vector_add(t_vector a, t_vector b)
 {
 	return ((t_vector){a.x + b.x, a.y + b.y, a.z + b.z});
+}
+t_vector	vector_cross(t_vector a, t_vector b)
+{
+	t_vector	result;
+
+	result.x = a.y * b.z - a.z * b.y;
+	result.y = a.z * b.x - a.x * b.z;
+	result.z = a.x * b.y - a.y * b.x;
+	return (result);
 }
 
 t_vector	vector_sub(t_vector a, t_vector b)
@@ -44,6 +53,14 @@ t_vector	normalize(t_vector v)
 	n = norm(v);
 	return (vector_scale(v, 1 / n));
 }
+
+int adjust_color_by_light(int *color, double light_intensity) {
+    int r = fmin(color[0] * light_intensity, 255);
+    int g = fmin(color[1] * light_intensity, 255);
+    int b = fmin(color[2] * light_intensity, 255);
+    return create_trgb(0, r, g, b);
+}
+
 
 float	intersect_ray_sphere(t_ray ray, t_sphere sphere)
 {
@@ -87,7 +104,6 @@ void	render(t_vars *vars, t_sphere sphere, t_light light)
 	int			g;
 	int			b;
 
-	
 	y = 0;
 	while (y < HEIGHT)
 	{

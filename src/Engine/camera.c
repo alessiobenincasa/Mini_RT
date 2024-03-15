@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 20:04:07 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/12 17:06:58 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/15 01:24:21 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,17 @@ void	move_camera(t_camera *cam, t_vector direction, double distance)
 
 void	rotate_camera(t_camera *cam, t_vector axis, double angle)
 {
+	double		rad;
+	t_vector	direction;
+
 	// simplification. La rotation réelle autour d'un axe arbitraire
 	// nécessiterait l'utilisation de quaternions ou de matrices de rotation.
 	// exemple simplifié pour la rotation autour de l'axe Y :
 	(void)axis;
-	double rad = angle * M_PI / 180;
-	t_vector direction = cam->orientation;
+	rad = angle * M_PI / 180;
+	direction = cam->orientation;
 	direction.x = direction.x * cos(rad) + direction.z * sin(rad);
 	direction.z = -direction.x * sin(rad) + direction.z * cos(rad);
 	cam->orientation = normalize(direction);
 }
+

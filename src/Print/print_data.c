@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:29:59 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/14 18:36:30 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/15 10:45:57 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,23 +71,21 @@ void	print_ambient(const t_ambient *ambient)
 	printf("\033[0m");
 }
 
-void	print_light(const t_light *light)
+void print_light(const t_light *light)
 {
-	printf("\033[33m");
+    printf("\033[33m");
 	printf("---------------\n");
-	printf("Light:\n");
-	printf("Position: (%f, %f, %f)\n", light->position.x, light->position.y,
-		light->position.z);
-	printf("Intensity: %f\n", light->intensity);
-	printf("Color: (%d, %d, %d)\n", light->color[0], light->color[1],
-		light->color[2]);
+    printf("Light:\n");
+    printf("Position: (%f, %f, %f)\n", light->position.x, light->position.y, light->position.z);
+    printf("Intensity: %f\n", light->intensity);
+    printf("Color: (%d, %d, %d)\n", light->color[0], light->color[1], light->color[2]);
 	printf("---------------\n");
-	printf("\033[0m");
+    printf("\033[0m");
 }
 
 void	print_plane(const t_plane *plane)
 {
-	printf("\033[37m");
+	printf("\033[32m");
 	printf("---------------\n");
 	printf("Plane:\n");
 	printf("Point: (%f, %f, %f)\n", plane->point.x, plane->point.y,
