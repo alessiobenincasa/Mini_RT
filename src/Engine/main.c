@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/15 10:41:32 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/16 07:27:05 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,28 @@ int key_hook(int keycode, t_vars *vars)
     return 0;
 }
 
+void	attribute_shapes(t_vars *vars, t_scene_data *scene_data)
+{
+	t_list	*current;
+
+    (void)vars;
+	current = scene_data->shapes;
+	while (current)
+	{
+        if (current->type == SPHERE)
+        {
+            print_sphere((t_sphere *)current->content);
+            g_sphere = *(t_sphere *)current->content;
+        }
+        else if (current->type == PLANE)
+        {
+            print_plane((t_plane *)current->content);
+            g_plane = *(t_plane *)current->content;
+        }
+		current = current->next;
+	}
+}
+
 int	main(int ac, char **av)
 {
     t_vars          vars;
@@ -76,12 +98,8 @@ int	main(int ac, char **av)
 	printf("shape count : %d\n", scene_data.shape_count);
 
     vars.camera.fov = 90;
-    
     g_light = scene_data.light;
-    print_sphere((t_sphere *)scene_data.shapes->content);
-    print_plane((t_plane *)scene_data.shapes->next->content);
-    g_sphere = *(t_sphere *)scene_data.shapes->content;
-    g_plane = *(t_plane *)scene_data.shapes->next->content;
+    attribute_shapes(&vars, &scene_data);
 
     vars.mlx = mlx_init();
     vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniRT - Scene");

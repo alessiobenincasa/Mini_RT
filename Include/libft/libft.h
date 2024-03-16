@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 11:56:27 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/15 17:23:04 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/16 07:19:30 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ typedef enum s_identifier_type
 typedef struct s_list
 {
 	void					*content;
-	enum t_identifier_type	*type;
+	t_identifier_type		type;
 	struct s_list			*next;
 }							t_list;
 
