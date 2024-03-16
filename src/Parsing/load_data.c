@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:27:10 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/14 20:42:33 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/16 07:04:51 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,20 @@ static int	add_to_struct(t_scene_data *scene_data, char *line)
 	return (0);
 }
 
+static void	set_data_to_zero(t_scene_data *scene_data)
+{
+	scene_data->shape_count = 0;
+	scene_data->shapes = NULL;
+	scene_data->initialised.ambient_light = 0;
+	scene_data->initialised.camera = 0;
+	scene_data->initialised.light = 0;
+}
+
 static int	load_scene_data(t_scene_data *scene_data, int fd)
 {
 	char	*line;
 
-	scene_data->shape_count = 0;
-	scene_data->shapes = NULL;
+	set_data_to_zero(scene_data);
 	line = get_next_line(fd);
 	while (line)
 	{

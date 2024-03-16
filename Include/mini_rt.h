@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/15 17:16:48 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/16 07:02:51 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,21 +95,20 @@ typedef struct s_ray
 }				t_ray;
 
 //*---------------------- ⚙️ 𝙎𝙏𝙍𝙐𝘾𝙏𝙎 ⚙️ -----------------------*//
-typedef enum s_identifier_type
+
+typedef struct s_init
 {
-	AMBIENT_LIGHT,
-	CAMERA,
-	LIGHT,
-	SPHERE,
-	PLANE,
-	CYLINDER
-}				t_identifier_type;
+	int			ambient_light;
+	int			camera;
+	int			light;
+}				t_init;
 
 typedef struct s_scene_data
 {
 	t_ambient	ambient_light;
 	t_camera	camera;
 	t_light		light;
+	t_init		initialised;
 	t_list		*shapes;
 	int			shape_count;
 }				t_scene_data;
