@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/17 01:45:28 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/17 02:48:49 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,33 +108,23 @@ typedef struct s_vars
 	t_camera	camera;
 }				t_vars;
 
-typedef struct s_tuple 
+typedef struct s_tuple
 {
-	double x, y, z, w;
+    double x, y, z, w;
 } t_tuple;
 
-int				validate_scene(char *filename);
-void			parse_scene(char *filename);
-void			my_mlx_pixel_put(t_vars *vars, int x, int y, int color);
-int				make_color(float percent, int flag, int r, int g);
-t_vector		vector_add(t_vector a, t_vector b);
-void render_cylinder_basic(t_vars *vars, t_cylinder cylinder, t_light light) ;
-void			render_plane(t_vars *vars, t_plane plane);
-float			intersect_ray_plane(t_ray ray, t_plane plane);
-float	intersect_ray_sphere(t_ray ray, t_sphere sphere);
+typedef struct s_projectile
+{
+	t_tuple position;
+	t_tuple velocity;
+}	t_projectile;
 
-t_vector		vector_sub(t_vector a, t_vector b);
-t_vector		vector_cross(t_vector a, t_vector b);
-t_vector		vector_scale(t_vector v, double s);
-double			dot(t_vector a, t_vector b);
-double			norm(t_vector v);
-void			render(t_vars *vars, t_sphere sphere, t_light light);
-void render_scene(t_vars *vars, t_sphere *sphere, t_plane *plane, t_light *light);
+typedef struct s_environnement
+{
+	t_tuple wind;
+	t_tuple gravity;
+}	t_environnement;
 
 
-int				create_trgb(int t, int r, int g, int b);
-void render_scene_with_sphere_and_plane(t_vars *vars, t_sphere sphere, t_plane plane, t_light light);
-int adjust_color_by_light(int *color, double light_intensity);
-double vector_length_sq(t_vector v);
 
 #endif

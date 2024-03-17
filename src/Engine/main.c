@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/17 01:49:10 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/17 02:52:29 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,12 @@ int main(void)
 
 */
 
+
+t_tuple vector(double x, double y, double z)
+{
+    return (t_tuple){x, y, z, 0.0};
+}
+
 t_tuple tuple(double x, double y, double z, double w)
 {
     t_tuple t = {x, y, z, w};
@@ -124,13 +130,6 @@ t_tuple tuple(double x, double y, double z, double w)
 t_tuple point(double x, double y, double z)
 {
     t_tuple t = {x, y, z, 1.0};
-    return t;
-}
-
-
-t_tuple vector(double x, double y, double z) 
-{
-    t_tuple t = {x, y, z, 0.0};
     return t;
 }
 
@@ -194,11 +193,41 @@ double magnitude (t_tuple t)
     return (sqrt(t.x * t.x + t.y * t.y + t.z * t.z));
 }
 
+double dot(t_tuple a, t_tuple b)
+{
+    return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+}
+
+t_vector cross(t_tuple v, t_tuple w)
+{   
+    t_vector result;
+    
+    result.x = v.y * w.z - v.z * w.y;
+    result.y = v.z * w.x - v.x * w.z;
+    result.z = v.x * w.y - v.y * w.x;
+    return (result);
+}
+
+
+t_projectile tick(t_environnement env, t_projectile proj)
+{
+    t_tuple position = add_tuples(proj.position, proj.velocity);
+    t_tuple velocity = add_tuples(add_tuples(proj.velocity, env.gravity), env.wind);
+    return (t_projectile){position, velocity};
+}
+
 int main() {
-    // Given tuples for the scenario
-    t_tuple t = vector(1, 2, 3); // Initializes a t_tuple
-    t_tuple normalized_t = normalize(t); // Normalizes the vector
-    printf("Normalized vector: (%.2f, %.2f, %.2f)\n", normalized_t.x, normalized_t.y, normalized_t.z);
-    printf("%f", magnitude(normalized_t));
+    t_projectile p = {point(0, 1, 0), normalize(vector(20, 20, 0))};
+    t_environnement e = {vector(0, -0.1, 0), vector(-0.01, 0, 0)};
+
+    int tickCount = 0;
+    while (p.position.y > 0) {
+        p = tick(e, p);
+        printf("Tick: %d, Position: (%.2f, %.2f, %.2f)\n", tickCount, p.position.x, p.position.y, p.position.z);
+        tickCount++;
+    }
+
+    printf("The projectile hit the ground after %d ticks.\n", tickCount);
+
     return 0;
 }
