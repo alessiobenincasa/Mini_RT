@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/17 18:45:38 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/17 21:10:17 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -343,6 +343,7 @@ void free_matrix(t_matrix* m)
     m->elements = NULL;
 }
 
+/*
 int main() {
     // Elements for matrix A
     float elementsA[16] = {
@@ -376,3 +377,4 @@ int main() {
     free_matrix(&C);
     return 0;
 }
+*/

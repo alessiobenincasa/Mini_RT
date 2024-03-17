@@ -6,85 +6,102 @@
 #    By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/08 16:18:07 by albeninc          #+#    #+#              #
-#    Updated: 2024/03/17 19:56:12 by albeninc         ###   ########.fr        #
+#    Updated: 2024/03/17 21:09:40 by albeninc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = miniRT
-UNIT_TESTS_NAME = unit_tests
-CC = cc
-CFLAGS = -Wall -Wextra -Werror
-
-# Include directories
-INCLUDES = -IInclude -Ilibft/srcs/includes -Iminilibx -I$HOME/Criterion/include/criterion
-
-# Recursively find all .c files in src directory and its subdirectories
-SRCS_DIR = src
-SRCS = $(shell find $(SRCS_DIR) -name '*.c' ! -path "$(SRCS_DIR)/Unit-testing/*")
-
-UNIT_TEST_SRC = $(SRCS_DIR)/Unit-testing/unit-test.c
-UNIT_TEST_OBJS = $(patsubst %.c, %.o, $(UNIT_TEST_SRC))
-
-OBJS_DIR = objs
-OBJS = $(patsubst $(SRCS_DIR)/%.c, $(OBJS_DIR)/%.o, $(SRCS))
-
-LIB_MINILIBX = -Lminilibx -lmlx -lXext -lX11 -lm -lz
-LIB_LIBFT = Include/libft/libft.a
-LIB_CRITERION = -L$HOME/Criterion/build/src -lcriterion -Wl,-rpath=$HOME/Criterion/build/src
-
-MINILIBX = minilibx/
-LIBFT = Include/libft/
+_END=$'\033[0m'
+_BOLD=$'\033[1m'
+_UNDER=$'\033[4m'
+_REV=$'\033[7m'
 
 # Colors
-GREEN = \033[0;32m
-YELLOW = \033[0;33m
-RESET = \033[0m
+_GREY=$'\033[30m'
+_RED=$'\033[31m'
+_GREEN=$'\033[32m'
+_YELLOW=$'\033[33m'
+_BLUE=$'\033[34m'
+_PURPLE=$'\033[35m'
+_CYAN=$'\033[36m'
+_WHITE=$'\033[37m'
 
-TOTAL_FILES = $(words $(SRCS))
-CURRENT_INDEX = 0
+################################################################################
+#                                VARIABLES									   #
+################################################################################
 
-define progress_bar
-    $(eval CURRENT_INDEX=$(shell echo $$(($(CURRENT_INDEX)+1))))
-    $(eval PERCENT=$(shell echo $$(($(CURRENT_INDEX) * 100 / $(TOTAL_FILES)))))
-    @printf "\r$(YELLOW)Compiling: $(GREEN)%3d%% $(RESET)[$(CURRENT_INDEX)/$(TOTAL_FILES)] $<"
-endef
+SRCS_DIR		=	src/Engine
+SRCS			=	$(shell find $(SRCS_DIR) -name '*.c')
+MAIN_SRCS		=	$(SRCS_DIR)/main.c
+NAME			= 	MiniRT
+RM				= 	rm -rf
+CC				=	gcc $(CFLAGS)
+CFLAGS			=	-Wall -Werror -Wextra -IInclude -IInclude/libft/
+LDFLAGS			=	-LInclude/libft -lft -lm
+OBJECTS 		=	$(SRCS:.c=.o)
 
-all: $(NAME)
+################################################################################
+#                                MAIN RULES								       #
+################################################################################
 
-$(NAME): lib $(OBJS)
-	@echo "$(GREEN)\nLinking...$(RESET)"
-	$(CC) $(CFLAGS) $(OBJS) $(LIB_MINILIBX) $(LIB_LIBFT) -o $(NAME)
-	@echo "$(GREEN)\n$(NAME) compiled successfully!$(RESET)"
+all:	$(NAME)
 
-$(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
-	@mkdir -p $(dir $@)
-	@$(call progress_bar)
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+$(NAME):	$(OBJECTS)
+	@echo "${_UNDER}${_RED}Creating binary for Project${_END}"
+	@$(CC) -o $(NAME) $(OBJECTS) $(LDFLAGS)
+	@echo "${_BOLD}${_GREEN}$(NAME) compiled successfully!${_END}"
 
-unit_tests: $(UNIT_TEST_OBJS)
-	@echo "$(GREEN)\nCompiling unit tests...$(RESET)"
-	$(CC) $(CFLAGS) $(INCLUDES) $(UNIT_TEST_SRC) $(LIB_CRITERION) -o $(UNIT_TESTS_NAME)
-	@echo "$(GREEN)\nUnit tests compiled successfully!$(RESET)"
+%.o: %.c
+	@echo "${_BOLD}${_BLUE}Compiling $<${_END}"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
-$(SRCS_DIR)/Unit-testing/%.o: $(SRCS_DIR)/Unit-testing/%.c
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+################################################################################
+#                              	TEST VARIABLES					   		   	   #
+################################################################################
 
-lib:
-	@make -C $(MINILIBX)
-	@make -C $(LIBFT)
+CR_HEADER_PATH	=	-I${HOME}/Criterion/include/criterion
+T_NAME			= 	UNIT_TEST
+T_SRCS			=	src/Unit_testing/unit-test.c
+T_CC			=	gcc $(CFLAGS) $(CR_HEADER_PATH) $(CR_LIB_PATH) $(T_FLAGS)
+CR_LIB_PATH     =   -L${HOME}/Criterion/build/src -Wl,-rpath=${HOME}/Criterion/build/src
+T_FLAGS         =   -lcriterion $(CR_LIB_PATH)
+# Test object files (add more as needed)
+T_OBJECTS =	$(T_SRCS:.c=.o)
+
+# Possibly needed source object files excluding main.o
+# Adjust this list to include only the objects needed for testing
+TESTED_OBJECTS := $(filter-out $(MAIN_SRCS:.c=.o), $(OBJECTS)) src/Engine/main.o
+
+################################################################################
+#                                TEST RULES                                    #
+################################################################################
+
+
+$(T_OBJECTS): %.o: %.c
+	@echo "${_BOLD}${_BLUE}Compiling test $<${_END}"
+	@$(CC) $(CFLAGS) $(CR_HEADER_PATH) -c $< -o $@
+
+tests:	$(T_OBJECTS) $(TESTED_OBJECTS)
+	@echo "${_UNDER}${_RED}Linking tests...${_END}"
+	@$(CC) -o $(T_NAME) $(T_OBJECTS) $(TESTED_OBJECTS) $(LDFLAGS) $(T_FLAGS)
+	@echo "${_BOLD}${_GREEN}Running tests...${_END}"
+	@./$(T_NAME)
+
+
+
+################################################################################
+#                               	CLEANUP								       #
+################################################################################
 
 clean:
-	@rm -rf $(OBJS_DIR) $(SRCS_DIR)/Unit-testing/*.o
-	@make clean -C $(MINILIBX)
-	@make clean -C $(LIBFT)
-	@echo "$(GREEN)Object files cleaned.$(RESET)"
+	@echo "${_UNDER}${_RED}Deleting Objects and Dependencies${_END}"
+	@$(RM) $(OBJECTS) $(T_OBJECTS)
+	@echo "${_BOLD}${_YELLOW}Cleanup complete${_END}"
 
 fclean: clean
-	@rm -f $(NAME) $(UNIT_TESTS_NAME)
-	@make fclean -C $(LIBFT)
-	@echo "$(GREEN)$(NAME) and unit tests removed.$(RESET)"
+	@echo "${_UNDER}${_RED}Deleting Executable${_END}"
+	@$(RM) $(NAME) $(T_NAME)
+	@echo "${_BOLD}${_RED}Executable removed${_END}"
 
-re: fclean all
+re:	fclean all
 
-.PHONY: all lib clean fclean re unit_tests
+.PHONY:		all clean fclean re tests
