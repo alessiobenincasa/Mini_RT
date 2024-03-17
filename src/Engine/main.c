@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/17 21:10:17 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/17 23:57:38 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -337,11 +337,59 @@ t_matrix multiply_matrices(t_matrix a, t_matrix b) {
     return c;
 }
 
+t_tuple multiply_matrix_tuple(t_matrix m, t_tuple t)
+{
+    float elements[4] = {t.x, t.y, t.z, t.w};
+    t_matrix result = multiply_matrices(m, create_matrix(4, 1, elements));
+    return tuple(result.elements[0], result.elements[1], result.elements[2], result.elements[3]);
+}
+
 void free_matrix(t_matrix* m)
 {
     free(m->elements);
     m->elements = NULL;
 }
+
+t_matrix identity_matrix(void)
+{
+    float elements[16] = {
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+    };
+    return create_matrix(4, 4, elements);
+}
+
+t_matrix transpose_matrix(t_matrix matrix)
+{
+    t_matrix transposed;
+    transposed.rows = matrix.cols;
+    transposed.cols = matrix.rows;
+    transposed.elements = (float *)malloc(sizeof(float) * transposed.rows * transposed.cols);
+    if (transposed.elements == NULL)
+    {
+        perror("Memory allocation error for transposed matrix");
+        exit(EXIT_FAILURE);
+    }
+    int i = 0;
+    while (i < matrix.rows)
+    {
+        int j = 0;
+        while (j < matrix.cols)
+        {
+
+            int originalIndex = i * matrix.cols + j;
+            int transposedIndex = j * transposed.cols + i;
+            transposed.elements[transposedIndex] = matrix.elements[originalIndex];
+            j++;
+        }
+        i++;
+    }
+    
+    return (transposed);
+}
+
 
 /*
 int main() {
@@ -377,4 +425,5 @@ int main() {
     free_matrix(&C);
     return 0;
 }
+
 */
