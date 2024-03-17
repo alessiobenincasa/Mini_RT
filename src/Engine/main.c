@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/17 02:52:29 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/17 18:45:38 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,35 @@ int main(void)
 
 */
 
+t_color color(float red, float green, float blue)
+{
+    t_color c;
+    c.red = red;
+    c.green = green;
+    c.blue = blue;
+    return c;
+}
+
+t_color add_colors(t_color c1, t_color c2)
+{
+    return color(c1.red + c2.red, c1.green + c2.green, c1.blue + c2.blue);
+}
+
+t_color subtract_colors(t_color c1, t_color c2)
+{
+    return color(c1.red - c2.red, c1.green - c2.green, c1.blue - c2.blue);
+}
+
+t_color multiply_color_scalar(t_color c, float scalar)
+{
+    return color(c.red * scalar, c.green * scalar, c.blue * scalar);
+}
+
+t_color hadarmard_product(t_color c, t_color b)
+{
+    return color(c.red * b.red, c.green * b.green, c.blue * b.blue);
+}
+
 
 t_tuple vector(double x, double y, double z)
 {
@@ -216,18 +245,134 @@ t_projectile tick(t_environnement env, t_projectile proj)
     return (t_projectile){position, velocity};
 }
 
-int main() {
-    t_projectile p = {point(0, 1, 0), normalize(vector(20, 20, 0))};
-    t_environnement e = {vector(0, -0.1, 0), vector(-0.01, 0, 0)};
+t_canvas canvas(int width, int height)
+{
+    t_canvas c;
+    int i = 0;
+    c.width = width;
+    c.height = height;
+    c.pixels = (t_color*)malloc(width * height * sizeof(t_color));
+    
+    while (i < width * height)
+    {
+        c.pixels[i] = (t_color){0, 0, 0};
+        i++;
+    }
+    
+    return c;
+}
 
-    int tickCount = 0;
-    while (p.position.y > 0) {
-        p = tick(e, p);
-        printf("Tick: %d, Position: (%.2f, %.2f, %.2f)\n", tickCount, p.position.x, p.position.y, p.position.z);
-        tickCount++;
+void write_pixel(t_canvas* c, int x, int y, t_color color)
+{
+    if (x >= 0 && x < c->width && y >= 0 && y < c->height) {
+        c->pixels[y * c->width + x] = color;
+    }
+}
+
+t_color pixel_at(t_canvas c, int x, int y)
+{
+    if (x >= 0 && x < c.width && y >= 0 && y < c.height)
+        return c.pixels[y * c.width + x];
+    return (t_color){0, 0, 0}; // Return black as a default/fallback color}
+}
+
+t_matrix create_matrix(int rows, int cols, float elements[])
+{
+    t_matrix m;
+    m.rows = rows;
+    m.cols = cols;
+    m.elements = (float*)malloc(rows * cols * sizeof(float));
+    if (elements != NULL)
+        ft_memcpy(m.elements, elements, rows * cols * sizeof(float));
+    else
+        ft_memset(m.elements, 0, rows * cols * sizeof(float));
+    return (m);
+}
+
+float get_element(t_matrix m, int row, int col)
+{
+    if (row >= 0 && row < m.rows && col >= 0 && col < m.cols)
+        return (m.elements[row * m.cols + col]);
+    return (0.0f);
+}
+int matrices_equal(t_matrix a, t_matrix b)
+{
+    int i = 0;
+    
+    if (a.rows != b.rows || a.cols != b.cols)
+        return 0;
+    while (i < a.rows * a.cols)
+    {
+        if (fabs(a.elements[i] - b.elements[i]) > EPSILON)
+            return (0);
+        i++;
+    }
+    return(1);
+}
+
+t_matrix multiply_matrices(t_matrix a, t_matrix b) {
+    if (a.cols != b.rows) {
+        printf("Error: Matrices cannot be multiplied due to incompatible dimensions.\n");
+        return create_matrix(0, 0, NULL);
+    }
+    
+    t_matrix c = create_matrix(a.rows, b.cols, NULL);
+    int i = 0;
+
+    while (i < a.rows) {
+        int j = 0;
+        while (j < b.cols) {
+            float sum = 0;
+            int k = 0;
+            while (k < a.cols) {
+                sum += a.elements[i * a.cols + k] * b.elements[k * b.cols + j];
+                k++;
+            }
+            c.elements[i * c.cols + j] = sum;
+            j++;
+        }
+        i++;
+    }
+    
+    return c;
+}
+
+void free_matrix(t_matrix* m)
+{
+    free(m->elements);
+    m->elements = NULL;
+}
+
+int main() {
+    // Elements for matrix A
+    float elementsA[16] = {
+        1, 2, 3, 4,
+        2, 4, 4, 2,
+        8, 6, 4, 1,
+        0, 0, 0, 1
+    };
+    // Elements for matrix B
+    float elementsB[4] = {
+        1, 2, 3, 1,
+    };
+
+    // Create matrices A and B
+    t_matrix A = create_matrix(4, 4, elementsA);
+    t_matrix B = create_matrix(4, 1, elementsB);
+    t_matrix C = multiply_matrices(A, B);
+    
+
+    printf("Result of A multiplied by B:\n");
+    for (int i = 0; i < C.rows; i++) {
+        for (int j = 0; j < C.cols; j++) {
+            printf("%8.2f", C.elements[i * C.cols + j]);
+        }
+        printf("\n");
     }
 
-    printf("The projectile hit the ground after %d ticks.\n", tickCount);
-
+    // Free the matrices when done
+    free_matrix(&A);
+    free_matrix(&B);
+    free_matrix(&C);
     return 0;
 }
