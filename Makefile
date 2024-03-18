@@ -6,7 +6,7 @@
 #    By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/08 16:18:07 by albeninc          #+#    #+#              #
-#    Updated: 2024/03/17 21:09:40 by albeninc         ###   ########.fr        #
+#    Updated: 2024/03/18 16:59:14 by albeninc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,9 @@ CC				=	gcc $(CFLAGS)
 CFLAGS			=	-Wall -Werror -Wextra -IInclude -IInclude/libft/
 LDFLAGS			=	-LInclude/libft -lft -lm
 OBJECTS 		=	$(SRCS:.c=.o)
+MLX_DIR			= ./minilibx
+MLX_FLAGS		= -L$(MLX_DIR) -lmlx -lXext -lX11
+CFLAGS			+= -I$(MLX_DIR)
 
 ################################################################################
 #                                MAIN RULES								       #
@@ -47,7 +50,7 @@ all:	$(NAME)
 
 $(NAME):	$(OBJECTS)
 	@echo "${_UNDER}${_RED}Creating binary for Project${_END}"
-	@$(CC) -o $(NAME) $(OBJECTS) $(LDFLAGS)
+	@$(CC) -o $(NAME) $(OBJECTS) $(LDFLAGS) $(MLX_FLAGS)
 	@echo "${_BOLD}${_GREEN}$(NAME) compiled successfully!${_END}"
 
 %.o: %.c

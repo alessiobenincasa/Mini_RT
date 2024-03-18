@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 11:07:54 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/18 15:36:30 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/18 17:15:54 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -589,3 +589,82 @@ Test(matrix_transformations, shearing_transformation_moves_z_in_proportion_to_y)
     free(transform.elements);
 }
 
+Test(matrix_transformations, individual_transformations_applied_in_sequence)
+{
+    t_tuple p = point(1, 0, 1);
+    t_matrix A = rotation_x(M_PI / 2);
+    t_matrix B = scaling(5, 5, 5);
+    t_matrix C = translation(10, 5, 7);
+
+    t_tuple p2 = multiply_matrix_tuple(A, p);
+    cr_assert_float_eq(p2.x, 1, 0.0001);
+    cr_assert_float_eq(p2.y, -1, 0.0001);
+    cr_assert_float_eq(p2.z, 0, 0.0001);
+
+    t_tuple p3 = multiply_matrix_tuple(B, p2);
+    cr_assert_float_eq(p3.x, 5, 0.0001);
+    cr_assert_float_eq(p3.y, -5, 0.0001);
+    cr_assert_float_eq(p3.z, 0, 0.0001);
+
+    t_tuple p4 = multiply_matrix_tuple(C, p3);
+    cr_assert_float_eq(p4.x, 15, 0.0001);
+    cr_assert_float_eq(p4.y, 0, 0.0001);
+    cr_assert_float_eq(p4.z, 7, 0.0001);
+
+    free(A.elements);
+    free(B.elements);
+    free(C.elements);
+}
+
+Test(matrix_transformations, chained_transformations_applied_in_reverse_order)
+{
+    t_tuple p = point(1, 0, 1);
+    t_matrix A = rotation_x(M_PI / 2);
+    t_matrix B = scaling(5, 5, 5);
+    t_matrix C = translation(10, 5, 7);
+
+    t_matrix T = multiply_matrices(multiply_matrices(C, B), A);
+
+    t_tuple result = multiply_matrix_tuple(T, p);
+    cr_assert_float_eq(result.x, 15, 0.0001);
+    cr_assert_float_eq(result.y, 0, 0.0001);
+    cr_assert_float_eq(result.z, 7, 0.0001);
+
+    free(A.elements);
+    free(B.elements);
+    free(C.elements);
+    free(T.elements);
+}
+
+Test(ray_creation, querying_a_ray)
+{
+    t_tuple origin = point(1, 2, 3);
+    t_tuple direction = vector(4, 5, 6);
+    t_ray r = ray(origin, direction);
+
+
+    cr_assert_float_eq(r.origin.x, origin.x, 0.00001, "Ray's origin x-coordinate did not match.");
+    cr_assert_float_eq(r.origin.y, origin.y, 0.00001, "Ray's origin y-coordinate did not match.");
+    cr_assert_float_eq(r.origin.z, origin.z, 0.00001, "Ray's origin z-coordinate did not match.");
+
+    cr_assert_float_eq(r.direction.x, direction.x, 0.00001, "Ray's direction x-coordinate did not match.");
+    cr_assert_float_eq(r.direction.y, direction.y, 0.00001, "Ray's direction y-coordinate did not match.");
+    cr_assert_float_eq(r.direction.z, direction.z, 0.00001, "Ray's direction z-coordinate did not match.");
+}
+
+Test(ray_operations, computing_a_point_from_a_distance)
+{
+    t_ray r = ray(point(2, 3, 4), vector(1, 0, 0));
+
+    t_tuple p0 = position(r, 0);
+    cr_assert(tuple_equals(p0, point(2, 3, 4)), "Position at t=0 did not match expected point.");
+
+    t_tuple p1 = position(r, 1);
+    cr_assert(tuple_equals(p1, point(3, 3, 4)), "Position at t=1 did not match expected point.");
+
+    t_tuple p_minus1 = position(r, -1);
+    cr_assert(tuple_equals(p_minus1, point(1, 3, 4)), "Position at t=-1 did not match expected point.");
+
+    t_tuple p2_5 = position(r, 2.5);
+    cr_assert(tuple_equals(p2_5, point(4.5, 3, 4)), "Position at t=2.5 did not match expected point.");
+}

@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/18 15:33:30 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/18 17:15:38 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,8 @@ t_tuple substract_tuples(t_tuple a, t_tuple b)
     t_tuple result = {a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w};
     return result;
 }
-int tuple_equals(t_tuple a, t_tuple b) {
+int tuple_equals(t_tuple a, t_tuple b)
+{
     return equal(a.x, b.x) && equal(a.y, b.y) && equal(a.z, b.z) && equal(a.w, b.w);
 }
 
@@ -187,6 +188,12 @@ t_tuple negate_tuple(t_tuple t)
     t_tuple result = {-t.x, -t.y, -t.z, -t.w};
     return (result);
 }
+t_vector tuple_to_vector(t_tuple t)
+{
+    t_vector v = {t.x, t.y, t.z};
+    return v;
+}
+
 
 t_tuple multiply_tuple_scalar(t_tuple a, double scalar)
 {
@@ -204,10 +211,8 @@ t_tuple normalize(t_tuple v)
 {
     double magnitude = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
     
-    // Si le vecteur est nul, retourner le vecteur lui-même
-    if (magnitude == 0.0) {
+    if (magnitude == 0.0)
         return v;
-    }
     
     t_tuple normalized_vector;
     normalized_vector.x = v.x / magnitude;
@@ -245,7 +250,7 @@ t_projectile tick(t_environnement env, t_projectile proj)
     return (t_projectile){position, velocity};
 }
 
-t_canvas canvas(int width, int height)
+t_canvas create_canvas(int width, int height)
 {
     t_canvas c;
     int i = 0;
@@ -273,7 +278,7 @@ t_color pixel_at(t_canvas c, int x, int y)
 {
     if (x >= 0 && x < c.width && y >= 0 && y < c.height)
         return c.pixels[y * c.width + x];
-    return (t_color){0, 0, 0}; // Return black as a default/fallback color}
+    return (t_color){0, 0, 0};
 }
 
 t_matrix create_matrix(int rows, int cols, float elements[])
@@ -310,11 +315,10 @@ int matrices_equal(t_matrix a, t_matrix b)
     return(1);
 }
 
-t_matrix multiply_matrices(t_matrix a, t_matrix b) {
-    if (a.cols != b.rows) {
-        printf("Error: Matrices cannot be multiplied due to incompatible dimensions.\n");
+t_matrix multiply_matrices(t_matrix a, t_matrix b)
+{
+    if (a.cols != b.rows)
         return create_matrix(0, 0, NULL);
-    }
     
     t_matrix c = create_matrix(a.rows, b.cols, NULL);
     int i = 0;
@@ -596,41 +600,16 @@ t_matrix shearing(float xy, float xz, float yx, float yz, float zx, float zy)
 
     return result;
 }
-
-
-/*
-int main() {
-    // Elements for matrix A
-    float elementsA[16] = {
-        1, 2, 3, 4,
-        2, 4, 4, 2,
-        8, 6, 4, 1,
-        0, 0, 0, 1
-    };
-    // Elements for matrix B
-    float elementsB[4] = {
-        1, 2, 3, 1,
-    };
-
-    // Create matrices A and B
-    t_matrix A = create_matrix(4, 4, elementsA);
-    t_matrix B = create_matrix(4, 1, elementsB);
-    t_matrix C = multiply_matrices(A, B);
-    
-
-    printf("Result of A multiplied by B:\n");
-    for (int i = 0; i < C.rows; i++) {
-        for (int j = 0; j < C.cols; j++) {
-            printf("%8.2f", C.elements[i * C.cols + j]);
-        }
-        printf("\n");
-    }
-
-    // Free the matrices when done
-    free_matrix(&A);
-    free_matrix(&B);
-    free_matrix(&C);
-    return 0;
+t_ray ray(t_tuple origin, t_tuple direction)
+{
+    t_ray r;
+    r.origin = origin;
+    r.direction = direction;
+    return r;
 }
 
-*/
+t_tuple position(t_ray r, double t)
+{
+    t_tuple distance = multiply_tuple_scalar(r.direction, t);
+    return add_tuples(r.origin, distance);
+}
