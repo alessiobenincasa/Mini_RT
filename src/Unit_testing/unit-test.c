@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/17 17:48:43 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/17 23:55:39 by albeninc         ###   ########.fr       */
+/*   Created: 2024/03/18 11:07:54 by albeninc          #+#    #+#             */
+/*   Updated: 2024/03/18 11:08:06 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,28 +49,43 @@ Test(matrix_operations, multiplying_the_identity_matrix_by_a_tuple)
     free_matrix(&identity);
 }
 
-Test(matrix_operations, transposing_a_matrix) {
-    // Dynamically allocate and initialize matrix A
+Test(matrix_operations, transposing_a_matrix)
+{
+    
     float elementsA[] = {0, 9, 3, 0, 9, 8, 0, 8, 1, 8, 5, 3, 0, 0, 5, 8};
     t_matrix A = {4, 4, malloc(16 * sizeof(float))};
-    ft_memcpy(A.elements, elementsA, 16 * sizeof(float)); // Ensure <string.h> is included for memcpy
+    ft_memcpy(A.elements, elementsA, 16 * sizeof(float)); 
 
-    // Dynamically allocate and initialize the expected result matrix
+    
     float elementsExpected[] = {0, 9, 1, 0, 9, 8, 8, 0, 3, 0, 5, 5, 0, 8, 3, 8};
     t_matrix expected = {4, 4, malloc(16 * sizeof(float))};
    ft_memcpy(expected.elements, elementsExpected, 16 * sizeof(float));
 
-    // Perform the transpose operation
+    
     t_matrix result = transpose_matrix(A);
 
-    // Verify the result
-    for (int i = 0; i < 16; i++) { // Using a single loop for simplicity
+    
+    for (int i = 0; i < 16; i++) { 
         cr_assert_eq(result.elements[i], expected.elements[i], "Element at index %d is %f but expected %f", 
                      i, result.elements[i], expected.elements[i]);
     }
 
-    // Free dynamically allocated memory
+    
     free(A.elements);
     free(expected.elements);
-    free(result.elements); // Assuming transpose_matrix also dynamically allocates memory
+    free(result.elements); 
+}
+
+
+Test(matrix_operations, determinant_of_2x2_matrix)
+{
+    t_matrix matrix = {
+        .rows = 2,
+        .cols = 2,
+        .elements = (float[]){4, 3, 6, 8} 
+    };
+
+    float det = determinant(matrix);
+
+    cr_assert_float_eq(det, 14, 0.001, "Expected determinant to be 14, but got %f", det);
 }

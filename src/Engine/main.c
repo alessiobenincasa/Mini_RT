@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/17 23:57:38 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/18 11:09:16 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -388,6 +388,14 @@ t_matrix transpose_matrix(t_matrix matrix)
     }
     
     return (transposed);
+}
+
+float determinant(t_matrix matrix)
+{
+    if (matrix.rows != 2 || matrix.cols != 2) {
+        exit(EXIT_FAILURE);
+    }
+    return matrix.elements[0] * matrix.elements[3] - matrix.elements[1] * matrix.elements[2];
 }
 
 

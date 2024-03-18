@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/17 23:56:00 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/18 11:09:38 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,5 +178,6 @@ void			free_matrix(t_matrix *m);
 t_matrix		identity_matrix(void);
 t_tuple			multiply_matrix_tuple(t_matrix m, t_tuple t);
 t_matrix		transpose_matrix(t_matrix matrix);
+float			determinant(t_matrix matrix);
 
 #endif
