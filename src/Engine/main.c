@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/18 11:09:16 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/18 12:18:48 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -390,14 +390,102 @@ t_matrix transpose_matrix(t_matrix matrix)
     return (transposed);
 }
 
-float determinant(t_matrix matrix)
+
+t_matrix submatrix(t_matrix matrix, int remove_row, int remove_col)
 {
-    if (matrix.rows != 2 || matrix.cols != 2) {
+    t_matrix sub;
+    sub.rows = matrix.rows - 1;
+    sub.cols = matrix.cols - 1;
+    sub.elements = malloc(sub.rows * sub.cols * sizeof(float));
+
+    if (!sub.elements) 
         exit(EXIT_FAILURE);
+    int i = 0, sub_i = 0;
+    while (i < matrix.rows)
+    {
+        if (i != remove_row)
+        {
+            int j = 0, sub_j = 0;
+            while (j < matrix.cols)
+            {
+                if (j != remove_col)
+                {
+                    sub.elements[sub_i * sub.cols + sub_j] = matrix.elements[i * matrix.cols + j];
+                    sub_j++;
+                }
+                j++;
+            }
+            sub_i++;
+        }
+        i++;
     }
-    return matrix.elements[0] * matrix.elements[3] - matrix.elements[1] * matrix.elements[2];
+    
+    return sub;
 }
 
+float minor(t_matrix matrix, int row, int col)
+{
+    t_matrix sub = submatrix(matrix, row, col);
+    float det = determinant(sub);
+    free(sub.elements);
+    return det;
+}
+float cofactor(t_matrix matrix, int row, int col)
+{
+    float min = minor(matrix, row, col);
+    if ((row + col) % 2 == 0)
+        return min;
+    
+    else
+        return -min;
+}
+
+float determinant(t_matrix M)
+{
+    if (M.rows != M.cols)
+        exit(EXIT_FAILURE);
+    
+    float det = 0;
+    if (M.rows == 2)
+        det = M.elements[0] * M.elements[3] - M.elements[1] * M.elements[2];
+    else 
+    {
+        int column = 0;
+        while (column < M.cols)
+        {
+            det += M.elements[column] * cofactor(M, 0, column);
+            column++;
+        }
+    }
+    return det;
+}
+
+t_matrix inverse(t_matrix A)
+{
+    float det = determinant(A);
+    if (det == 0)
+        exit(EXIT_FAILURE);
+
+    t_matrix B = { .rows = A.rows, .cols = A.cols, .elements = malloc(A.rows * A.cols * sizeof(float)) };
+    int i = 0;
+    while (i < A.rows)
+    {
+        int j = 0;
+        while (j < A.cols)
+        {
+            float cof = cofactor(A, i, j);
+            B.elements[j * B.cols + i] = cof / det;
+            j++;
+        }
+        i++;
+    }
+    return B;
+}
+
+int is_invertible(t_matrix A)
+{
+    return determinant(A) != 0;
+}
 
 /*
 int main() {

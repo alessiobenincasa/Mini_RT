@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/18 11:09:38 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/18 12:19:41 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,11 @@ void			free_matrix(t_matrix *m);
 t_matrix		identity_matrix(void);
 t_tuple			multiply_matrix_tuple(t_matrix m, t_tuple t);
 t_matrix		transpose_matrix(t_matrix matrix);
-float			determinant(t_matrix matrix);
+t_matrix		submatrix(t_matrix matrix, int remove_row, int remove_col);
+float			minor(t_matrix matrix, int row, int col);
+float			cofactor(t_matrix matrix, int row, int col);
+float			determinant(t_matrix M);
+int				is_invertible(t_matrix A);
+t_matrix		inverse(t_matrix A);
 
 #endif
