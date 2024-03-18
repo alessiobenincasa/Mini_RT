@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/18 13:52:00 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/18 15:33:30 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -509,6 +509,92 @@ t_matrix translation(float x, float y, float z)
         index++;
     }
     return transform;
+}
+
+t_matrix scaling(float x, float y, float z)
+{
+    int i = 0;
+    t_matrix scale = {4, 4, malloc(16 * sizeof(float))};
+    if (!scale.elements)
+        exit(EXIT_FAILURE);
+    while (i < 16)
+    {
+        scale.elements[i] = 0;
+        i++;
+    }
+    scale.elements[0] = x;
+    scale.elements[5] = y;
+    scale.elements[10] = z;
+    scale.elements[15] = 1.0;
+    return scale;
+}
+t_matrix rotation_x(float radians)
+{
+    t_matrix result = {4, 4, malloc(16 * sizeof(float))};
+    if (!result.elements)
+        exit(EXIT_FAILURE);
+        
+    int i = 0;
+    while (i < 16) {
+        result.elements[i] = 0;
+        i++;
+    }
+    result.elements[0] = 1;
+    result.elements[5] = cos(radians);
+    result.elements[6] = -sin(radians);
+    result.elements[9] = sin(radians);
+    result.elements[10] = cos(radians);
+    result.elements[15] = 1;
+    return result;
+}
+t_matrix rotation_y(float radians)
+{
+    int i = 0;
+    t_matrix result = {4, 4, malloc(16 * sizeof(float))};
+    if (!result.elements)
+        exit(EXIT_FAILURE);
+
+    while (i < 16)
+    {
+        result.elements[i] = 0;
+        i++;
+    }
+    result.elements[0] = cos(radians);
+    result.elements[2] = sin(radians);
+    result.elements[5] = 1;
+    result.elements[8] = -sin(radians);
+    result.elements[10] = cos(radians);
+    result.elements[15] = 1;
+
+    return result;
+}
+
+t_matrix shearing(float xy, float xz, float yx, float yz, float zx, float zy)
+{
+    t_matrix result = {4, 4, malloc(16 * sizeof(float))};
+    int i = 0;
+    if (!result.elements)
+        exit(EXIT_FAILURE);
+        
+    while (i < 16)
+    {
+        result.elements[i] = 0;
+        i++;
+    }
+    result.elements[0] = 1;
+    result.elements[5] = 1;
+    result.elements[10] = 1;
+    result.elements[15] = 1;
+
+
+    result.elements[1] = xy; 
+    result.elements[2] = xz;
+    result.elements[4] = yx;
+    result.elements[6] = yz;
+    result.elements[8] = zx;
+    result.elements[9] = zy;
+
+    return result;
 }
 
 

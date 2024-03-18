@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 11:07:54 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/18 14:00:16 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/18 15:36:30 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -390,6 +390,202 @@ Test(matrix_transformations, translation_does_not_affect_vectors)
     cr_assert_float_eq(result.z, v.z, 0.0001, "Z component should remain unchanged. Expected %f, got %f", v.z, result.z);
     cr_assert_float_eq(result.w, v.w, 0.0001, "W component (indicating a vector) should remain 0. Expected %f, got %f", v.w, result.w);
 
+    free(transform.elements);
+}
+
+Test(matrix_transformations, scaling_matrix_applied_to_point)
+{
+    t_matrix transform = scaling(2, 3, 4);
+    t_tuple p = point(-4, 6, 8);
+    t_tuple result = multiply_matrix_tuple(transform, p);
+
+    t_tuple expected = point(-8, 18, 32);
+
+    cr_assert_float_eq(result.x, expected.x, 0.0001);
+    cr_assert_float_eq(result.y, expected.y, 0.0001);
+    cr_assert_float_eq(result.z, expected.z, 0.0001);
+    cr_assert_float_eq(result.w, expected.w, 0.0001);
+
+    free(transform.elements);
+}
+
+Test(matrix_transformations, scaling_matrix_applied_to_vector)
+{
+    t_matrix transform = scaling(2, 3, 4);
+    t_tuple v = vector(-4, 6, 8);
+    t_tuple result = multiply_matrix_tuple(transform, v);
+
+    t_tuple expected = vector(-8, 18, 32);
+
+    cr_assert_float_eq(result.x, expected.x, 0.0001);
+    cr_assert_float_eq(result.y, expected.y, 0.0001);
+    cr_assert_float_eq(result.z, expected.z, 0.0001);
+    cr_assert_float_eq(result.w, expected.w, 0.0001);
+
+    free(transform.elements);
+}
+
+Test(matrix_transformations, inverse_scaling_matrix_applied_to_vector)
+{
+    t_matrix transform = scaling(2, 3, 4);
+    t_matrix inv = inverse(transform);
+    t_tuple v = vector(-4, 6, 8);
+    t_tuple result = multiply_matrix_tuple(inv, v);
+
+    t_tuple expected = vector(-2, 2, 2);
+
+    cr_assert_float_eq(result.x, expected.x, 0.0001);
+    cr_assert_float_eq(result.y, expected.y, 0.0001);
+    cr_assert_float_eq(result.z, expected.z, 0.0001);
+    cr_assert_float_eq(result.w, expected.w, 0.0001);
+
+    free(transform.elements);
+    free(inv.elements);
+}
+
+Test(matrix_transformations, reflection_is_scaling_by_negative_value)
+{
+    t_matrix transform = scaling(-1, 1, 1);
+    t_tuple p = point(2, 3, 4);
+    t_tuple result = multiply_matrix_tuple(transform, p);
+
+    t_tuple expected = point(-2, 3, 4);
+
+    cr_assert_float_eq(result.x, expected.x, 0.0001, "X component after reflection incorrect. Expected %f, got %f", expected.x, result.x);
+    cr_assert_float_eq(result.y, expected.y, 0.0001, "Y component should remain unchanged. Expected %f, got %f", expected.y, result.y);
+    cr_assert_float_eq(result.z, expected.z, 0.0001, "Z component should remain unchanged. Expected %f, got %f", expected.z, result.z);
+    cr_assert_float_eq(result.w, expected.w, 0.0001, "W component (indicating a point) should remain 1. Expected %f, got %f", expected.w, result.w);
+
+    free(transform.elements);
+}
+
+
+Test(matrix_transformations, rotating_point_around_x_axis)
+{
+    t_tuple p = point(0, 1, 0);
+    t_matrix half_quarter = rotation_x(M_PI / 4);
+    t_matrix full_quarter = rotation_x(M_PI / 2);
+
+    t_tuple half_rotated = multiply_matrix_tuple(half_quarter, p);
+    t_tuple full_rotated = multiply_matrix_tuple(full_quarter, p);
+
+    cr_assert_float_eq(half_rotated.x, 0, 0.0001);
+    cr_assert_float_eq(half_rotated.y, sqrt(2)/2, 0.0001);
+    cr_assert_float_eq(half_rotated.z, sqrt(2)/2, 0.0001);
+
+    cr_assert_float_eq(full_rotated.x, 0, 0.0001);
+    cr_assert_float_eq(full_rotated.y, 0, 0.0001);
+    cr_assert_float_eq(full_rotated.z, 1, 0.0001);
+
+    free(half_quarter.elements);
+    free(full_quarter.elements);
+}
+
+Test(matrix_transformations, inverse_rotating_point_around_x_axis)
+{
+    t_tuple p = point(0, 1, 0);
+    t_matrix half_quarter = rotation_x(M_PI / 4);
+    t_matrix inv = inverse(half_quarter);
+
+    t_tuple inv_rotated = multiply_matrix_tuple(inv, p);
+
+    cr_assert_float_eq(inv_rotated.x, 0, 0.0001);
+    cr_assert_float_eq(inv_rotated.y, sqrt(2)/2, 0.0001);
+    cr_assert_float_eq(inv_rotated.z, -sqrt(2)/2, 0.0001);
+
+    free(half_quarter.elements);
+    free(inv.elements);
+}
+
+
+Test(matrix_transformations, rotating_point_around_y_axis)
+{
+    t_tuple p = point(0, 0, 1);
+    t_matrix half_quarter = rotation_y(M_PI / 4);
+    t_matrix full_quarter = rotation_y(M_PI / 2);
+
+    t_tuple half_rotated = multiply_matrix_tuple(half_quarter, p);
+    t_tuple full_rotated = multiply_matrix_tuple(full_quarter, p);
+
+    cr_assert_float_eq(half_rotated.x, sqrt(2)/2, 0.0001, "Expected x to be √2/2, got %f", half_rotated.x);
+    cr_assert_float_eq(half_rotated.y, 0, 0.0001, "Expected y to be 0, got %f", half_rotated.y);
+    cr_assert_float_eq(half_rotated.z, sqrt(2)/2, 0.0001, "Expected z to be √2/2, got %f", half_rotated.z);
+
+    cr_assert_float_eq(full_rotated.x, 1, 0.0001, "Expected x to be 1, got %f", full_rotated.x);
+    cr_assert_float_eq(full_rotated.y, 0, 0.0001, "Expected y to be 0, got %f", full_rotated.y);
+    cr_assert_float_eq(full_rotated.z, 0, 0.0001, "Expected z to be 0, got %f", full_rotated.z);
+
+    free(half_quarter.elements);
+    free(full_quarter.elements);
+}
+
+
+
+Test(matrix_transformations, shearing_transformation_moves_x_in_proportion_to_y)
+{
+    t_matrix transform = shearing(1, 0, 0, 0, 0, 0);
+    t_tuple p = point(2, 3, 4);
+    t_tuple result = multiply_matrix_tuple(transform, p);
+
+    cr_assert_float_eq(result.x, 5, 0.0001, "After shearing, x should be 5, got %f", result.x);
+    cr_assert_float_eq(result.y, 3, 0.0001, "Y should remain unchanged, got %f", result.y);
+    cr_assert_float_eq(result.z, 4, 0.0001, "Z should remain unchanged, got %f", result.z);
+
+    free(transform.elements);
+}
+
+Test(matrix_transformations, shearing_transformation_moves_x_in_proportion_to_z)
+{
+    t_matrix transform = shearing(0, 1, 0, 0, 0, 0);
+    t_tuple p = point(2, 3, 4);
+    t_tuple result = multiply_matrix_tuple(transform, p);
+    cr_assert_float_eq(result.x, 6, 0.0001);
+    cr_assert_float_eq(result.y, 3, 0.0001);
+    cr_assert_float_eq(result.z, 4, 0.0001);
+    free(transform.elements);
+}
+
+Test(matrix_transformations, shearing_transformation_moves_y_in_proportion_to_x)
+{
+    t_matrix transform = shearing(0, 0, 1, 0, 0, 0);
+    t_tuple p = point(2, 3, 4);
+    t_tuple result = multiply_matrix_tuple(transform, p);
+    cr_assert_float_eq(result.x, 2, 0.0001);
+    cr_assert_float_eq(result.y, 5, 0.0001);
+    cr_assert_float_eq(result.z, 4, 0.0001);
+    free(transform.elements);
+}
+
+Test(matrix_transformations, shearing_transformation_moves_y_in_proportion_to_z)
+{
+    t_matrix transform = shearing(0, 0, 0, 1, 0, 0);
+    t_tuple p = point(2, 3, 4);
+    t_tuple result = multiply_matrix_tuple(transform, p);
+    cr_assert_float_eq(result.x, 2, 0.0001);
+    cr_assert_float_eq(result.y, 7, 0.0001);
+    cr_assert_float_eq(result.z, 4, 0.0001);
+    free(transform.elements);
+}
+
+Test(matrix_transformations, shearing_transformation_moves_z_in_proportion_to_x)
+{
+    t_matrix transform = shearing(0, 0, 0, 0, 1, 0);
+    t_tuple p = point(2, 3, 4);
+    t_tuple result = multiply_matrix_tuple(transform, p);
+    cr_assert_float_eq(result.x, 2, 0.0001);
+    cr_assert_float_eq(result.y, 3, 0.0001);
+    cr_assert_float_eq(result.z, 6, 0.0001);
+    free(transform.elements);
+}
+
+Test(matrix_transformations, shearing_transformation_moves_z_in_proportion_to_y)
+{
+    t_matrix transform = shearing(0, 0, 0, 0, 0, 1);
+    t_tuple p = point(2, 3, 4);
+    t_tuple result = multiply_matrix_tuple(transform, p);
+    cr_assert_float_eq(result.x, 2, 0.0001);
+    cr_assert_float_eq(result.y, 3, 0.0001);
+    cr_assert_float_eq(result.z, 7, 0.0001);
     free(transform.elements);
 }
 

@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/18 13:52:18 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/18 15:32:43 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,8 @@ typedef struct s_matrix
 }				t_matrix;
 
 t_color			color(float red, float green, float blue);
+t_matrix		rotation_x(float radians);
+t_matrix		scaling(float x, float y, float z);
 t_matrix		multiply_matrices(t_matrix a, t_matrix b);
 int				matrices_equal(t_matrix a, t_matrix b);
 float			get_element(t_matrix m, int row, int col);
@@ -160,6 +162,7 @@ t_vector		cross(t_tuple v, t_tuple w);
 double			dot(t_tuple a, t_tuple b);
 double			magnitude(t_tuple t);
 t_tuple			normalize(t_tuple v);
+t_matrix		rotation_y(float radians);
 t_tuple			divide_tuple_scalar(t_tuple a, double scalar);
 t_tuple			multiply_tuple_scalar(t_tuple a, double scalar);
 t_tuple			negate_tuple(t_tuple t);
@@ -185,5 +188,7 @@ float			determinant(t_matrix M);
 int				is_invertible(t_matrix A);
 t_matrix		inverse(t_matrix A);
 t_matrix		translation(float x, float y, float z);
+t_matrix		shearing(float xy, float xz, float yx, float yz, float zx,
+					float zy);
 
 #endif
