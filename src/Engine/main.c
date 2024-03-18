@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/18 17:15:38 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/18 22:10:06 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -613,3 +613,85 @@ t_tuple position(t_ray r, double t)
     t_tuple distance = multiply_tuple_scalar(r.direction, t);
     return add_tuples(r.origin, distance);
 }
+
+t_sphere sphere()
+{
+    t_sphere s;
+    s.center = point(0, 0, 0);
+    s.radius = 1;
+    return s;
+}
+
+t_intersections intersect(t_sphere *s, t_ray r)
+{
+    t_tuple sphere_to_ray = substract_tuples(r.origin, s->center);
+
+    double a = dot(r.direction, r.direction);
+    double b = 2.0 * dot(r.direction, sphere_to_ray);
+    double c = dot(sphere_to_ray, sphere_to_ray) - (s->radius * s->radius);
+
+    double discriminant = b * b - 4 * a * c;
+
+    t_intersections xs;
+    if (discriminant < 0)
+    {
+        xs.count = 0;
+        xs.intersections = NULL;
+    }
+    else 
+    {
+       
+        discriminant = fabs(discriminant) < 1e-6 ? 0 : discriminant;
+        xs.count = (discriminant == 0) ? 2 : 2;
+        xs.intersections = malloc(xs.count * sizeof(t_intersection));
+
+        double sqrt_discriminant = sqrt(discriminant);
+        xs.intersections[0].t = (-b - sqrt_discriminant) / (2 * a);
+        xs.intersections[0].sphere = s;
+        xs.intersections[1].t = (-b + sqrt_discriminant) / (2 * a);
+        xs.intersections[1].sphere = s;
+    }
+
+    return xs;
+}
+
+
+t_intersection intersection(double t, t_sphere *object)
+{
+    t_intersection i;
+    i.t = t;
+    i.sphere = object;
+    return i;
+}
+
+t_intersections intersections(int count, t_intersection *intersectionsArray)
+{
+    t_intersections xs;
+    int i = 0;
+    xs.count = count;
+    xs.intersections = (t_intersection *)malloc(sizeof(t_intersection) * count);
+    while (i < count)
+    {
+        xs.intersections[i] = intersectionsArray[i];
+        i++;
+    }
+    return xs;
+}
+
+t_intersection *hit(t_intersections *intersections)
+{
+    int i = 0;
+    t_intersection *hit = NULL;
+    while (i < intersections->count)
+    {
+        if (intersections->intersections[i].t >= 0)
+        {
+            if (hit == NULL || intersections->intersections[i].t < hit->t)
+                hit = &(intersections->intersections[i]);
+        }
+        i++;
+    }
+    return hit;
+}
+
+

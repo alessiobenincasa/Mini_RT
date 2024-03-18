@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 11:07:54 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/18 17:15:54 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/18 22:13:26 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -667,4 +667,162 @@ Test(ray_operations, computing_a_point_from_a_distance)
 
     t_tuple p2_5 = position(r, 2.5);
     cr_assert(tuple_equals(p2_5, point(4.5, 3, 4)), "Position at t=2.5 did not match expected point.");
+}
+
+Test(sphere_intersections, ray_intersects_sphere_at_two_points)
+{
+    t_ray r = ray(point(0, 0, -5), vector(0, 0, 1));
+    t_sphere s = sphere();
+    t_intersections xs = intersect(&s, r);
+
+    cr_assert_eq(xs.count, 2, "Expected 2 intersections but got %d.", xs.count);
+    cr_assert_float_eq(xs.intersections[0].t, 4.0, 1e-6, "First intersection t value was not 4.0.");
+    cr_assert_float_eq(xs.intersections[1].t, 6.0, 1e-6, "Second intersection t value was not 6.0.");
+
+    free(xs.intersections);
+}
+
+Test(sphere_intersections, ray_intersects_sphere_at_a_tangent)
+{
+    t_ray r = ray(point(0, 1, -5), vector(0, 0, 1));
+    t_sphere s = sphere();
+    t_intersections xs = intersect(&s, r);
+
+    cr_assert_eq(xs.count, 2, "Expected 2 intersections but got %d.", xs.count);
+    cr_assert_float_eq(xs.intersections[0].t, 5.0, 1e-6, "First intersection t value was not 4.0.");
+    cr_assert_float_eq(xs.intersections[1].t, 5.0, 1e-6, "Second intersection t value was not 6.0.");
+
+    free(xs.intersections);
+}
+Test(sphere_intersections, ray_misses_sphere)
+{
+    t_ray r = ray(point(0, 2, -5), vector(0, 0, 1));
+    t_sphere s = sphere();
+    t_intersections xs = intersect(&s, r);
+
+    cr_assert_eq(xs.count, 0, "Expected 2 intersections but got %d.", xs.count);
+
+    free(xs.intersections);
+}
+
+Test(sphere_intersections, A_ray_originates_inside_a_sphere)
+{
+    t_ray r = ray(point(0, 0, 0), vector(0, 0, 1));
+    t_sphere s = sphere();
+    t_intersections xs = intersect(&s, r);
+
+    cr_assert_eq(xs.count, 2, "Expected 2 intersections but got %d.", xs.count);
+    cr_assert_float_eq(xs.intersections[0].t, -1.0, 1e-6, "First intersection t value was not 4.0.");
+    cr_assert_float_eq(xs.intersections[1].t, 1.0, 1e-6, "Second intersection t value was not 6.0.");
+
+    free(xs.intersections);
+}
+
+Test(sphere_intersections, A_ray_originates_behind_a_sphere)
+{
+    t_ray r = ray(point(0, 0, 5), vector(0, 0, 1));
+    t_sphere s = sphere();
+    t_intersections xs = intersect(&s, r);
+
+    cr_assert_eq(xs.count, 2, "Expected 2 intersections but got %d.", xs.count);
+    cr_assert_float_eq(xs.intersections[0].t, -6.0, 1e-6, "First intersection t value was not 4.0.");
+    cr_assert_float_eq(xs.intersections[1].t, -4.0, 1e-6, "Second intersection t value was not 6.0.");
+
+    free(xs.intersections);
+}
+
+Test(intersection_tests, encapsulates_t_and_object)
+{
+    t_sphere s = sphere();
+    t_intersection i = intersection(3.5, &s);
+
+
+    cr_assert_float_eq(i.t, 3.5, 1e-6, "Intersection t value was not set correctly.");
+    cr_assert_eq(i.sphere, &s, "Intersection object was not set correctly.");
+}
+Test(intersection_collections, aggregating_intersections)
+{
+    t_sphere s = sphere();
+    t_intersection intersectionArray[] = {intersection(1, &s), intersection(2, &s)};
+
+    t_intersections xs = intersections(2, intersectionArray);
+
+    cr_assert_eq(xs.count, 2, "The intersection count should be 2.");
+    cr_assert_float_eq(xs.intersections[0].t, 1, 1e-6, "First intersection's t value should be 1.");
+    cr_assert_float_eq(xs.intersections[1].t, 2, 1e-6, "Second intersection's t value should be 2.");
+
+    free(xs.intersections);
+}
+
+Test(intersection_operations, intersect_sets_object_on_intersection)
+{
+    t_sphere s = sphere();
+    t_ray r = ray(point(0, 0, -5), vector(0, 0, 1));
+    t_intersections xs = intersect(&s, r);
+
+    cr_assert_eq(xs.count, 2, "Intersection count should be 2.");
+    cr_assert_eq(xs.intersections[0].sphere, &s, "First intersection object did not match.");
+    cr_assert_eq(xs.intersections[1].sphere, &s, "Second intersection object did not match.");
+
+    if (xs.intersections != NULL)
+        free(xs.intersections);
+}
+
+Test(intersection_hit, all_intersections_positive_t)
+{
+    t_sphere s = sphere();
+    t_intersection intersectionsArray[] = {intersection(1, &s), intersection(2, &s)};
+    t_intersections xs = intersections(2, intersectionsArray);
+
+    t_intersection *i = hit(&xs);
+    cr_assert(i != NULL, "Expected a hit but got NULL.");
+    cr_assert_float_eq(i->t, 1, 1e-6, "The hit should be at t=1.");
+    
+    free(xs.intersections);
+}
+
+Test(hit_tests, hit_with_some_negative_t)
+{
+    t_sphere s = sphere();
+    t_intersection i1 = intersection(-1, &s);
+    t_intersection i2 = intersection(1, &s);
+    t_intersection all_intersections[] = {i1, i2};
+    t_intersections xs = intersections(2, all_intersections);
+
+    t_intersection *hit_result = hit(&xs);
+    cr_assert_not_null(hit_result, "Expected a hit but got NULL.");
+    cr_assert_float_eq(hit_result->t, 1, 1e-6, "The hit should be at t=1.");
+
+    free(xs.intersections);
+}
+
+Test(hit_tests, hit_with_all_negative_t)
+{
+    t_sphere s = sphere();
+    t_intersection i1 = intersection(-2, &s);
+    t_intersection i2 = intersection(-1, &s);
+    t_intersection all_intersections[] = {i1, i2};
+    t_intersections xs = intersections(2, all_intersections);
+
+    t_intersection *hit_result = hit(&xs);
+    cr_assert_null(hit_result, "Expected no hit but got one.");
+
+    free(xs.intersections);
+}
+
+Test(hit_tests, hit_is_lowest_nonnegative_intersection)
+{
+    t_sphere s = sphere();
+    t_intersection i1 = intersection(5, &s);
+    t_intersection i2 = intersection(7, &s);
+    t_intersection i3 = intersection(-3, &s);
+    t_intersection i4 = intersection(2, &s);
+    t_intersection all_intersections[] = {i1, i2, i3, i4};
+    t_intersections xs = intersections(4, all_intersections);
+
+    t_intersection *hit_result = hit(&xs);
+    cr_assert_not_null(hit_result, "Expected a hit but got NULL.");
+    cr_assert_float_eq(hit_result->t, 2, 1e-6, "The hit should be at t=2.");
+
+    free(xs.intersections);
 }
