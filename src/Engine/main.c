@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/18 22:10:06 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/18 23:16:34 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -619,41 +619,65 @@ t_sphere sphere()
     t_sphere s;
     s.center = point(0, 0, 0);
     s.radius = 1;
+    s.transform = identity_matrix();
     return s;
+}
+
+void set_transform(t_sphere *s, t_matrix t)
+{
+    if (s != NULL)
+        s->transform = t;
 }
 
 t_intersections intersect(t_sphere *s, t_ray r)
 {
-    t_tuple sphere_to_ray = substract_tuples(r.origin, s->center);
+    t_matrix inverse_transform = inverse(s->transform);
 
-    double a = dot(r.direction, r.direction);
-    double b = 2.0 * dot(r.direction, sphere_to_ray);
+    
+    t_ray transformed_ray = transform(r, inverse_transform);
+
+
+    t_tuple sphere_to_ray = substract_tuples(transformed_ray.origin, s->center);
+
+    double a = dot(transformed_ray.direction, transformed_ray.direction);
+    double b = 2.0 * dot(transformed_ray.direction, sphere_to_ray);
     double c = dot(sphere_to_ray, sphere_to_ray) - (s->radius * s->radius);
 
     double discriminant = b * b - 4 * a * c;
 
     t_intersections xs;
-    if (discriminant < 0)
-    {
-        xs.count = 0;
-        xs.intersections = NULL;
-    }
-    else 
-    {
-       
-        discriminant = fabs(discriminant) < 1e-6 ? 0 : discriminant;
-        xs.count = (discriminant == 0) ? 2 : 2;
-        xs.intersections = malloc(xs.count * sizeof(t_intersection));
+    if (discriminant < 0) {
+    xs.count = 0;
+    xs.intersections = NULL;
+} else {
+    xs.count = (discriminant == 0) ? 2 : 2;
+    xs.intersections = malloc(xs.count * sizeof(t_intersection));
+    if (xs.intersections == NULL) exit(EXIT_FAILURE);
 
-        double sqrt_discriminant = sqrt(discriminant);
-        xs.intersections[0].t = (-b - sqrt_discriminant) / (2 * a);
-        xs.intersections[0].sphere = s;
-        xs.intersections[1].t = (-b + sqrt_discriminant) / (2 * a);
-        xs.intersections[1].sphere = s;
+    double root = sqrt(discriminant);
+
+    double t1 = (-b - root) / (2 * a);
+    double t2 = (-b + root) / (2 * a);
+
+    if (t1 > t2) {
+        double temp = t1;
+        t1 = t2;
+        t2 = temp;
     }
 
+    xs.intersections[0].t = t1;
+    xs.intersections[0].sphere = s;
+
+    if (discriminant == 0) {
+        xs.intersections[1].t = t1;
+    } else {
+        xs.intersections[1].t = t2;
+    }
+    xs.intersections[1].sphere = s;
+    }
     return xs;
 }
+
 
 
 t_intersection intersection(double t, t_sphere *object)
@@ -693,5 +717,25 @@ t_intersection *hit(t_intersections *intersections)
     }
     return hit;
 }
+void matrix_set(t_matrix *m, int row, int col, float value)\
+{
+    int index = row * m->cols + col;
+    m->elements[index] = value;
+}
+
+float matrix_get(t_matrix *m, int row, int col)
+{
+    int index = row * m->cols + col;
+    return m->elements[index];
+}
+
+t_ray transform(t_ray ray, t_matrix m)
+{
+    t_ray transformed_ray;
+    transformed_ray.origin = multiply_matrix_tuple(m, ray.origin);
+    transformed_ray.direction = multiply_matrix_tuple(m, ray.direction);
+    return transformed_ray;
+}
+
 
 

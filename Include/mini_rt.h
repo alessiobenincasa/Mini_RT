@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/18 21:56:57 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/18 23:08:56 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,7 @@ typedef struct s_sphere
 {
 	t_tuple			center;
 	double			radius;
+	t_matrix		transform;
 }					t_sphere;
 
 typedef struct s_intersection
@@ -174,6 +175,7 @@ t_color				pixel_at(t_canvas c, int x, int y);
 void				write_pixel(t_canvas *c, int x, int y, t_color color);
 t_canvas			create_canvas(int width, int height);
 t_vector			tuple_to_vector(t_tuple t);
+void				set_transform(t_sphere *s, t_matrix t);
 t_projectile		tick(t_environnement env, t_projectile proj);
 t_vector			cross(t_tuple v, t_tuple w);
 double				dot(t_tuple a, t_tuple b);
@@ -187,6 +189,7 @@ int					tuple_equals(t_tuple a, t_tuple b);
 t_tuple				substract_tuples(t_tuple a, t_tuple b);
 t_tuple				add_tuples(t_tuple a, t_tuple b);
 int					equal(double a, double b);
+t_ray				transform(t_ray ray, t_matrix m);
 t_intersection		intersection(double t, t_sphere *object);
 t_tuple				point(double x, double y, double z);
 t_tuple				tuple(double x, double y, double z, double w);

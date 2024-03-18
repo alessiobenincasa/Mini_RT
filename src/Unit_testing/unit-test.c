@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 11:07:54 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/18 22:13:26 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/18 23:11:56 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -825,4 +825,69 @@ Test(hit_tests, hit_is_lowest_nonnegative_intersection)
     cr_assert_float_eq(hit_result->t, 2, 1e-6, "The hit should be at t=2.");
 
     free(xs.intersections);
+}
+
+Test(ray_transformations, translating_a_ray)
+{
+    t_ray r = ray(point(1, 2, 3), vector(0, 1, 0));
+    t_matrix m = translation(3, 4, 5);
+
+    t_ray r2 = transform(r, m);
+
+    cr_assert(tuple_equals(r2.origin, point(4, 6, 8)), "Translated ray origin did not match expected point.");
+    cr_assert(tuple_equals(r2.direction, vector(0, 1, 0)), "Translated ray direction did not match expected vector.");
+}
+
+Test(ray_transformations, scaling_a_ray)
+{
+    t_ray r = ray(point(1, 2, 3), vector(0, 1, 0));
+    t_matrix m = scaling(2, 3, 4);
+
+    t_ray r2 = transform(r, m);
+
+    cr_assert(tuple_equals(r2.origin, point(2, 6, 12)), "Scaled ray origin did not match expected point.");
+    cr_assert(tuple_equals(r2.direction, vector(0, 3, 0)), "Scaled ray direction did not match expected vector.");
+}
+
+Test(sphere_transformations, sphere_default_transformation)
+{
+    t_sphere s = sphere();
+    t_matrix identity = identity_matrix();
+    
+    cr_assert(matrices_equal(s.transform, identity), "Sphere's default transformation is not the identity matrix.");
+}
+
+Test(sphere_transformations, changing_spheres_transformation)
+{
+    t_sphere s = sphere();
+    t_matrix t = translation(2, 3, 4);
+    
+    set_transform(&s, t);
+    cr_assert(matrices_equal(s.transform, t), "Sphere's transformation was not set correctly.");
+}
+
+Test(sphere_intersections, intersecting_a_scaled_sphere_with_a_ray)
+{
+    t_ray r = ray(point(0, 0, -5), vector(0, 0, 1));
+    t_sphere s = sphere();
+    set_transform(&s, scaling(2, 2, 2));
+
+    t_intersections xs = intersect(&s, r);
+
+    cr_assert_eq(xs.count, 2, "Expected 2 intersections but got %d.", xs.count);
+    cr_assert_float_eq(xs.intersections[0].t, 3, 1e-6, "First intersection t value was not 3.");
+    cr_assert_float_eq(xs.intersections[1].t, 7, 1e-6, "Second intersection t value was not 7.");
+    free(xs.intersections);
+}
+
+Test(sphere_intersections, intersecting_a_translated_sphere_with_a_ray)
+{
+    t_ray r = ray(point(0, 0, -5), vector(0, 0, 1));
+    t_sphere s = sphere();
+    set_transform(&s, translation(5, 0, 0));
+
+    t_intersections xs = intersect(&s, r);
+
+    cr_assert_eq(xs.count, 0, "Expected 0 intersections but got %d.", xs.count);
+
 }
