@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/18 12:18:48 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/18 13:52:00 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -486,6 +486,31 @@ int is_invertible(t_matrix A)
 {
     return determinant(A) != 0;
 }
+t_matrix translation(float x, float y, float z)
+{
+    t_matrix transform = {
+        .rows = 4,
+        .cols = 4,
+        .elements = malloc(16 * sizeof(float))
+    };
+    if (!transform.elements)
+        exit(EXIT_FAILURE);
+    
+    int index = 0;
+    float elements[] = {
+        1, 0, 0, x,
+        0, 1, 0, y,
+        0, 0, 1, z,
+        0, 0, 0, 1
+    };
+    while (index < 16) 
+    {
+        transform.elements[index] = elements[index];
+        index++;
+    }
+    return transform;
+}
+
 
 /*
 int main() {

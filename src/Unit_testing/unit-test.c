@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 11:07:54 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/18 12:25:52 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/18 14:00:16 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -343,5 +343,53 @@ Test(matrix_inverse_tests, multiplying_a_product_by_its_inverse)
     free(C.elements);
     free(B_inv.elements);
     free(result.elements);
+}
+Test(matrix_transformations, multiplying_by_translation_matrix)
+{
+    t_matrix transform = translation(5, -3, 2);
+    t_tuple p = point(-3, 4, 5);
+
+    t_tuple result = multiply_matrix_tuple(transform, p);
+
+    t_tuple expected = point(2, 1, 7);
+
+    cr_assert_float_eq(result.x, expected.x, 0.0001);
+    cr_assert_float_eq(result.y, expected.y, 0.0001);
+    cr_assert_float_eq(result.z, expected.z, 0.0001);
+    cr_assert_float_eq(result.w, expected.w, 0.0001);
+
+    free(transform.elements);
+}
+Test(matrix_transformations, multiplying_by_inverse_of_translation_matrix)
+{
+    t_matrix transform = translation(5, -3, 2);
+    t_matrix inv = inverse(transform);
+    t_tuple p = point(-3, 4, 5);
+    t_tuple result = multiply_matrix_tuple(inv, p);
+
+    t_tuple expected = point(-8, 7, 3);
+
+    cr_assert_float_eq(result.x, expected.x, 0.0001, "Expected x of %f, got %f", expected.x, result.x);
+    cr_assert_float_eq(result.y, expected.y, 0.0001, "Expected y of %f, got %f", expected.y, result.y);
+    cr_assert_float_eq(result.z, expected.z, 0.0001, "Expected z of %f, got %f", expected.z, result.z);
+    cr_assert_float_eq(result.w, expected.w, 0.0001, "Expected w of %f, got %f", expected.w, result.w);
+
+    free(transform.elements);
+    free(inv.elements);
+}
+
+Test(matrix_transformations, translation_does_not_affect_vectors)
+{
+    t_matrix transform = translation(5, -3, 2);
+    t_tuple v = vector(-3, 4, 5);
+    
+   
+    t_tuple result = multiply_matrix_tuple(transform, v);
+    cr_assert_float_eq(result.x, v.x, 0.0001, "X component should remain unchanged. Expected %f, got %f", v.x, result.x);
+    cr_assert_float_eq(result.y, v.y, 0.0001, "Y component should remain unchanged. Expected %f, got %f", v.y, result.y);
+    cr_assert_float_eq(result.z, v.z, 0.0001, "Z component should remain unchanged. Expected %f, got %f", v.z, result.z);
+    cr_assert_float_eq(result.w, v.w, 0.0001, "W component (indicating a vector) should remain 0. Expected %f, got %f", v.w, result.w);
+
+    free(transform.elements);
 }
 

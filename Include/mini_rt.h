@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/18 12:19:41 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/18 13:52:18 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,5 +184,6 @@ float			cofactor(t_matrix matrix, int row, int col);
 float			determinant(t_matrix M);
 int				is_invertible(t_matrix A);
 t_matrix		inverse(t_matrix A);
+t_matrix		translation(float x, float y, float z);
 
 #endif
