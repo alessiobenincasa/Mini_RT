@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 11:07:54 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/18 23:11:56 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/19 14:28:53 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -890,4 +890,192 @@ Test(sphere_intersections, intersecting_a_translated_sphere_with_a_ray)
 
     cr_assert_eq(xs.count, 0, "Expected 0 intersections but got %d.", xs.count);
 
+}
+
+
+Test(sphere_normals, normal_on_sphere_at_point_on_x_axis)
+{
+    t_sphere s = sphere();
+    t_tuple point = {1, 0, 0, 1};
+    t_tuple expected = {1, 0, 0, 0};
+    t_tuple normal = normal_at(s, point);
+    cr_assert_eq(normal.x, expected.x);
+    cr_assert_eq(normal.y, expected.y);
+    cr_assert_eq(normal.z, expected.z);
+}
+
+Test(sphere_normals, normal_on_sphere_at_point_on_y_axis)
+{
+    t_sphere s = sphere();
+    t_tuple point = {0, 1, 0, 1};
+    t_tuple expected = {0, 1, 0, 0};
+    t_tuple normal = normal_at(s, point);
+    cr_assert_eq(normal.x, expected.x);
+    cr_assert_eq(normal.y, expected.y);
+    cr_assert_eq(normal.z, expected.z);
+}
+
+Test(sphere_normals, normal_on_sphere_at_point_on_z_axis)
+{
+    t_sphere s = sphere();
+    t_tuple point = {0, 0, 1, 1};
+    t_tuple expected = {0, 0, 1, 0};
+    t_tuple normal = normal_at(s, point);
+    cr_assert_eq(normal.x, expected.x);
+    cr_assert_eq(normal.y, expected.y);
+    cr_assert_eq(normal.z, expected.z);
+}
+
+Test(sphere_normals, normal_on_sphere_at_nonaxial_point)
+{
+    t_sphere s = sphere();
+    double val = sqrt(3) / 3;
+    t_tuple point = {val, val, val, 1};
+    t_tuple expected = {val, val, val, 0};
+    t_tuple normal = normal_at(s, point);
+    cr_assert_float_eq(normal.x, expected.x, 1e-6);
+    cr_assert_float_eq(normal.y, expected.y, 1e-6);
+    cr_assert_float_eq(normal.z, expected.z, 1e-6);
+}
+
+Test(sphere_normals, normal_is_a_normalized_vector)
+{
+    t_sphere s = sphere();
+    double val = sqrt(3) / 3;
+    t_tuple point = {val, val, val, 1};
+    t_tuple normal = normal_at(s, point);
+    t_tuple normalized_normal = normalize(normal); 
+    cr_assert_float_eq(normal.x, normalized_normal.x, 1e-6);
+    cr_assert_float_eq(normal.y, normalized_normal.y, 1e-6);
+    cr_assert_float_eq(normal.z, normalized_normal.z, 1e-6);
+}
+
+Test(matrix_transformations, rotating_point_around_z_axis)
+{
+
+    t_tuple p = {0, 1, 0, 1};
+
+    t_matrix half_quarter = rotation_z(M_PI / 4);
+    t_matrix full_quarter = rotation_z(M_PI / 2);
+
+
+    t_tuple expected_half = {-sqrt(2)/2, sqrt(2)/2, 0, 1};
+    t_tuple expected_full = {-1, 0, 0, 1};
+    
+    t_tuple result_half = multiply_matrix_tuple(half_quarter, p);
+    t_tuple result_full = multiply_matrix_tuple(full_quarter, p);
+
+    cr_assert_float_eq(result_half.x, expected_half.x, 1e-6);
+    cr_assert_float_eq(result_half.y, expected_half.y, 1e-6);
+    cr_assert_float_eq(result_half.z, expected_half.z, 1e-6);
+
+    cr_assert_float_eq(result_full.x, expected_full.x, 1e-6);
+    cr_assert_float_eq(result_full.y, expected_full.y, 1e-6);
+    cr_assert_float_eq(result_full.z, expected_full.z, 1e-6);
+}
+
+
+Test(sphere_transformed_normals, normal_on_translated_sphere)
+{
+    t_sphere s = sphere();
+    set_transform(&s, translation(0, 1, 0));
+    t_tuple point = {0, 1.70711, -0.70711, 1};
+    t_tuple expected_normal = {0, 0.70711, -0.70711, 0};
+    t_tuple normal = normal_at(s, point);
+
+    cr_assert_float_eq(normal.x, expected_normal.x, 1e-5);
+    cr_assert_float_eq(normal.y, expected_normal.y, 1e-5);
+    cr_assert_float_eq(normal.z, expected_normal.z, 1e-5);
+}
+
+Test(sphere_transformed_normals, normal_on_transformed_sphere)
+{
+    t_sphere s = sphere();
+    t_matrix m = multiply_matrices(scaling(1, 0.5, 1), rotation_z(M_PI / 5));
+    set_transform(&s, m);
+    double sqrt2over2 = sqrt(2) / 2;
+    t_tuple point = {0, sqrt2over2, -sqrt2over2, 1};
+    t_tuple expected_normal = {0, 0.97014, -0.24254, 0};
+    t_tuple normal = normal_at(s, point);
+
+    cr_assert_float_eq(normal.x, expected_normal.x, 1e-5);
+    cr_assert_float_eq(normal.y, expected_normal.y, 1e-5);
+    cr_assert_float_eq(normal.z, expected_normal.z, 1e-5);
+}
+
+Test(reflection, vector_approaching_at_45_degrees)
+{
+    t_tuple v = {1, -1, 0, 0};
+    t_tuple n = {0, 1, 0, 0};
+    t_tuple expected = {1, 1, 0, 0};
+
+    t_tuple r = reflect(v, n);
+
+    cr_assert_float_eq(r.x, expected.x, 1e-6, "Expected x component: %f, but got: %f", expected.x, r.x);
+    cr_assert_float_eq(r.y, expected.y, 1e-6, "Expected y component: %f, but got: %f", expected.y, r.y);
+    cr_assert_float_eq(r.z, expected.z, 1e-6, "Expected z component: %f, but got: %f", expected.z, r.z);
+}
+Test(reflection, Reflecting_a_vector_off_a_slanted_surface)
+{
+    t_tuple v = {0, -1, 0, 0};
+    double sqrt2over2 = sqrt(2) / 2;
+    t_tuple n = {sqrt2over2, sqrt2over2, 0, 0};
+    t_tuple expected = {1, 0, 0, 0};
+
+    t_tuple r = reflect(v, n);
+
+    cr_assert_float_eq(r.x, expected.x, 1e-6, "Expected x component: %f, but got: %f", expected.x, r.x);
+    cr_assert_float_eq(r.y, expected.y, 1e-6, "Expected y component: %f, but got: %f", expected.y, r.y);
+    cr_assert_float_eq(r.z, expected.z, 1e-6, "Expected z component: %f, but got: %f", expected.z, r.z);
+}
+
+Test(light_attributes, point_light_has_position_intensity_and_color)
+{
+    t_vector position = {0, 0, 0};
+    double intensity = 1.0;      
+    int color[3] = {255, 255, 255};
+
+
+    t_light light = point_light(position, intensity, color);
+
+    cr_assert_eq(light.position.x, position.x, "Light position x did not match");
+    cr_assert_eq(light.position.y, position.y, "Light position y did not match");
+    cr_assert_eq(light.position.z, position.z, "Light position z did not match");
+    cr_assert_eq(light.intensity, intensity, "Light intensity did not match");
+    cr_assert_eq(light.color[0], color[0], "Light color red did not match");
+    cr_assert_eq(light.color[1], color[1], "Light color green did not match");
+    cr_assert_eq(light.color[2], color[2], "Light color blue did not match");
+}
+
+Test(default_material, material_properties)
+{
+    t_material m = material();
+
+    cr_assert_eq(m.color[0], 1, "Expected default color red component to be 1");
+    cr_assert_eq(m.color[1], 1, "Expected default color green component to be 1");
+    cr_assert_eq(m.color[2], 1, "Expected default color blue component to be 1");
+    cr_assert_float_eq(m.ambient, 0.1, 1e-6, "Expected default ambient to be 0.1");
+    cr_assert_float_eq(m.diffuse, 0.9, 1e-6, "Expected default diffuse to be 0.9");
+    cr_assert_float_eq(m.specular, 0.9, 1e-6, "Expected default specular to be 0.9");
+    cr_assert_float_eq(m.shininess, 200.0, 1e-6, "Expected default shininess to be 200.0");
+}
+
+Test(sphere_properties, sphere_has_default_material)
+{
+    t_sphere s = sphere();
+    t_material default_mat = material();
+
+    cr_assert_float_eq(s.material.ambient, default_mat.ambient, 1e-6, "Ambient property mismatch.");
+    cr_assert_float_eq(s.material.diffuse, default_mat.diffuse, 1e-6, "Diffuse property mismatch.");
+}
+
+Test(sphere_properties, sphere_can_be_assigned_material)
+{
+    t_sphere s = sphere();
+    t_material m = material();
+    m.ambient = 1;
+
+    s.material = m;
+
+    cr_assert_eq(s.material.ambient, m.ambient, "Failed to assign custom material to sphere.");
 }

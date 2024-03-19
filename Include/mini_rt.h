@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/19 11:47:59 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/19 14:28:25 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,10 +127,20 @@ typedef struct s_ray
 	t_tuple			direction;
 }					t_ray;
 
+typedef struct s_material
+{
+	int				color[3];
+	double			ambient;
+	double			diffuse;
+	double			specular;
+	double			shininess;
+}					t_material;
+
 typedef struct s_sphere
 {
 	t_tuple			center;
 	double			radius;
+	t_material		material;
 	t_matrix		transform;
 	int				color[3];
 }					t_sphere;
@@ -160,13 +170,19 @@ typedef struct s_vars
 {
 	void			*mlx;
 	void			*win;
-	t_img img; // Updated to use t_img structure
+	t_img			img;
 }					t_vars;
+
+
+
 t_intersection		*hit(t_intersections *xs);
+t_material			material(void);
 t_color				color(float red, float green, float blue);
 t_intersections		intersections(int count,
 						t_intersection *intersectionsArray);
 t_matrix			rotation_x(float radians);
+t_light				point_light(t_vector position, double intensity,
+						int color[3]);
 t_sphere			sphere(void);
 t_intersections		intersect(t_sphere *s, t_ray r);
 t_matrix			scaling(float x, float y, float z);
@@ -203,6 +219,8 @@ t_tuple				position(t_ray r, double t);
 t_color				hadarmard_product(t_color c, t_color b);
 t_color				multiply_color_scalar(t_color c, float scalar);
 t_color				subtract_colors(t_color c1, t_color c2);
+t_tuple				reflect(t_tuple incident, t_tuple normal);
+t_tuple				normal_at(t_sphere sphere, t_tuple p);
 t_color				add_colors(t_color c1, t_color c2);
 void				free_matrix(t_matrix *m);
 t_tuple				vector_to_tuple(t_vector v);
@@ -212,6 +230,7 @@ t_matrix			transpose_matrix(t_matrix matrix);
 t_matrix			submatrix(t_matrix matrix, int remove_row, int remove_col);
 float				minor(t_matrix matrix, int row, int col);
 float				cofactor(t_matrix matrix, int row, int col);
+t_matrix			rotation_z(float radians);
 float				determinant(t_matrix M);
 int					is_invertible(t_matrix A);
 t_matrix			inverse(t_matrix A);

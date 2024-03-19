@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/19 11:54:01 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/19 14:23:57 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -471,6 +471,25 @@ t_matrix rotation_y(float radians)
     return result;
 }
 
+t_matrix rotation_z(float radians)
+{
+    // Initialize elements to zero for creating a new matrix
+    float *elements = NULL; // Not directly using an array since create_matrix handles the allocation
+    
+    // Create a 4x4 matrix
+    t_matrix m = create_matrix(4, 4, elements);
+
+    // Set the rotation_z specific elements
+    m.elements[0 * m.cols + 0] = cosf(radians);
+    m.elements[0 * m.cols + 1] = -sinf(radians);
+    m.elements[1 * m.cols + 0] = sinf(radians);
+    m.elements[1 * m.cols + 1] = cosf(radians);
+    m.elements[2 * m.cols + 2] = 1;
+    m.elements[3 * m.cols + 3] = 1;
+
+    return m;
+}
+
 t_matrix shearing(float xy, float xz, float yx, float yz, float zx, float zy)
 {
     t_matrix result = {4, 4, malloc(16 * sizeof(float))};
@@ -518,6 +537,7 @@ t_sphere sphere()
     s.center = point(0, 0, 0);
     s.radius = 1;
     s.transform = identity_matrix();
+    s.material = material();
     return s;
 }
 
@@ -635,6 +655,52 @@ t_ray transform(t_ray ray, t_matrix m)
     return transformed_ray;
 }
 
+t_tuple    normal_at(t_sphere sphere, t_tuple p)
+{
+    t_tuple object_point = multiply_matrix_tuple(inverse(sphere.transform), p);\
+    t_tuple object_normal = substract_tuples(object_point, (t_tuple){sphere.center.x, sphere.center.y, sphere.center.z, 1});
+    t_tuple world_normal = multiply_matrix_tuple(transpose_matrix(inverse(sphere.transform)), object_normal);
+    
+    world_normal.w = 0;
+    return (normalize(world_normal));
+}
+
+t_tuple reflect(t_tuple incident, t_tuple normal)
+{
+    t_tuple result;
+    float dot_product = dot(incident, normal);
+    result.x = incident.x - 2 * dot_product * normal.x;
+    result.y = incident.y - 2 * dot_product * normal.y;
+    result.z = incident.z - 2 * dot_product * normal.z;
+    result.w  = 0;
+    return result;
+}
+t_light point_light(t_vector position, double intensity, int color[3])
+{
+    t_light light;
+    light.position = position;
+    light.intensity = intensity;
+    light.color[0] = color[0];
+    light.color[1] = color[1];
+    light.color[2] = color[2];
+    return light;
+}
+
+t_material material()
+{
+    t_material m;
+    m.color[0] = 1;
+    m.color[1] = 1;
+    m.color[2] = 1;
+    m.ambient = 0.1;
+    m.diffuse = 0.9;
+    m.specular = 0.9;
+    m.shininess = 200.0;
+    return m;
+}
+
+
+/*
 void render_sphere(t_vars *vars)
 {
     int x = 0; 
@@ -683,3 +749,6 @@ int main() {
     mlx_loop(vars.mlx);
     return (0);
 }
+
+*/
+
