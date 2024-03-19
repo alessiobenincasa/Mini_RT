@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/19 14:28:25 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/19 17:36:30 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,8 +173,6 @@ typedef struct s_vars
 	t_img			img;
 }					t_vars;
 
-
-
 t_intersection		*hit(t_intersections *xs);
 t_material			material(void);
 t_color				color(float red, float green, float blue);
@@ -210,6 +208,8 @@ int					tuple_equals(t_tuple a, t_tuple b);
 t_tuple				substract_tuples(t_tuple a, t_tuple b);
 t_tuple				add_tuples(t_tuple a, t_tuple b);
 int					equal(double a, double b);
+t_color				lighting(t_material m, t_light light, t_tuple position,
+						t_tuple eyev, t_tuple normalv);
 t_ray				transform(t_ray ray, t_matrix m);
 t_intersection		intersection(double t, t_sphere *object);
 t_tuple				point(double x, double y, double z);
@@ -240,5 +240,7 @@ t_matrix			shearing(float xy, float xz, float yx, float yz, float zx,
 t_ray				ray(t_tuple origin, t_tuple direction);
 void				my_mlx_pixel_put(t_vars *vars, int x, int y, int color);
 int					create_trgb(int t, int r, int g, int b);
+void				scale_color(int inputColor[3], float intensity,
+						float outputColor[3]);
 
 #endif

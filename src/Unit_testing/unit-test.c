@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 11:07:54 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/19 14:28:53 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/19 16:13:44 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1078,4 +1078,97 @@ Test(sphere_properties, sphere_can_be_assigned_material)
     s.material = m;
 
     cr_assert_eq(s.material.ambient, m.ambient, "Failed to assign custom material to sphere.");
+}
+
+Test(sphere_properties, sphere_material_assignment)
+{
+    t_sphere s = sphere();
+    t_material m = material();
+    m.ambient = 1.0;
+
+    s.material = m;
+
+    cr_assert_float_eq(s.material.ambient, m.ambient, 1e-6, "Failed to correctly assign custom material's ambient property to the sphere.");
+}
+
+Test(lighting_scenarios, lighting_with_eye_between_light_and_surface)
+{
+    t_material m = material();
+    t_tuple position = {0, 0, 0, 1};
+
+    t_tuple eyev = {0, 0, -1, 0};
+    t_tuple normalv = {0, 0, -1, 0};
+    t_light light = {
+        .position = {0, 0, -10},
+        .intensity = 1.0,
+        .color = {255, 255, 255}
+    };
+
+    t_color result = lighting(m, light, position, eyev, normalv);
+
+
+    t_color expected = {1.9f, 1.9f, 1.9f}; 
+    cr_assert_float_eq(result.red, expected.red, 1e-6, "Red component mismatch.");
+    cr_assert_float_eq(result.green, expected.green, 1e-6, "Green component mismatch.");
+    cr_assert_float_eq(result.blue, expected.blue, 1e-6, "Blue component mismatch.");
+}
+
+Test(lighting_scenarios, lighting_with_eye_opposite_surface_light_offset_45)
+{
+    t_material m = material();
+    t_tuple position = {0, 0, 0, 1};
+    t_tuple eyev = {0, 0, -1, 0};
+    t_tuple normalv = {0, 0, -1, 0};
+    t_light light = {
+        .position = {0, 10, -10},
+        .intensity = 1.0,
+        .color = {255, 255, 255}
+    };
+
+    t_color result = lighting(m, light, position, eyev, normalv);
+    t_color expected = {0.7364f, 0.7364f, 0.7364f};
+
+    cr_assert_float_eq(result.red, expected.red, 1e-4);
+    cr_assert_float_eq(result.green, expected.green, 1e-4);
+    cr_assert_float_eq(result.blue, expected.blue, 1e-4);
+}
+
+Test(lighting_scenarios, lighting_with_eye_in_path_of_reflection_vector)
+{
+    t_material m = material();
+    t_tuple position = {0, 0, 0, 1};
+    t_tuple eyev = {0, -sqrt(2)/2, -sqrt(2)/2, 0};
+    t_tuple normalv = {0, 0, -1, 0};
+    t_light light = {
+        .position = {0, 10, -10},
+        .intensity = 1.0,
+        .color = {255, 255, 255}
+    };
+
+    t_color result = lighting(m, light, position, eyev, normalv);
+    t_color expected = {1.6364f, 1.6364f, 1.6364f};
+
+    cr_assert_float_eq(result.red, expected.red, 1e-4);
+    cr_assert_float_eq(result.green, expected.green, 1e-4);
+    cr_assert_float_eq(result.blue, expected.blue, 1e-4);
+}
+
+Test(lighting_scenarios, lighting_with_light_behind_surface)
+{
+    t_material m = material();
+    t_tuple position = {0, 0, 0, 1};
+    t_tuple eyev = {0, 0, -1, 0};
+    t_tuple normalv = {0, 0, -1, 0};
+    t_light light = {
+        .position = {0, 0, 10},
+        .intensity = 1.0,
+        .color = {255, 255, 255}
+    };
+
+    t_color result = lighting(m, light, position, eyev, normalv);
+    t_color expected = {0.1f, 0.1f, 0.1f};
+
+    cr_assert_float_eq(result.red, expected.red, 1e-4);
+    cr_assert_float_eq(result.green, expected.green, 1e-4);
+    cr_assert_float_eq(result.blue, expected.blue, 1e-4);
 }

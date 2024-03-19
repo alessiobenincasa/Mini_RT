@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/19 14:23:57 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/19 17:37:33 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -596,6 +596,55 @@ t_intersections intersect(t_sphere *s, t_ray r)
     return xs;
 }
 
+// t_intersections intersect_tuple(t_sphere *s, t_ray r)
+// {
+//     t_matrix inverse_transform = inverse(s->transform);
+
+    
+//     t_ray transformed_ray = transform(r, inverse_transform);
+
+
+//     t_tuple sphere_to_ray = substract_tuples(transformed_ray.origin, s->center);
+
+//     double a = dot(transformed_ray.direction, transformed_ray.direction);
+//     double b = 2.0 * dot(transformed_ray.direction, sphere_to_ray);
+//     double c = dot(sphere_to_ray, sphere_to_ray) - (s->radius * s->radius);
+
+//     double discriminant = b * b - 4 * a * c;
+
+//     t_intersections xs;
+//     if (discriminant < 0) {
+//         xs.count = 0;
+//         xs.intersections = NULL;
+//     } else {
+//         xs.count = (discriminant == 0) ? 2 : 2;
+//         xs.intersections = malloc(xs.count * sizeof(t_intersection));
+//         if (xs.intersections == NULL) exit(EXIT_FAILURE);
+
+//         double root = sqrt(discriminant);
+
+//         double t1 = (-b - root) / (2 * a);
+//         double t2 = (-b + root) / (2 * a);
+
+//         if (t1 > t2) {
+//             double temp = t1;
+//             t1 = t2;
+//             t2 = temp;
+//         }
+
+//         xs.intersections[0].t = t1;
+//         xs.intersections[0].sphere = s;
+
+//         if (discriminant == 0) {
+//             xs.intersections[1].t = t1;
+//         } else {
+//             xs.intersections[1].t = t2;
+//         }
+//         xs.intersections[1].sphere = s;
+//     }
+//     return xs;
+// }
+
 
 
 t_intersection intersection(double t, t_sphere *object)
@@ -657,7 +706,7 @@ t_ray transform(t_ray ray, t_matrix m)
 
 t_tuple    normal_at(t_sphere sphere, t_tuple p)
 {
-    t_tuple object_point = multiply_matrix_tuple(inverse(sphere.transform), p);\
+    t_tuple object_point = multiply_matrix_tuple(inverse(sphere.transform), p);
     t_tuple object_normal = substract_tuples(object_point, (t_tuple){sphere.center.x, sphere.center.y, sphere.center.z, 1});
     t_tuple world_normal = multiply_matrix_tuple(transpose_matrix(inverse(sphere.transform)), object_normal);
     
@@ -699,56 +748,128 @@ t_material material()
     return m;
 }
 
-
-/*
-void render_sphere(t_vars *vars)
-{
-    int x = 0; 
-    int y = 0;
-    int canvas_pixel = 1200;
-    double wall_size = 0.3;
-    t_sphere s = sphere();
-    double pixel_size = wall_size / canvas_pixel;
-    double wall_z = -4.5;
-    double half = wall_size / 2.0;
-    int color = 0x00FF0000; 
-
-    while (y < canvas_pixel)
-    {
-        double world_y = half - pixel_size * y - (wall_size / 2.0 - canvas_pixel / 2.0 * pixel_size);
-        x = 0;
-        while (x < canvas_pixel)
-        {
-            double world_x = -half + pixel_size * x + (wall_size / 2.0 - canvas_pixel / 2.0 * pixel_size);
-            t_tuple pixel_position = {world_x, world_y, wall_z, 1};
-            t_tuple ray_direction = normalize(substract_tuples(pixel_position, (t_tuple){0, 0, -5, 1}));
-            t_ray r = ray((t_tuple){0, 0, -5, 1}, ray_direction);
-            t_intersections result = intersect(&s, r);
-            t_intersection *intersection = hit(&result);
-            if (intersection != NULL)
-                my_mlx_pixel_put(vars, x, y, color);
-            x++;
-        }
-        y++;
+void scale_color(int inputColor[3], float intensity, float outputColor[3]) {
+    int i = 0;
+    while (i < 3) {
+        outputColor[i] = (inputColor[i] / 255.0f) * intensity;
+        i++;
     }
 }
 
+t_color lighting(t_material m, t_light light, t_tuple position, t_tuple eyev, t_tuple normalv)
+{
+    float effective_color[3];
+    scale_color(light.color, light.intensity, effective_color);
 
-int main() {
-    t_vars  vars;
 
-    vars.mlx = mlx_init();
-    vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniLibX - Sphere Rendering");
-    vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
-    vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
-                                     &vars.img.endian);
+    t_color ambient = {
+        effective_color[0] * m.ambient,
+        effective_color[1] * m.ambient,
+        effective_color[2] * m.ambient
+    };
 
-    render_sphere(&vars);
+    t_tuple lightv = normalize((t_tuple){
+        light.position.x - position.x,
+        light.position.y - position.y,
+        light.position.z - position.z,
+        0
+    });
 
-    mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
-    mlx_loop(vars.mlx);
-    return (0);
+    float light_dot_normal = dot(lightv, normalv);
+    t_color diffuse = {0, 0, 0}, specular = {0, 0, 0};
+
+    if (light_dot_normal > 0)
+    {
+
+        diffuse.red = effective_color[0] * m.diffuse * light_dot_normal;
+        diffuse.green = effective_color[1] * m.diffuse * light_dot_normal;
+        diffuse.blue = effective_color[2] * m.diffuse * light_dot_normal;
+
+        
+        t_tuple reflectv = reflect((t_tuple){-lightv.x, -lightv.y, -lightv.z, 0}, normalv);
+        float reflect_dot_eye = dot(reflectv, eyev);
+
+        if (reflect_dot_eye > 0) {
+            float factor = powf(reflect_dot_eye, m.shininess);
+            specular.red = light.intensity * m.specular * factor;
+            specular.green = light.intensity * m.specular * factor;
+            specular.blue = light.intensity * m.specular * factor;
+        }
+    }
+
+    t_color result = {
+        ambient.red + diffuse.red + specular.red,
+        ambient.green + diffuse.green + specular.green,
+        ambient.blue + diffuse.blue + specular.blue
+    };
+
+    return result;
+
 }
 
-*/
+// void render_sphere(t_vars *vars)
+// {
+//     int x = 0; 
+//     int y = 0;
+//     int canvas_pixel = 1200;
+//     double wall_size = 0.3;
+//     t_sphere s = sphere();
+//     double pixel_size = wall_size / canvas_pixel;
+//     double wall_z = -4.5;
+//     double half = wall_size / 2.0;
+//     int color = 0x00FF0000; 
+//     t_light light;
+    
+//     light.position = (t_tuple){10, 10, 10, 0.0};
+//     light.color[0] = 1;
+//     light.color[1] = 1;
+//     light.color[2] = 1;
+
+//     while (y < canvas_pixel)
+//     {
+//         double world_y = half - pixel_size * y - (wall_size / 2.0 - canvas_pixel / 2.0 * pixel_size);
+//         x = 0;
+//         while (x < canvas_pixel)
+//         {
+//             double world_x = -half + pixel_size * x + (wall_size / 2.0 - canvas_pixel / 2.0 * pixel_size);
+//             t_tuple pixel_position = {world_x, world_y, wall_z, 1};
+//             t_tuple ray_direction = normalize(substract_tuples(pixel_position, (t_tuple){0, 0, -5.0, 1}));
+//             t_ray r = ray((t_tuple){0, 0, -5.0, 1}, ray_direction);
+//             t_intersections result = intersect(&s, r);
+//             t_intersection *intersection = hit(&result);
+//             if (intersection != NULL)
+//             {
+//                 // t_tuple minus_ray = negate_tuple(ray_direction);
+//                 // t_tuple normal = normal_at(s, );
+//                 // if (lighting(s.material, light, light.position, minus_ray, normal) != color)
+//                 // {
+                    
+//                 // }
+//                 my_mlx_pixel_put(vars, x, y, color);
+//             }
+//             x++;
+//         }
+//         y++;
+//     }
+// }
+
+
+
+// int main()
+// {
+//     t_vars  vars;
+
+//     vars.mlx = mlx_init();
+//     vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniLibX - Sphere Rendering");
+//     vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
+//     vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
+//                                      &vars.img.endian);
+//     render_sphere(&vars);
+//     mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
+//     mlx_loop(vars.mlx);
+//     return (0);
+// }
+
+
+
 
