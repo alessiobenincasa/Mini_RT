@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/19 21:29:49 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/19 21:39:46 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -830,8 +830,8 @@ void render_sphere(t_vars *vars)
     double wall_size = 0.3;
     t_sphere s = sphere();
     s.material.color[0] = 1;
-    s.material.color[1] = 0;
-    s.material.color[2] = 0;
+    s.material.color[1] = 0.2;
+    s.material.color[2] = 1;
     double pixel_size = wall_size / canvas_pixel;
     double wall_z = -4.5;
     double half = wall_size / 2.0;
@@ -839,8 +839,8 @@ void render_sphere(t_vars *vars)
     light.position = (t_vector){-10, 10, -10};
     light.intensity = 1.0;
     light.color[0] = 255;
-    light.color[1] = 255;
-    light.color[2] = 255;
+    light.color[1] = 0;
+    light.color[2] = 0;
 
     while (y < canvas_pixel)
     {
