@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/18 23:16:34 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/19 02:00:30 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -738,4 +738,55 @@ t_ray transform(t_ray ray, t_matrix m)
 }
 
 
+void draw_circle(void *mlx, void *win, int x, int y, int radius, int color)
+{
+    int dx, dy, d;
 
+    dx = 0;
+    dy = radius;
+    d = 1 - radius;
+    
+    while (dy > dx)
+    {
+        if (d < 0)
+            d += 2 * dx + 3;
+        else
+        {
+            d += 2 * (dx - dy) + 5;
+            dy--;
+        }
+        dx++;
+
+        mlx_pixel_put(mlx, win, x + dx, y + dy, color);
+        mlx_pixel_put(mlx, win, x - dx, y + dy, color);
+        mlx_pixel_put(mlx, win, x + dx, y - dy, color);
+        mlx_pixel_put(mlx, win, x - dx, y - dy, color);
+        mlx_pixel_put(mlx, win, x + dy, y + dx, color);
+        mlx_pixel_put(mlx, win, x - dy, y + dx, color);
+        mlx_pixel_put(mlx, win, x + dy, y - dx, color);
+        mlx_pixel_put(mlx, win, x - dy, y - dx, color);
+    }
+}
+
+void draw_sphere(void *mlx, void *win, int x, int y, int radius, int color)
+{
+    for (int r = radius; r > 0; r -= 5)
+    {
+        draw_circle(mlx, win, x, y, r, color);
+    }
+}
+
+int main(void)
+{
+    void *mlx;
+    void *win;
+
+    mlx = mlx_init();
+    win = mlx_new_window(mlx, WIDTH, HEIGHT, "Red Sphere");
+
+    draw_sphere(mlx, win, WIDTH / 2, HEIGHT / 2, 100, 0xFF0000); // Red color
+
+    mlx_loop(mlx);
+
+    return 0;
+}

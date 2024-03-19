@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/18 23:08:56 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/19 01:54:11 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # define MLX_ERROR 1
 # define M_PI 3.14159265358979323846
 # define EPSILON 0.00001
+# define PI 3.14159265358979323846
 
 typedef struct s_color
 {
@@ -85,23 +86,6 @@ typedef struct s_cylinder
 	int color[3]; // RGB
 }					t_cylinder;
 
-typedef struct s_img
-{
-	void			*img_ptr;
-	char			*addr;
-	int				bits_per_pixel;
-	int				line_length;
-	int				endian;
-}					t_img;
-
-typedef struct s_vars
-{
-	void			*mlx;
-	void			*win;
-	t_img			img;
-	t_camera		camera;
-}					t_vars;
-
 typedef struct s_tuple
 {
 	double x, y, z, w;
@@ -145,6 +129,7 @@ typedef struct s_sphere
 	t_tuple			center;
 	double			radius;
 	t_matrix		transform;
+	int				color[3];
 }					t_sphere;
 
 typedef struct s_intersection
@@ -159,6 +144,21 @@ typedef struct s_intersections
 	int				count;
 }					t_intersections;
 
+typedef struct s_img
+{
+	void			*img_ptr;
+	char			*addr;
+	int				bits_per_pixel;
+	int				line_length;
+	int				endian;
+}					t_img;
+
+typedef struct s_vars
+{
+	void			*mlx;
+	void			*win;
+	t_img img; // Updated to use t_img structure
+}					t_vars;
 t_intersection		*hit(t_intersections *xs);
 t_color				color(float red, float green, float blue);
 t_intersections		intersections(int count,
@@ -171,6 +171,7 @@ t_matrix			multiply_matrices(t_matrix a, t_matrix b);
 int					matrices_equal(t_matrix a, t_matrix b);
 float				get_element(t_matrix m, int row, int col);
 t_matrix			create_matrix(int rows, int cols, float elements[]);
+void				convert_and_display_canvas(t_vars *vars, t_canvas canvas);
 t_color				pixel_at(t_canvas c, int x, int y);
 void				write_pixel(t_canvas *c, int x, int y, t_color color);
 t_canvas			create_canvas(int width, int height);
@@ -179,6 +180,7 @@ void				set_transform(t_sphere *s, t_matrix t);
 t_projectile		tick(t_environnement env, t_projectile proj);
 t_vector			cross(t_tuple v, t_tuple w);
 double				dot(t_tuple a, t_tuple b);
+int					make_color(float percent, int flag, int r, int g);
 double				magnitude(t_tuple t);
 t_tuple				normalize(t_tuple v);
 t_matrix			rotation_y(float radians);
@@ -214,5 +216,7 @@ t_matrix			translation(float x, float y, float z);
 t_matrix			shearing(float xy, float xz, float yx, float yz, float zx,
 						float zy);
 t_ray				ray(t_tuple origin, t_tuple direction);
+void				my_mlx_pixel_put(t_vars *vars, int x, int y, int color);
+int					create_trgb(int t, int r, int g, int b);
 
 #endif
