@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/19 02:00:30 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/19 03:50:58 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,7 +250,7 @@ t_projectile tick(t_environnement env, t_projectile proj)
     return (t_projectile){position, velocity};
 }
 
-t_canvas create_canvas(int width, int height)
+t_canvas canvas(int width, int height)
 {
     t_canvas c;
     int i = 0;
@@ -737,56 +737,45 @@ t_ray transform(t_ray ray, t_matrix m)
     return transformed_ray;
 }
 
+void render_sphere(t_vars *vars) {
+    int x, y;
+    int canvas_pixel = 100; // Canvas size in pixels
+    double wall_size = -1.0; // Reduced wall size for a larger appearance of the sphere
+    t_sphere s = sphere(); // Your sphere initialization
+    double pixel_size = wall_size / canvas_pixel; // Pixel size in world units
+    double wall_z = -3; // Closer wall position for a larger appearance
+    double half = wall_size / 2.0;
+    int color = 0x00FF0000; // Red color
 
-void draw_circle(void *mlx, void *win, int x, int y, int radius, int color)
-{
-    int dx, dy, d;
-
-    dx = 0;
-    dy = radius;
-    d = 1 - radius;
-    
-    while (dy > dx)
-    {
-        if (d < 0)
-            d += 2 * dx + 3;
-        else
-        {
-            d += 2 * (dx - dy) + 5;
-            dy--;
+    for (y = 0; y < canvas_pixel; y++) {
+        double world_y = half - pixel_size * y - (wall_size / 2.0 - canvas_pixel / 2.0 * pixel_size);
+        for (x = 0; x < canvas_pixel; x++) {
+            double world_x = -half + pixel_size * x + (wall_size / 2.0 - canvas_pixel / 2.0 * pixel_size);
+            t_tuple pixel_position = {world_x, world_y, wall_z, 1};
+            t_tuple ray_direction = normalize(substract_tuples(pixel_position, (t_tuple){0, 0, -5, 1}));
+            t_ray r = ray((t_tuple){0, 0, -5, 1}, ray_direction);
+            t_intersections result = intersect(&s, r);
+            t_intersection *intersection = hit(&result);
+            if (intersection != NULL) {
+                my_mlx_pixel_put(vars, x, y, color);
+            }
         }
-        dx++;
-
-        mlx_pixel_put(mlx, win, x + dx, y + dy, color);
-        mlx_pixel_put(mlx, win, x - dx, y + dy, color);
-        mlx_pixel_put(mlx, win, x + dx, y - dy, color);
-        mlx_pixel_put(mlx, win, x - dx, y - dy, color);
-        mlx_pixel_put(mlx, win, x + dy, y + dx, color);
-        mlx_pixel_put(mlx, win, x - dy, y + dx, color);
-        mlx_pixel_put(mlx, win, x + dy, y - dx, color);
-        mlx_pixel_put(mlx, win, x - dy, y - dx, color);
     }
 }
 
-void draw_sphere(void *mlx, void *win, int x, int y, int radius, int color)
-{
-    for (int r = radius; r > 0; r -= 5)
-    {
-        draw_circle(mlx, win, x, y, r, color);
-    }
-}
 
-int main(void)
-{
-    void *mlx;
-    void *win;
+int main() {
+    t_vars  vars;
 
-    mlx = mlx_init();
-    win = mlx_new_window(mlx, WIDTH, HEIGHT, "Red Sphere");
+    vars.mlx = mlx_init();
+    vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniLibX - Sphere Rendering");
+    vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
+    vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
+                                     &vars.img.endian);
 
-    draw_sphere(mlx, win, WIDTH / 2, HEIGHT / 2, 100, 0xFF0000); // Red color
+    render_sphere(&vars);
 
-    mlx_loop(mlx);
-
-    return 0;
+    mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
+    mlx_loop(vars.mlx);
+    return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/19 01:54:11 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/19 03:45:38 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@
 # define M_PI 3.14159265358979323846
 # define EPSILON 0.00001
 # define PI 3.14159265358979323846
+# define HALF (WIDTH / 2)
+# define PIXEL_SIZE 1
+# define WALL_Z 10
 
 typedef struct s_color
 {
@@ -174,7 +177,7 @@ t_matrix			create_matrix(int rows, int cols, float elements[]);
 void				convert_and_display_canvas(t_vars *vars, t_canvas canvas);
 t_color				pixel_at(t_canvas c, int x, int y);
 void				write_pixel(t_canvas *c, int x, int y, t_color color);
-t_canvas			create_canvas(int width, int height);
+t_canvas			canvas(int width, int height);
 t_vector			tuple_to_vector(t_tuple t);
 void				set_transform(t_sphere *s, t_matrix t);
 t_projectile		tick(t_environnement env, t_projectile proj);
