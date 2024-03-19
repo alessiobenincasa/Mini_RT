@@ -6,7 +6,7 @@
 #    By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/08 16:18:07 by albeninc          #+#    #+#              #
-#    Updated: 2024/03/18 16:59:14 by albeninc         ###   ########.fr        #
+#    Updated: 2024/03/19 23:08:01 by albeninc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ _WHITE=$'\033[37m'
 
 SRCS_DIR		=	src/Engine
 SRCS			=	$(shell find $(SRCS_DIR) -name '*.c')
-MAIN_SRCS		=	$(SRCS_DIR)/main.c
+MAIN_SRCS		=	$(SRCS_DIR)/main.c /world.c
 NAME			= 	MiniRT
 RM				= 	rm -rf
 CC				=	gcc $(CFLAGS)

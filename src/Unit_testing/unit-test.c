@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 11:07:54 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/19 16:13:44 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/19 23:30:37 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1172,3 +1172,15 @@ Test(lighting_scenarios, lighting_with_light_behind_surface)
     cr_assert_float_eq(result.green, expected.green, 1e-4);
     cr_assert_float_eq(result.blue, expected.blue, 1e-4);
 }
+
+Test(world_tests, creating_a_world)
+{
+
+    t_world w = world();
+
+    cr_assert_null(w.objects, "World should contain no objects upon initialization.");
+    cr_assert_eq(w.object_count, 0, "World's object count should be 0 upon initialization.");
+
+    cr_assert_null(w.light, "World should have no light source upon initialization.");
+}
+

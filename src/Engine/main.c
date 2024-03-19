@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/19 21:39:46 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/19 23:31:58 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -473,13 +473,10 @@ t_matrix rotation_y(float radians)
 
 t_matrix rotation_z(float radians)
 {
-    // Initialize elements to zero for creating a new matrix
-    float *elements = NULL; // Not directly using an array since create_matrix handles the allocation
+    float *elements = NULL;
     
-    // Create a 4x4 matrix
     t_matrix m = create_matrix(4, 4, elements);
 
-    // Set the rotation_z specific elements
     m.elements[0 * m.cols + 0] = cosf(radians);
     m.elements[0 * m.cols + 1] = -sinf(radians);
     m.elements[1 * m.cols + 0] = sinf(radians);
@@ -595,56 +592,6 @@ t_intersections intersect(t_sphere *s, t_ray r)
     }
     return xs;
 }
-
-// t_intersections intersect_tuple(t_sphere *s, t_ray r)
-// {
-//     t_matrix inverse_transform = inverse(s->transform);
-
-    
-//     t_ray transformed_ray = transform(r, inverse_transform);
-
-
-//     t_tuple sphere_to_ray = substract_tuples(transformed_ray.origin, s->center);
-
-//     double a = dot(transformed_ray.direction, transformed_ray.direction);
-//     double b = 2.0 * dot(transformed_ray.direction, sphere_to_ray);
-//     double c = dot(sphere_to_ray, sphere_to_ray) - (s->radius * s->radius);
-
-//     double discriminant = b * b - 4 * a * c;
-
-//     t_intersections xs;
-//     if (discriminant < 0) {
-//         xs.count = 0;
-//         xs.intersections = NULL;
-//     } else {
-//         xs.count = (discriminant == 0) ? 2 : 2;
-//         xs.intersections = malloc(xs.count * sizeof(t_intersection));
-//         if (xs.intersections == NULL) exit(EXIT_FAILURE);
-
-//         double root = sqrt(discriminant);
-
-//         double t1 = (-b - root) / (2 * a);
-//         double t2 = (-b + root) / (2 * a);
-
-//         if (t1 > t2) {
-//             double temp = t1;
-//             t1 = t2;
-//             t2 = temp;
-//         }
-
-//         xs.intersections[0].t = t1;
-//         xs.intersections[0].sphere = s;
-
-//         if (discriminant == 0) {
-//             xs.intersections[1].t = t1;
-//         } else {
-//             xs.intersections[1].t = t2;
-//         }
-//         xs.intersections[1].sphere = s;
-//     }
-//     return xs;
-// }
-
 
 
 t_intersection intersection(double t, t_sphere *object)
@@ -870,19 +817,21 @@ void render_sphere(t_vars *vars)
 }
 
 
-int main() {
-    t_vars  vars;
+// int main() {
+//     t_vars  vars;
 
-    vars.mlx = mlx_init();
-    vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniLibX - Sphere Rendering");
-    vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
-    vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
-                                     &vars.img.endian);
+//     vars.mlx = mlx_init();
+//     vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniLibX - Sphere Rendering");
+//     vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
+//     vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
+//                                      &vars.img.endian);
 
-    render_sphere(&vars);
+//     render_sphere(&vars);
 
-    mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
-    mlx_loop(vars.mlx);
-    return (0);
-}
+//     mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
+//     mlx_loop(vars.mlx);
+//     return (0);
+// }
+
+
 
