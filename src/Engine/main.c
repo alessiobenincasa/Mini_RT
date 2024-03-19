@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/19 04:06:54 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/19 11:54:01 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -634,10 +634,12 @@ t_ray transform(t_ray ray, t_matrix m)
     transformed_ray.direction = multiply_matrix_tuple(m, ray.direction);
     return transformed_ray;
 }
-/*
-void render_sphere(t_vars *vars) {
-    int x, y;
-    int canvas_pixel = 500;
+
+void render_sphere(t_vars *vars)
+{
+    int x = 0; 
+    int y = 0;
+    int canvas_pixel = 1200;
     double wall_size = 0.3;
     t_sphere s = sphere();
     double pixel_size = wall_size / canvas_pixel;
@@ -645,19 +647,23 @@ void render_sphere(t_vars *vars) {
     double half = wall_size / 2.0;
     int color = 0x00FF0000; 
 
-    for (y = 0; y < canvas_pixel; y++) {
+    while (y < canvas_pixel)
+    {
         double world_y = half - pixel_size * y - (wall_size / 2.0 - canvas_pixel / 2.0 * pixel_size);
-        for (x = 0; x < canvas_pixel; x++) {
+        x = 0;
+        while (x < canvas_pixel)
+        {
             double world_x = -half + pixel_size * x + (wall_size / 2.0 - canvas_pixel / 2.0 * pixel_size);
             t_tuple pixel_position = {world_x, world_y, wall_z, 1};
             t_tuple ray_direction = normalize(substract_tuples(pixel_position, (t_tuple){0, 0, -5, 1}));
             t_ray r = ray((t_tuple){0, 0, -5, 1}, ray_direction);
             t_intersections result = intersect(&s, r);
             t_intersection *intersection = hit(&result);
-            if (intersection != NULL) {
+            if (intersection != NULL)
                 my_mlx_pixel_put(vars, x, y, color);
-            }
+            x++;
         }
+        y++;
     }
 }
 
@@ -677,5 +683,3 @@ int main() {
     mlx_loop(vars.mlx);
     return (0);
 }
-
-*/

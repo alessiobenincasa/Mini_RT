@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/19 03:57:56 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/19 11:47:59 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@
 # include <string.h>
 # include <unistd.h>
 
-# define WIDTH 500
-# define HEIGHT 500
+# define WIDTH 1200
+# define HEIGHT 1200
 # define MLX_ERROR 1
 # define M_PI 3.14159265358979323846
 # define EPSILON 0.00001
