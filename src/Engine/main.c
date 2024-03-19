@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/19 03:52:28 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/19 03:58:03 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -739,7 +739,7 @@ t_ray transform(t_ray ray, t_matrix m)
 
 void render_sphere(t_vars *vars) {
     int x, y;
-    int canvas_pixel = 100;
+    int canvas_pixel = 500;
     double wall_size = -1.0;
     t_sphere s = sphere();
     double pixel_size = wall_size / canvas_pixel;
