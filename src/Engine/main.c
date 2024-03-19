@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/19 17:37:33 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/19 21:29:49 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -807,69 +807,82 @@ t_color lighting(t_material m, t_light light, t_tuple position, t_tuple eyev, t_
 
 }
 
-// void render_sphere(t_vars *vars)
-// {
-//     int x = 0; 
-//     int y = 0;
-//     int canvas_pixel = 1200;
-//     double wall_size = 0.3;
-//     t_sphere s = sphere();
-//     double pixel_size = wall_size / canvas_pixel;
-//     double wall_z = -4.5;
-//     double half = wall_size / 2.0;
-//     int color = 0x00FF0000; 
-//     t_light light;
-    
-//     light.position = (t_tuple){10, 10, 10, 0.0};
-//     light.color[0] = 1;
-//     light.color[1] = 1;
-//     light.color[2] = 1;
 
-//     while (y < canvas_pixel)
-//     {
-//         double world_y = half - pixel_size * y - (wall_size / 2.0 - canvas_pixel / 2.0 * pixel_size);
-//         x = 0;
-//         while (x < canvas_pixel)
-//         {
-//             double world_x = -half + pixel_size * x + (wall_size / 2.0 - canvas_pixel / 2.0 * pixel_size);
-//             t_tuple pixel_position = {world_x, world_y, wall_z, 1};
-//             t_tuple ray_direction = normalize(substract_tuples(pixel_position, (t_tuple){0, 0, -5.0, 1}));
-//             t_ray r = ray((t_tuple){0, 0, -5.0, 1}, ray_direction);
-//             t_intersections result = intersect(&s, r);
-//             t_intersection *intersection = hit(&result);
-//             if (intersection != NULL)
-//             {
-//                 // t_tuple minus_ray = negate_tuple(ray_direction);
-//                 // t_tuple normal = normal_at(s, );
-//                 // if (lighting(s.material, light, light.position, minus_ray, normal) != color)
-//                 // {
-                    
-//                 // }
-//                 my_mlx_pixel_put(vars, x, y, color);
-//             }
-//             x++;
-//         }
-//         y++;
-//     }
-// }
+int convert_color_to_int(t_color color)
+{
+    int red = (int)(color.red * 255);
+    int green = (int)(color.green * 255);
+    int blue = (int)(color.blue * 255);
 
+    red = red < 0 ? 0 : (red > 255 ? 255 : red);
+    green = green < 0 ? 0 : (green > 255 ? 255 : green);
+    blue = blue < 0 ? 0 : (blue > 255 ? 255 : blue);
 
+    int combined_color = (red << 16) | (green << 8) | blue;
+    return combined_color;
+}
 
-// int main()
-// {
-//     t_vars  vars;
+void render_sphere(t_vars *vars)
+{
+    int x = 0; 
+    int y = 0;
+    int canvas_pixel = 1200;
+    double wall_size = 0.3;
+    t_sphere s = sphere();
+    s.material.color[0] = 1;
+    s.material.color[1] = 0;
+    s.material.color[2] = 0;
+    double pixel_size = wall_size / canvas_pixel;
+    double wall_z = -4.5;
+    double half = wall_size / 2.0;
+    t_light light;
+    light.position = (t_vector){-10, 10, -10};
+    light.intensity = 1.0;
+    light.color[0] = 255;
+    light.color[1] = 255;
+    light.color[2] = 255;
 
-//     vars.mlx = mlx_init();
-//     vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniLibX - Sphere Rendering");
-//     vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
-//     vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
-//                                      &vars.img.endian);
-//     render_sphere(&vars);
-//     mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
-//     mlx_loop(vars.mlx);
-//     return (0);
-// }
-
+    while (y < canvas_pixel)
+    {
+        double world_y = half - pixel_size * y - (wall_size / 2.0 - canvas_pixel / 2.0 * pixel_size);
+        x = 0;
+        while (x < canvas_pixel)
+        {
+            double world_x = -half + pixel_size * x + (wall_size / 2.0 - canvas_pixel / 2.0 * pixel_size);
+            t_tuple pixel_position = {world_x, world_y, wall_z, 1};
+            t_tuple ray_direction = normalize(substract_tuples(pixel_position, (t_tuple){0, 0, -5, 1}));
+            t_ray r = ray((t_tuple){0, 0, -5, 1}, ray_direction);
+            t_intersections result = intersect(&s, r);
+            t_intersection *intersection = hit(&result);
+            if (intersection != NULL)
+            {
+                t_tuple hit_point = position(r, intersection->t);
+                t_tuple normal = normal_at(s, hit_point);
+                t_tuple eye = negate_tuple(ray_direction);
+                t_color pixel_color = lighting(s.material, light, hit_point, eye, normal);
+                int final_color = convert_color_to_int(pixel_color);
+                my_mlx_pixel_put(vars, x, y, final_color);
+            }
+            x++;
+        }
+        y++;
+    }
+}
 
 
+int main() {
+    t_vars  vars;
+
+    vars.mlx = mlx_init();
+    vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniLibX - Sphere Rendering");
+    vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
+    vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
+                                     &vars.img.endian);
+
+    render_sphere(&vars);
+
+    mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
+    mlx_loop(vars.mlx);
+    return (0);
+}
 
