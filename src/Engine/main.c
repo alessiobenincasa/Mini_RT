@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/19 03:50:58 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/19 03:52:28 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -739,13 +739,13 @@ t_ray transform(t_ray ray, t_matrix m)
 
 void render_sphere(t_vars *vars) {
     int x, y;
-    int canvas_pixel = 100; // Canvas size in pixels
-    double wall_size = -1.0; // Reduced wall size for a larger appearance of the sphere
-    t_sphere s = sphere(); // Your sphere initialization
-    double pixel_size = wall_size / canvas_pixel; // Pixel size in world units
-    double wall_z = -3; // Closer wall position for a larger appearance
+    int canvas_pixel = 100;
+    double wall_size = -1.0;
+    t_sphere s = sphere();
+    double pixel_size = wall_size / canvas_pixel;
+    double wall_z = -3;
     double half = wall_size / 2.0;
-    int color = 0x00FF0000; // Red color
+    int color = 0x00FF0000; 
 
     for (y = 0; y < canvas_pixel; y++) {
         double world_y = half - pixel_size * y - (wall_size / 2.0 - canvas_pixel / 2.0 * pixel_size);
