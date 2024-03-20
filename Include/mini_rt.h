@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/20 11:20:04 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/20 21:22:50 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,15 +186,30 @@ typedef struct s_world
 	t_light			*light;
 }					t_world;
 
+typedef struct s_comps
+{
+	double			t;
+	t_sphere		*sphere;
+	t_tuple			point;
+	t_tuple			eyev;
+	t_tuple			normalv;
+	int				inside;
+
+}					t_comps;
+
 t_intersection		*hit(t_intersections *xs);
 int					compare_intersection_t(const void *a, const void *b);
 t_intersections		intersect_world(t_world *world, t_ray r);
 t_world				world(void);
 t_material			material(void);
+t_color				shade_hit(t_world world, t_comps comps);
 t_color				color(float red, float green, float blue);
 t_intersections		intersections(int count,
 						t_intersection *intersectionsArray);
 t_matrix			rotation_x(float radians);
+int					convert_color_to_int(t_color color);
+t_comps				prepare_computations(t_intersection intersection,
+						t_ray ray);
 t_light				point_light(t_vector position, double intensity,
 						int color[3]);
 t_sphere			sphere(void);
@@ -258,5 +273,6 @@ void				my_mlx_pixel_put(t_vars *vars, int x, int y, int color);
 int					create_trgb(int t, int r, int g, int b);
 void				scale_color(int inputColor[3], float intensity,
 						float outputColor[3]);
+t_world				default_world(void);
 
 #endif
