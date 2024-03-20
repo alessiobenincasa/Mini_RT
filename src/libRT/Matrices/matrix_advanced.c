@@ -1,0 +1,84 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   matrix_advanced.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/19 15:35:43 by svolodin          #+#    #+#             */
+/*   Updated: 2024/03/19 16:00:11 by svolodin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "mini_rt.h"
+
+t_matrix	multiply_matrices(t_matrix a, t_matrix b)
+{
+	t_matrix	c;
+	int			i;
+	int			j;
+	int			k;
+	float		sum;
+
+	if (a.cols != b.rows)
+		return (create_matrix(0, 0, NULL));
+	c = create_matrix(a.rows, b.cols, NULL);
+	i = -1;
+	while (++i < a.rows)
+	{
+		j = -1;
+		while (++j < b.cols)
+		{
+			sum = 0;
+			k = -1;
+			while (++k < a.cols)
+			{
+				sum += a.elements[i * a.cols + k] * b.elements[k * b.cols + j];
+			}
+			c.elements[i * c.cols + j] = sum;
+		}
+	}
+	return (c);
+}
+
+t_matrix inverse(t_matrix A)
+{
+    float det = determinant(A);
+    if (det == 0)
+        exit(EXIT_FAILURE);
+
+    t_matrix B = { .rows = A.rows, .cols = A.cols, .elements = malloc(A.rows * A.cols * sizeof(float)) };
+    int i = 0;
+    while (i < A.rows)
+    {
+        int j = 0;
+        while (j < A.cols)
+        {
+            float cof = cofactor(A, i, j);
+            B.elements[j * B.cols + i] = cof / det;
+            j++;
+        }
+        i++;
+    }
+    return B;
+}
+
+t_matrix	identity_matrix(void)
+{
+	float	elements[16] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
+
+	return (create_matrix(4, 4, elements));
+}
+
+
+t_tuple multiply_matrix_tuple(t_matrix m, t_tuple t)
+{
+    float elements[4] = {t.x, t.y, t.z, t.w};
+    t_matrix result = multiply_matrices(m, create_matrix(4, 1, elements));
+    return tuple(result.elements[0], result.elements[1], result.elements[2], result.elements[3]);
+}
+
+int is_invertible(t_matrix A)
+{
+    return determinant(A) != 0;
+}

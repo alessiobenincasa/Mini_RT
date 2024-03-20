@@ -3,15 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   mini_rt.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/19 14:28:25 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/20 15:26:44 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINI_RT_H
 # define MINI_RT_H
+
+//*--------------------- 📚 𝙇𝙄𝘽𝙍𝘼𝙍𝙄𝙀𝙎 📚------------------------*//
 
 # include "../minilibx/mlx.h"
 # include "X11/X.h"
@@ -25,6 +27,9 @@
 # include <string.h>
 # include <unistd.h>
 
+
+//*-------------------- 📖 𝘿𝙀𝙁𝙄𝙉𝙄𝙏𝙄𝙊𝙉𝙎 📖 ---------------------*//
+
 # define WIDTH 1200
 # define HEIGHT 1200
 # define MLX_ERROR 1
@@ -35,12 +40,86 @@
 # define PIXEL_SIZE 1
 # define WALL_Z 10
 
+
+//*------------------ 📜 Pre-declarations 📜 -------------------*//
+
+typedef struct s_scene_state t_scene_state;
+typedef struct s_vector t_vector;
+typedef struct s_ambient t_ambient;
+typedef struct s_camera t_camera;
+typedef struct s_light t_light;
+typedef struct s_plane t_plane;
+typedef struct s_cylinder t_cylinder;
+typedef struct s_tuple t_tuple;
+typedef struct s_projectile t_projectile;
+typedef struct s_environnement t_environnement;
+typedef struct s_canvas t_canvas;
+typedef struct s_ray t_ray;
+typedef struct s_material t_material;
+typedef struct s_sphere t_sphere;
+typedef struct s_intersection t_intersection;
+typedef struct s_intersections t_intersections;
+typedef struct s_img t_img;
+typedef struct s_vars t_vars;
+
+
+//*----------------------- 🎨 Colors 🎨 -----------------------*//
+
 typedef struct s_color
 {
 	float			red;
 	float			green;
 	float			blue;
 }					t_color;
+
+t_color				hadarmard_product(t_color c, t_color b);
+t_color				multiply_color_scalar(t_color c, float scalar);
+t_color				subtract_colors(t_color c1, t_color c2);
+t_color				pixel_at(t_canvas c, int x, int y);
+t_color				color(float red, float green, float blue);
+t_color				add_colors(t_color c1, t_color c2);
+	
+//*---------------------- 🧮 Matrices 🧮 ----------------------*//	
+
+typedef struct s_matrix
+{
+	int				rows;
+	int				cols;
+	float			*elements;
+
+}					t_matrix;
+
+// Basic matrix operations
+t_matrix			create_matrix(int rows, int cols, float elements[]);
+void				free_matrix(t_matrix *m);
+float				get_element(t_matrix m, int row, int col);						
+int					matrices_equal(t_matrix a, t_matrix b);
+t_matrix			transpose_matrix(t_matrix matrix);
+
+// Matrix transformation
+t_matrix			translation(float x, float y, float z);
+t_matrix			scaling(float x, float y, float z);
+t_matrix			shearing(float xy, float xz, float yx, float yz, float zx, float zy);
+
+// Matrix rotations
+t_matrix			rotation_x(float radians);
+t_matrix			rotation_y(float radians);
+t_matrix			rotation_z(float radians);
+
+
+// Matrix utility functions
+t_matrix			submatrix(t_matrix matrix, int remove_row, int remove_col);
+float				minor(t_matrix matrix, int row, int col);
+float				cofactor(t_matrix matrix, int row, int col);
+float				determinant(t_matrix M);
+
+// Matrix advanced operations
+t_matrix			multiply_matrices(t_matrix a, t_matrix b);
+t_tuple				multiply_matrix_tuple(t_matrix m, t_tuple t);
+t_matrix			inverse(t_matrix A);
+int					is_invertible(t_matrix A);
+t_matrix			identity_matrix(void);
+
 
 typedef struct s_scene_state
 {
@@ -113,14 +192,6 @@ typedef struct s_canvas
 	t_color			*pixels;
 }					t_canvas;
 
-typedef struct s_matrix
-{
-	int				rows;
-	int				cols;
-	float			*elements;
-
-}					t_matrix;
-
 typedef struct s_ray
 {
 	t_tuple			origin;
@@ -174,24 +245,16 @@ typedef struct s_vars
 }					t_vars;
 
 
-
 t_intersection		*hit(t_intersections *xs);
 t_material			material(void);
-t_color				color(float red, float green, float blue);
 t_intersections		intersections(int count,
 						t_intersection *intersectionsArray);
-t_matrix			rotation_x(float radians);
 t_light				point_light(t_vector position, double intensity,
 						int color[3]);
 t_sphere			sphere(void);
 t_intersections		intersect(t_sphere *s, t_ray r);
-t_matrix			scaling(float x, float y, float z);
-t_matrix			multiply_matrices(t_matrix a, t_matrix b);
-int					matrices_equal(t_matrix a, t_matrix b);
-float				get_element(t_matrix m, int row, int col);
-t_matrix			create_matrix(int rows, int cols, float elements[]);
+
 void				convert_and_display_canvas(t_vars *vars, t_canvas canvas);
-t_color				pixel_at(t_canvas c, int x, int y);
 void				write_pixel(t_canvas *c, int x, int y, t_color color);
 t_canvas			canvas(int width, int height);
 t_vector			tuple_to_vector(t_tuple t);
@@ -202,7 +265,6 @@ double				dot(t_tuple a, t_tuple b);
 int					make_color(float percent, int flag, int r, int g);
 double				magnitude(t_tuple t);
 t_tuple				normalize(t_tuple v);
-t_matrix			rotation_y(float radians);
 t_tuple				divide_tuple_scalar(t_tuple a, double scalar);
 t_tuple				multiply_tuple_scalar(t_tuple a, double scalar);
 t_tuple				negate_tuple(t_tuple t);
@@ -216,27 +278,12 @@ t_tuple				point(double x, double y, double z);
 t_tuple				tuple(double x, double y, double z, double w);
 t_tuple				vector(double x, double y, double z);
 t_tuple				position(t_ray r, double t);
-t_color				hadarmard_product(t_color c, t_color b);
-t_color				multiply_color_scalar(t_color c, float scalar);
-t_color				subtract_colors(t_color c1, t_color c2);
 t_tuple				reflect(t_tuple incident, t_tuple normal);
 t_tuple				normal_at(t_sphere sphere, t_tuple p);
-t_color				add_colors(t_color c1, t_color c2);
-void				free_matrix(t_matrix *m);
 t_tuple				vector_to_tuple(t_vector v);
-t_matrix			identity_matrix(void);
-t_tuple				multiply_matrix_tuple(t_matrix m, t_tuple t);
-t_matrix			transpose_matrix(t_matrix matrix);
-t_matrix			submatrix(t_matrix matrix, int remove_row, int remove_col);
-float				minor(t_matrix matrix, int row, int col);
-float				cofactor(t_matrix matrix, int row, int col);
-t_matrix			rotation_z(float radians);
-float				determinant(t_matrix M);
-int					is_invertible(t_matrix A);
-t_matrix			inverse(t_matrix A);
-t_matrix			translation(float x, float y, float z);
-t_matrix			shearing(float xy, float xz, float yx, float yz, float zx,
-						float zy);
+
+
+
 t_ray				ray(t_tuple origin, t_tuple direction);
 void				my_mlx_pixel_put(t_vars *vars, int x, int y, int color);
 int					create_trgb(int t, int r, int g, int b);
