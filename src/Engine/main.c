@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/19 15:42:28 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/20 15:39:34 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,7 +231,7 @@ t_intersection intersection(double t, t_sphere *object)
     return i;
 }
 
-t_intersections intersections(int count, t_intersection *intersectionsArray)
+t_intersections intersections(int count, t_intersection *inter_arr)
 {
     t_intersections xs;
     int i = 0;
@@ -239,7 +239,7 @@ t_intersections intersections(int count, t_intersection *intersectionsArray)
     xs.intersections = (t_intersection *)malloc(sizeof(t_intersection) * count);
     while (i < count)
     {
-        xs.intersections[i] = intersectionsArray[i];
+        xs.intersections[i] = inter_arr[i];
         i++;
     }
     return xs;
