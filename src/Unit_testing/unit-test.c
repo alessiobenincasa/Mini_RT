@@ -1,14 +1,14 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   unit-test.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/18 11:07:54 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/19 23:30:37 by albeninc         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+// /* ************************************************************************** */
+// /*                                                                            */
+// /*                                                        :::      ::::::::   */
+// /*   unit-test.c                                        :+:      :+:    :+:   */
+// /*                                                    +:+ +:+         +:+     */
+// /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+// /*                                                +#+#+#+#+#+   +#+           */
+// /*   Created: 2024/03/18 11:07:54 by albeninc          #+#    #+#             */
+// /*   Updated: 2024/03/20 11:20:50 by albeninc         ###   ########.fr       */
+// /*                                                                            */
+// /* ************************************************************************** */
 
 #include "mini_rt.h"
 #include <criterion.h>
@@ -1184,3 +1184,37 @@ Test(world_tests, creating_a_world)
     cr_assert_null(w.light, "World should have no light source upon initialization.");
 }
 
+
+Test(default_world_intersections, should_return_expected_values)
+{
+    t_vector l = tuple_to_vector(vector(-10, 10, -10));
+    int     colors[3] = {1, 1, 1};
+    t_light light = point_light(l, 1, colors);
+
+    t_sphere s1 = sphere();
+    s1.material.color[0] = 0.8;
+    s1.material.color[1] = 1.0; 
+    s1.material.color[2] = 0.6;
+    s1.material.diffuse = 0.7;
+    s1.material.specular = 0.2;
+
+    t_sphere s2 = sphere();
+    s2.transform = scaling(0.5, 0.5, 0.5);
+
+    t_world w;
+    w.light = &light;
+    w.object_count = 2;
+    w.objects = malloc(sizeof(t_object) * 2);
+    w.objects[0].data = &s1;
+    w.objects[1].data = &s2;
+
+    t_ray r = ray(point(0, 0, -5), vector(0, 0, 1));
+    t_intersections xs = intersect_world(&w, r);
+
+    cr_assert_eq(xs.count, 4, "Expected 4 intersections, got %d", xs.count);
+    cr_assert_float_eq(xs.intersections[0].t, 4.0, 0.0001, "Expected t = 4, got %f", xs.intersections[0].t);
+    cr_assert_float_eq(xs.intersections[1].t, 4.5, 0.0001, "Expected t = 4.5, got %f", xs.intersections[1].t);
+    cr_assert_float_eq(xs.intersections[2].t, 5.5, 0.0001, "Expected t = 5.5, got %f", xs.intersections[2].t);
+    cr_assert_float_eq(xs.intersections[3].t, 6.0, 0.0001, "Expected t = 6, got %f", xs.intersections[3].t);
+
+}

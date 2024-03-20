@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/19 23:13:41 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/20 11:20:04 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,7 +188,7 @@ typedef struct s_world
 
 t_intersection		*hit(t_intersections *xs);
 int					compare_intersection_t(const void *a, const void *b);
-t_intersections		intersect_world(t_world w, t_ray r);
+t_intersections		intersect_world(t_world *world, t_ray r);
 t_world				world(void);
 t_material			material(void);
 t_color				color(float red, float green, float blue);
@@ -205,7 +205,6 @@ int					matrices_equal(t_matrix a, t_matrix b);
 float				get_element(t_matrix m, int row, int col);
 t_matrix			create_matrix(int rows, int cols, float elements[]);
 void				convert_and_display_canvas(t_vars *vars, t_canvas canvas);
-t_intersections		intersect_world(t_world w, t_ray r);
 t_color				pixel_at(t_canvas c, int x, int y);
 void				write_pixel(t_canvas *c, int x, int y, t_color color);
 t_canvas			canvas(int width, int height);

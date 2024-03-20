@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/19 23:31:58 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/20 12:15:46 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -564,36 +564,34 @@ t_intersections intersect(t_sphere *s, t_ray r)
     if (discriminant < 0) {
     xs.count = 0;
     xs.intersections = NULL;
-} else {
-    xs.count = (discriminant == 0) ? 2 : 2;
-    xs.intersections = malloc(xs.count * sizeof(t_intersection));
-    if (xs.intersections == NULL) exit(EXIT_FAILURE);
-
-    double root = sqrt(discriminant);
-
-    double t1 = (-b - root) / (2 * a);
-    double t2 = (-b + root) / (2 * a);
-
-    if (t1 > t2) {
-        double temp = t1;
-        t1 = t2;
-        t2 = temp;
-    }
-
-    xs.intersections[0].t = t1;
-    xs.intersections[0].sphere = s;
-
-    if (discriminant == 0) {
-        xs.intersections[1].t = t1;
     } else {
-        xs.intersections[1].t = t2;
-    }
-    xs.intersections[1].sphere = s;
+        xs.count = (discriminant == 0) ? 2 : 2;
+        xs.intersections = malloc(xs.count * sizeof(t_intersection));
+        if (xs.intersections == NULL) exit(EXIT_FAILURE);
+
+        double root = sqrt(discriminant);
+
+        double t1 = (-b - root) / (2 * a);
+        double t2 = (-b + root) / (2 * a);
+
+        if (t1 > t2) {
+            double temp = t1;
+            t1 = t2;
+            t2 = temp;
+        }
+
+        xs.intersections[0].t = t1;
+        xs.intersections[0].sphere = s;
+
+        if (discriminant == 0) {
+            xs.intersections[1].t = t1;
+        } else {
+            xs.intersections[1].t = t2;
+        }
+        xs.intersections[1].sphere = s;
     }
     return xs;
 }
-
-
 t_intersection intersection(double t, t_sphere *object)
 {
     t_intersection i;
