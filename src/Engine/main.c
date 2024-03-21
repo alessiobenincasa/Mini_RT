@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/20 20:21:28 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/21 14:22:32 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -669,23 +669,20 @@ t_tuple reflect(t_tuple incident, t_tuple normal)
     result.w  = 0;
     return result;
 }
-t_light point_light(t_vector position, double intensity, int color[3])
+t_light point_light(t_tuple position, t_color intensity)
 {
     t_light light;
     light.position = position;
     light.intensity = intensity;
-    light.color[0] = color[0];
-    light.color[1] = color[1];
-    light.color[2] = color[2];
-    return light;
+    return (light);
 }
 
 t_material material()
 {
     t_material m;
-    m.color[0] = 1;
-    m.color[1] = 1;
-    m.color[2] = 1;
+    m.color.red = 1;
+    m.color.green = 1;
+    m.color.blue = 1;
     m.ambient = 0.1;
     m.diffuse = 0.9;
     m.specular = 0.9;
@@ -693,24 +690,34 @@ t_material material()
     return m;
 }
 
-void scale_color(int inputColor[3], float intensity, float outputColor[3]) {
-    int i = 0;
-    while (i < 3) {
-        outputColor[i] = (inputColor[i] / 255.0f) * intensity;
-        i++;
-    }
+t_color multiply_colors(t_color color1, t_color color2)
+{
+    t_color result;
+    
+    result.red = color1.red * color2.red;
+    result.green = color1.green * color2.green;
+    result.blue = color1.blue * color2.blue;
+    
+    return result;
 }
+
+void set_color(t_color *color, float red, float green, float blue)
+{
+    color->red = red;
+    color->green = green;
+    color->blue = blue;
+}
+
 
 t_color lighting(t_material m, t_light light, t_tuple position, t_tuple eyev, t_tuple normalv)
 {
-    float effective_color[3];
-    scale_color(light.color, light.intensity, effective_color);
+    t_color effective_color = multiply_colors(m.color, light.intensity);
 
 
     t_color ambient = {
-        effective_color[0] * m.ambient,
-        effective_color[1] * m.ambient,
-        effective_color[2] * m.ambient
+        effective_color.red * m.ambient,
+        effective_color.green * m.ambient,
+        effective_color.blue * m.ambient
     };
 
     t_tuple lightv = normalize((t_tuple){
@@ -721,24 +728,34 @@ t_color lighting(t_material m, t_light light, t_tuple position, t_tuple eyev, t_
     });
 
     float light_dot_normal = dot(lightv, normalv);
-    t_color diffuse = {0, 0, 0}, specular = {0, 0, 0};
+    
+    t_color diffuse;
+    t_color specular;
 
-    if (light_dot_normal > 0)
+    if (light_dot_normal < 0)
+    {
+        set_color(&diffuse, 0, 0 ,0);
+        set_color(&specular, 0, 0 ,0);
+    }
+    else
     {
 
-        diffuse.red = effective_color[0] * m.diffuse * light_dot_normal;
-        diffuse.green = effective_color[1] * m.diffuse * light_dot_normal;
-        diffuse.blue = effective_color[2] * m.diffuse * light_dot_normal;
+        diffuse.red = effective_color.red * m.diffuse * light_dot_normal;
+        diffuse.green = effective_color.green * m.diffuse * light_dot_normal;
+        diffuse.blue = effective_color.blue * m.diffuse * light_dot_normal;
 
         
         t_tuple reflectv = reflect((t_tuple){-lightv.x, -lightv.y, -lightv.z, 0}, normalv);
         float reflect_dot_eye = dot(reflectv, eyev);
 
-        if (reflect_dot_eye > 0) {
+        if (reflect_dot_eye <= 0)
+            set_color(&specular, 0, 0 ,0);
+        else
+        {
             float factor = powf(reflect_dot_eye, m.shininess);
-            specular.red = light.intensity * m.specular * factor;
-            specular.green = light.intensity * m.specular * factor;
-            specular.blue = light.intensity * m.specular * factor;
+            specular.red = light.intensity.red * m.specular * factor;
+            specular.green = light.intensity.green * m.specular * factor;
+            specular.blue = light.intensity.blue * m.specular * factor;
         }
     }
 
@@ -774,18 +791,16 @@ void render_sphere(t_vars *vars)
     int canvas_pixel = 1200;
     double wall_size = 0.3;
     t_sphere s = sphere();
-    s.material.color[0] = 1;
-    s.material.color[1] = 0.2;
-    s.material.color[2] = 1;
+    set_color(&s.material.color, 0.15, 0.6, 0);
     double pixel_size = wall_size / canvas_pixel;
     double wall_z = -4.5;
     double half = wall_size / 2.0;
-    t_light light;
-    light.position = (t_vector){-10, 10, -10};
-    light.intensity = 1.0;
-    light.color[0] = 255;
-    light.color[1] = 0;
-    light.color[2] = 0;
+    t_light light = {
+        .position = {-10, 10, -10},
+        .intensity = {1, 1, 1}
+    };
+    s.transform = scaling(0.9, 1, 1);
+
 
     while (y < canvas_pixel)
     {

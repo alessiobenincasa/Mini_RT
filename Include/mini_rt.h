@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_rt.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/20 21:22:50 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/21 13:27:12 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,11 @@ typedef struct s_color
 	float			blue;
 }					t_color;
 
+typedef struct s_tuple
+{
+	double x, y, z, w;
+}					t_tuple;
+
 typedef struct s_scene_state
 {
 	int				ambient_light_found;
@@ -68,9 +73,8 @@ typedef struct s_camera
 
 typedef struct s_light
 {
-	t_vector		position;
-	double			intensity;
-	int color[3]; // RGB
+	t_tuple		position;
+	t_color		intensity;
 }					t_light;
 
 typedef struct s_plane
@@ -89,10 +93,6 @@ typedef struct s_cylinder
 	int color[3]; // RGB
 }					t_cylinder;
 
-typedef struct s_tuple
-{
-	double x, y, z, w;
-}					t_tuple;
 
 typedef struct s_projectile
 {
@@ -129,7 +129,7 @@ typedef struct s_ray
 
 typedef struct s_material
 {
-	int				color[3];
+	t_color			color;
 	double			ambient;
 	double			diffuse;
 	double			specular;
@@ -210,8 +210,7 @@ t_matrix			rotation_x(float radians);
 int					convert_color_to_int(t_color color);
 t_comps				prepare_computations(t_intersection intersection,
 						t_ray ray);
-t_light				point_light(t_vector position, double intensity,
-						int color[3]);
+t_light 			point_light(t_tuple position, t_color intensity);
 t_sphere			sphere(void);
 t_intersections		intersect(t_sphere *s, t_ray r);
 t_matrix			scaling(float x, float y, float z);
