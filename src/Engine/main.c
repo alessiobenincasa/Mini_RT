@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/21 14:22:32 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/22 09:36:11 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -627,7 +627,7 @@ t_intersection *hit(t_intersections *intersections)
         }
         i++;
     }
-    return hit;
+    return (hit);
 }
 void matrix_set(t_matrix *m, int row, int col, float value)\
 {
@@ -731,24 +731,21 @@ t_color lighting(t_material m, t_light light, t_tuple position, t_tuple eyev, t_
     
     t_color diffuse;
     t_color specular;
+    set_color(&diffuse, 0, 0 ,0);
+    set_color(&specular, 0, 0 ,0);
 
-    if (light_dot_normal < 0)
-    {
-        set_color(&diffuse, 0, 0 ,0);
-        set_color(&specular, 0, 0 ,0);
-    }
-    else
+    if (light_dot_normal > -EPSILON)
     {
 
         diffuse.red = effective_color.red * m.diffuse * light_dot_normal;
         diffuse.green = effective_color.green * m.diffuse * light_dot_normal;
         diffuse.blue = effective_color.blue * m.diffuse * light_dot_normal;
 
-        
-        t_tuple reflectv = reflect((t_tuple){-lightv.x, -lightv.y, -lightv.z, 0}, normalv);
+        t_tuple minus_lightv = vector(-lightv.x, -lightv.y, -lightv.z);
+        t_tuple reflectv = reflect(minus_lightv, normalv);
         float reflect_dot_eye = dot(reflectv, eyev);
 
-        if (reflect_dot_eye <= 0)
+        if (reflect_dot_eye <= -EPSILON)
             set_color(&specular, 0, 0 ,0);
         else
         {
@@ -765,8 +762,7 @@ t_color lighting(t_material m, t_light light, t_tuple position, t_tuple eyev, t_
         ambient.blue + diffuse.blue + specular.blue
     };
 
-    return result;
-
+    return (result);
 }
 
 

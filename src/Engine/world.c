@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:07:18 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/21 12:56:30 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/22 09:52:56 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,39 @@ t_world	world(void)
 
 	w.objects = NULL;
 	w.object_count = 0;
-	w.light = NULL;
 	return (w);
+}
+
+t_world default_world(void)
+{
+    t_world w;
+
+    t_sphere *s1 = malloc(sizeof(t_sphere));
+    *s1 = sphere();
+    set_color(&s1->material.color, 0.8, 1.0, 0.6);
+    s1->material.diffuse = 0.7;
+    s1->material.specular = 0.2;
+
+    t_sphere *s2 = malloc(sizeof(t_sphere));
+    *s2 = sphere();
+    s2->transform = scaling(0.5, 0.5, 0.5);
+
+    w.object_count = 2;
+    w.objects = malloc(sizeof(t_object) * 2);
+    w.objects[0].data = s1;
+    w.objects[1].data = s2;
+
+    w.light = point_light(point(-10, 10, -10), color(1, 1, 1));
+    return (w);
+}
+
+void free_world(t_world *w)
+{
+    for (int i = 0; i < w->object_count; i++)
+	{
+        free(w->objects[i].data);
+    }
+    free(w->objects);
 }
 
 void	add_intersection(t_intersections *xs, double t, t_sphere *s)
@@ -57,33 +88,6 @@ void	sort_intersections(t_intersections *intersections)
 		sizeof(t_intersection), compare_intersections);
 }
 
-// t_world default_world(void)
-// {
-	
-//     t_world		w;
-//     t_vector 	l = tuple_to_vector(vector(-10, 10, -10));
-//     int     colors[3] = {1, 1, 1};
-//     t_light light = point_light(l, 1, colors);
-
-//     t_sphere s1 = sphere();
-//     s1.material.color[0] = 0.8;
-//     s1.material.color[1] = 1.0; 
-//     s1.material.color[2] = 0.6;
-//     s1.material.diffuse = 0.7;
-//     s1.material.specular = 0.2;
-
-//     t_sphere s2 = sphere();
-//     s2.transform = scaling(0.5, 0.5, 0.5);
-
-//     w.light = &light;
-//     w.object_count = 2;
-//     w.objects = malloc(sizeof(t_object) * 2);
-//     w.objects[0].data = &s1;
-//     w.objects[1].data = &s2;
-
-//     return (w);
-// }
-
 t_intersections	intersect_world(t_world *world, t_ray r)
 {
 	t_sphere		*s;
@@ -111,7 +115,7 @@ t_comps prepare_computations(t_intersection i, t_ray r)
     comps.point = position(r, comps.t);
     comps.eyev = negate_tuple(r.direction);
     comps.normalv = normal_at(*comps.sphere, comps.point);
-    if (dot(comps.normalv, comps.eyev) < 0)
+    if (dot(comps.normalv, comps.eyev) < -EPSILON)
     {
         comps.inside = 1;
         comps.normalv = negate_tuple(comps.normalv);
@@ -124,7 +128,19 @@ t_comps prepare_computations(t_intersection i, t_ray r)
 
 t_color shade_hit(t_world world, t_comps comps)
 {
-    return (lighting(comps.sphere->material, *world.light , comps.point, comps.eyev, comps.normalv));
+	t_color light = lighting(comps.sphere->material, world.light , comps.point, comps.eyev, comps.normalv);
+	return (light);
 }
 
+t_color	color_at(t_world w, t_ray r)
+{
+	t_intersections xs = intersect_world(&w, r);
+	t_intersection	*i = hit(&xs);
+	
+	if (!i)
+		return (color(0, 0, 0));
+	t_comps comps = prepare_computations(*i, r);
+	t_color result = shade_hit(w, comps);
+	return (result);
+}
 

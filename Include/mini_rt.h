@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/21 13:27:12 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/22 09:40:25 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ typedef struct s_world
 {
 	t_object		*objects;
 	int				object_count;
-	t_light			*light;
+	t_light			light;
 }					t_world;
 
 typedef struct s_comps
@@ -270,8 +270,10 @@ t_matrix			shearing(float xy, float xz, float yx, float yz, float zx,
 t_ray				ray(t_tuple origin, t_tuple direction);
 void				my_mlx_pixel_put(t_vars *vars, int x, int y, int color);
 int					create_trgb(int t, int r, int g, int b);
-void				scale_color(int inputColor[3], float intensity,
-						float outputColor[3]);
 t_world				default_world(void);
+void 				set_color(t_color *color, float red, float green, float blue);
+t_color				color_at(t_world w, t_ray r);
+void 				free_world(t_world *w);
+
 
 #endif

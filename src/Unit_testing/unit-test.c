@@ -1169,111 +1169,168 @@ Test(lighting_scenarios, lighting_with_light_behind_surface)
     cr_assert_float_eq(result.blue, expected.blue, 1e-4);
 }
 
-Test(world_tests, creating_a_world)
+// Test(world_tests, creating_a_world)
+// {
+
+//     t_world w = world();
+
+//     cr_assert_null(w.objects, "World should contain no objects upon initialization.");
+//     cr_assert_eq(w.object_count, 0, "World's object count should be 0 upon initialization.");
+
+//     cr_assert_null(w.light, "World should have no light source upon initialization.");
+// }
+
+
+Test(intersection_tests, ray_intersects_world)
 {
+    t_world w = default_world();
+    t_ray r = ray(point(0, 0, -5), vector(0, 0, 1));
+    
+    t_intersections xs = intersect_world(&w, r);
+    
+    cr_assert_eq(xs.count, 4, "Expected intersection count of 4, got %d.", xs.count);
+    
+    cr_assert_float_eq(xs.intersections[0].t, 4, 1e-6, "Expected first intersection 't' value of 4, got %f.", xs.intersections[0].t);
+    cr_assert_float_eq(xs.intersections[1].t, 4.5, 1e-6, "Expected second intersection 't' value of 4.5, got %f.", xs.intersections[1].t);
+    cr_assert_float_eq(xs.intersections[2].t, 5.5, 1e-6, "Expected third intersection 't' value of 5.5, got %f.", xs.intersections[2].t);
+    cr_assert_float_eq(xs.intersections[3].t, 6, 1e-6, "Expected fourth intersection 't' value of 6, got %f.", xs.intersections[3].t);
+}
 
-    t_world w = world();
+Test(precomputations, precomputing_the_state_of_an_intersection)
+{
+    t_ray r = ray(point(0, 0, -5), vector(0, 0, 1));
+    t_sphere shape = sphere();
+    t_intersection i = intersection(4, &shape);
+    
+    t_comps comps = prepare_computations(i, r);
 
-    cr_assert_null(w.objects, "World should contain no objects upon initialization.");
-    cr_assert_eq(w.object_count, 0, "World's object count should be 0 upon initialization.");
+    cr_assert_float_eq(comps.t, i.t, 1e-6, "Expected comps.t to equal i.t");
+    cr_assert(comps.sphere == i.sphere, "Expected comps.object to equal i.object");
+    
+    cr_assert_float_eq(comps.point.x, 0, 1e-6, "Expected comps.point.x to be 0");
+    cr_assert_float_eq(comps.point.y, 0, 1e-6, "Expected comps.point.y to be 0");
+    cr_assert_float_eq(comps.point.z, -1, 1e-6, "Expected comps.point.z to be -1");
 
-    cr_assert_null(w.light, "World should have no light source upon initialization.");
+    cr_assert_float_eq(comps.eyev.x, 0, 1e-6, "Expected comps.eyev.x to be 0");
+    cr_assert_float_eq(comps.eyev.y, 0, 1e-6, "Expected comps.eyev.y to be 0");
+    cr_assert_float_eq(comps.eyev.z, -1, 1e-6, "Expected comps.eyev.z to be -1");
+
+    cr_assert_float_eq(comps.normalv.x, 0, 1e-6, "Expected comps.normalv.x to be 0");
+    cr_assert_float_eq(comps.normalv.y, 0, 1e-6, "Expected comps.normalv.y to be 0");
+    cr_assert_float_eq(comps.normalv.z, -1, 1e-6, "Expected comps.normalv.z to be -1");
+}
+
+Test(precomputations, The_hit_when_an_intersection_occurs_on_the_outside)
+{
+    t_ray r = ray(point(0, 0, -5), vector(0, 0, 1));
+    t_sphere shape = sphere();
+    t_intersection i = intersection(4, &shape);
+            
+    t_comps comps = prepare_computations(i, r);
+
+    cr_assert(comps.inside == 0, "Expected comps.object to equal i.object");
+}
+
+Test(precomputations, intersection_occurs_inside)
+{
+    t_ray r = ray(point(0, 0, 0), vector(0, 0, 1));
+    t_sphere shape = sphere();
+    t_intersection i = intersection(1, &shape);
+            
+    t_comps comps = prepare_computations(i, r);
+
+    // Checking the point of intersection
+    cr_assert_eq(comps.point.x, 0, "Expected comps.point.x to be 0.");
+    cr_assert_eq(comps.point.y, 0, "Expected comps.point.y to be 0.");
+    cr_assert_eq(comps.point.z, 1, "Expected comps.point.z to be 1.");
+
+    // Checking the eye vector
+    cr_assert_eq(comps.eyev.x, 0, "Expected comps.eyev.x to be 0.");
+    cr_assert_eq(comps.eyev.y, 0, "Expected comps.eyev.y to be 0.");
+    cr_assert_eq(comps.eyev.z, -1, "Expected comps.eyev.z to be -1.");
+
+    // Checking if the intersection occurs inside
+    cr_assert_eq(comps.inside, 1, "Expected intersection to occur inside, but comps.inside was not 1.");
+
+    // Checking the normal vector
+    cr_assert_eq(comps.normalv.x, 0, "Expected comps.normalv.x to be 0.");
+    cr_assert_eq(comps.normalv.y, 0, "Expected comps.normalv.y to be 0.");
+    cr_assert_eq(comps.normalv.z, -1, "Expected comps.normalv.z to be -1.");
 }
 
 
-// Test(default_world_intersections, should_return_expected_values)
-// {
-//     t_vector l = tuple_to_vector(vector(-10, 10, -10));
-//     int     colors[3] = {1, 1, 1};
-//     t_light light = point_light(l, 1, colors);
-
-//     t_sphere s1 = sphere();
-//     s1.material.color[0] = 0.8;
-//     s1.material.color[1] = 1.0; 
-//     s1.material.color[2] = 0.6;
-//     s1.material.diffuse = 0.7;
-//     s1.material.specular = 0.2;
-
-//     t_sphere s2 = sphere();
-//     s2.transform = scaling(0.5, 0.5, 0.5);
-
-//     t_world w;
-//     w.light = &light;
-//     w.object_count = 2;
-//     w.objects = malloc(sizeof(t_object) * 2);
-//     w.objects[0].data = &s1;
-//     w.objects[1].data = &s2;
-
-//     t_ray r = ray(point(0, 0, -5), vector(0, 0, 1));
-//     t_intersections xs = intersect_world(&w, r);
-
-//     cr_assert_eq(xs.count, 4, "Expected 4 intersections, got %d", xs.count);
-//     cr_assert_float_eq(xs.intersections[0].t, 4.0, 0.0001, "Expected t = 4, got %f", xs.intersections[0].t);
-//     cr_assert_float_eq(xs.intersections[1].t, 4.5, 0.0001, "Expected t = 4.5, got %f", xs.intersections[1].t);
-//     cr_assert_float_eq(xs.intersections[2].t, 5.5, 0.0001, "Expected t = 5.5, got %f", xs.intersections[2].t);
-//     cr_assert_float_eq(xs.intersections[3].t, 6.0, 0.0001, "Expected t = 6, got %f", xs.intersections[3].t);
-
-// }
-
-// Test(precomputations, precomputing_the_state_of_an_intersection)
-// {
-//     t_ray r = ray(point(0, 0, -5), vector(0, 0, 1));
-//     t_sphere shape = sphere();
-//     t_intersection i = intersection(4, &shape);
-    
-//     t_comps comps = prepare_computations(i, r);
-
-//     cr_assert_float_eq(comps.t, i.t, 1e-6, "Expected comps.t to equal i.t");
-//     cr_assert(comps.sphere == i.sphere, "Expected comps.object to equal i.object");
-    
-//     cr_assert_float_eq(comps.point.x, 0, 1e-6, "Expected comps.point.x to be 0");
-//     cr_assert_float_eq(comps.point.y, 0, 1e-6, "Expected comps.point.y to be 0");
-//     cr_assert_float_eq(comps.point.z, -1, 1e-6, "Expected comps.point.z to be -1");
-
-//     cr_assert_float_eq(comps.eyev.x, 0, 1e-6, "Expected comps.eyev.x to be 0");
-//     cr_assert_float_eq(comps.eyev.y, 0, 1e-6, "Expected comps.eyev.y to be 0");
-//     cr_assert_float_eq(comps.eyev.z, -1, 1e-6, "Expected comps.eyev.z to be -1");
-
-//     cr_assert_float_eq(comps.normalv.x, 0, 1e-6, "Expected comps.normalv.x to be 0");
-//     cr_assert_float_eq(comps.normalv.y, 0, 1e-6, "Expected comps.normalv.y to be 0");
-//     cr_assert_float_eq(comps.normalv.z, -1, 1e-6, "Expected comps.normalv.z to be -1");
-// }
-
-// Test(precomputations, The_hit_when_an_intersection_occurs_on_the_outside)
-// {
-//     t_ray r = ray(point(0, 0, -5), vector(0, 0, 1));
-//     t_sphere shape = sphere();
-//     t_intersection i = intersection(4, &shape);
+Test(shading_tests, shading_an_intersection)
+{
+    t_world w = default_world();
+    t_ray r = ray(point(0, 0, -5), vector(0, 0, 1));
+    t_sphere *shape = w.objects[0].data;
+    t_intersection i = intersection(4, shape);
             
-//     t_comps comps = prepare_computations(i, r);
+    t_comps comps = prepare_computations(i, r);
+    t_color c = shade_hit(w, comps);
 
-//     cr_assert(comps.inside == 0, "Expected comps.object to equal i.object");
-// }
+    cr_assert_float_eq(c.red, 0.38066, 1e-5, "Expected red component to be 0.38066, got %f.", c.red);
+    cr_assert_float_eq(c.green, 0.47583, 1e-5, "Expected green component to be 0.47583, got %f.", c.green);
+    cr_assert_float_eq(c.blue, 0.2855, 1e-5, "Expected blue component to be 0.2855, got %f.", c.blue);
+    free_world(&w);
+}
 
-// Test(precomputations, the_hit_when_an_intersection_occurs_on_the_outside)
-// {
-//     t_ray r = ray(point(0, 0, 0), vector(0, 0, 1));
-//     t_sphere shape = sphere();
-//     t_intersection i = intersection(1, &shape);
+Test(shading, intersection_inside)
+{
+    t_world w = default_world();
+    w.light = point_light(point(0, 0.25, 0), color(1, 1, 1));
+    t_ray r = ray(point(0, 0, 0), vector(0, 0, 1));
+    t_sphere *shape = w.objects[1].data;
+    t_intersection i = intersection(0.5, shape);
     
-//     t_comps comps = prepare_computations(i, r);
+    t_comps comps = prepare_computations(i, r);
+    t_color c = shade_hit(w, comps);
 
-//     cr_assert_float_eq(comps.t, i.t, 1e-6, "Expected comps.t to equal i.t");
-//     cr_assert(comps.sphere == i.sphere, "Expected comps.object to equal i.object");
+    cr_assert_float_eq(c.red, 0.90498, 1e-4, "Expected red component to be 0.90498, got %f.", c.red);
+    cr_assert_float_eq(c.green, 0.90498, 1e-4, "Expected different green, got %f.", c.green);
+    cr_assert_float_eq(c.blue, 0.90498, 1e-4, "Expected different blue, got %f.", c.blue);
+    free_world(&w);
+}
+
+Test(ray_color_tests, color_when_ray_misses)
+{
+    t_world w = default_world();
+    t_ray r = ray(point(0, 0, -5), vector(0, 1, 0));
+    t_color c = color_at(w, r);
     
-//     cr_assert_float_eq(comps.point.x, 0, 1e-6, "Expected comps.point.x to be 0");
-//     cr_assert_float_eq(comps.point.y, 0, 1e-6, "Expected comps.point.y to be 0");
-//     cr_assert_float_eq(comps.point.z, 1, 1e-6, "Expected comps.point.z to be -1");
+    cr_assert_float_eq(c.red, 0, 1e-6, "Expected red component to be 0, got %f", c.red);
+    cr_assert_float_eq(c.green, 0, 1e-6, "Expected green component to be 0, got %f", c.green);
+    cr_assert_float_eq(c.blue, 0, 1e-6, "Expected blue component to be 0, got %f", c.blue);
+    free_world(&w);
+}
 
-//     cr_assert_float_eq(comps.eyev.x, 0, 1e-6, "Expected comps.eyev.x to be 0");
-//     cr_assert_float_eq(comps.eyev.y, 0, 1e-6, "Expected comps.eyev.y to be 0");
-//     cr_assert_float_eq(comps.eyev.z, -1, 1e-6, "Expected comps.eyev.z to be -1");
+Test(ray_color_tests, color_when_ray_hits)
+{
+    t_world w = default_world();
+    t_ray r = ray(point(0, 0, -5), vector(0, 0, 1));
+    t_color c = color_at(w, r);
+    
+    cr_assert_float_eq(c.red, 0.38066, 1e-5, "Expected red component to be 0.38066, got %f", c.red);
+    cr_assert_float_eq(c.green, 0.47583, 1e-5, "Expected green component to be 0.47583, got %f", c.green);
+    cr_assert_float_eq(c.blue, 0.2855, 1e-5, "Expected blue component to be 0.2855, got %f", c.blue);
+    free_world(&w);
+}
 
-//     cr_assert_float_eq(comps.normalv.x, 0, 1e-6, "Expected comps.normalv.x to be 0");
-//     cr_assert_float_eq(comps.normalv.y, 0, 1e-6, "Expected comps.normalv.y to be 0");
-//     cr_assert_float_eq(comps.normalv.z, -1, 1e-6, "Expected comps.normalv.z to be -1");
+Test(ray_color_tests, color_with_intersection_behind_ray)
+{
+    t_world w = default_world();
 
-//     cr_assert(comps.inside == 1, "Expected comps.inside to be true");
-// }
+    t_sphere *outer = w.objects[0].data;
+    t_sphere *inner = w.objects[1].data;
+    outer->material.ambient = 1;
+    inner->material.ambient = 1;
 
-
+    t_ray r = ray(point(0, 0, 0.75), vector(0, 0, -1));
+    t_color c = color_at(w, r);
+    t_color expected = inner->material.color;
+    
+    cr_assert_float_eq(c.red, expected.red, 1e-6, "Expected red component to match inner material, got %f", c.red);
+    cr_assert_float_eq(c.green, expected.green, 1e-6, "Expected green component to match inner material, got %f", c.green);
+    cr_assert_float_eq(c.blue, expected.blue, 1e-6, "Expected blue component to match inner material, got %f", c.blue);
+    free_world(&w);
+}
