@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/22 13:53:15 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/22 15:22:30 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,5 +285,6 @@ t_camera			camera(int hsize, int vsize, double fov);
 t_ray				ray_for_pixel(t_camera camera, int px, int py);
 t_canvas			render(t_camera cam, t_world w);
 void				render_scene(t_vars *vars);
+t_canvas			render_scene2(void);
 
 #endif

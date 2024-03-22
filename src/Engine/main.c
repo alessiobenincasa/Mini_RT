@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/22 14:11:31 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/22 15:22:45 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -827,7 +827,24 @@ void render_sphere(t_vars *vars)
 }
 
 
-// int main() {
+// void display_canvas(t_vars *vars, t_canvas *canvas)
+// {
+//     int x, y;
+//     int color;
+
+//     for (y = 0; y < canvas->height; y++)
+//     {
+//         for (x = 0; x < canvas->width; x++)
+//         {
+//             color = color_to_int(canvas->pixels[y * canvas->width + x]);
+//             *(int *)(vars->img.addr + (y * vars->img.line_length + x * (vars->img.bits_per_pixel / 8))) = color;
+//         }
+//     }
+// }
+
+
+// int main()
+// {
 //     t_vars  vars;
 
 //     vars.mlx = mlx_init();
@@ -843,5 +860,22 @@ void render_sphere(t_vars *vars)
 //     return (0);
 // }
 
+// int main()
+// {
+//     t_vars      vars;
+//     t_canvas    canvas = render_scene2();
+
+//     vars.mlx = mlx_init();
+//     vars.win = mlx_new_window(vars.mlx, canvas.width, canvas.height, "MiniLibX - Sphere Rendering");
+//     vars.img.img_ptr = mlx_new_image(vars.mlx, canvas.width, canvas.height);
+//     vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
+//                                      &vars.img.endian);
+
+//     display_canvas(&vars, &canvas);
+
+//     mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
+//     mlx_loop(vars.mlx);
+//     return (0);
+// }
 
 

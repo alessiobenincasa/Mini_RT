@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 12:05:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/22 14:27:55 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/22 15:22:05 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,4 +151,67 @@ void	render_scene(t_vars *vars)
 	cam.transform = view_transform(point(0, 1.5, -5), point(0, 1, 0), vector(0, 1, 0));
 
 	render_mlx(vars, cam, world);
+}
+
+t_canvas	render_scene2(void)
+{
+	t_world		world;
+	world.object_count = 6;
+    world.objects = malloc(sizeof(t_object) * 6);
+
+	t_sphere* floor = malloc(sizeof(t_sphere));
+	*floor = sphere();
+	floor->transform = scaling(10, 0.01, 10);
+	floor->material = material();
+	floor->material.color = color(1, 0.9, 0.9);
+	floor->material.specular = 0;
+
+	t_sphere* left_wall = malloc(sizeof(t_sphere));
+	*left_wall = sphere();
+	left_wall->transform = matrix_mult_four(translation(0, 0, 5), rotation_y(-(M_PI / 4)), rotation_x(M_PI / 2), scaling(10, 0.01, 10));
+	left_wall->material = floor->material;
+
+	t_sphere* right_wall = malloc(sizeof(t_sphere));
+	*right_wall = sphere();
+	right_wall->transform = matrix_mult_four(translation(0, 0, 5), rotation_y(M_PI / 4), rotation_x(M_PI / 2), scaling(10, 0.01, 10));
+	right_wall->material = floor->material;
+
+	t_sphere* middle = malloc(sizeof(t_sphere));
+	*middle = sphere();
+	middle->transform = translation(-0.5, 1, 0.5);
+	middle->material = material();
+	middle->material.color = color(0.1, 1, 0.5);
+	middle->material.diffuse = 0.7;
+	middle->material.specular = 0.3;
+
+	t_sphere* right = malloc(sizeof(t_sphere));
+	*right = sphere();
+	right->transform = multiply_matrices(translation(1.5, 0.5, -0.5), scaling(0.5, 0.5, 0.5));
+	right->material = material();
+	right->material.color = color(0.5, 1, 0.1);
+	right->material.diffuse = 0.7;
+	right->material.specular = 0.3;
+
+	t_sphere* left = malloc(sizeof(t_sphere));
+	*left = sphere();
+	left->transform = multiply_matrices(translation(-1.5, 0.33, -0.75), scaling(0.33, 0.33, 0.33));
+	left->material = material();
+	left->material.color = color(1, 0.8, 0.1);
+	left->material.diffuse = 0.7;
+	left->material.specular = 0.3;
+
+    world.objects[0].data = floor;
+    world.objects[1].data = left_wall;
+    world.objects[2].data = right_wall;
+    world.objects[3].data = middle;
+    world.objects[4].data = right;
+    world.objects[5].data = left;
+	world.light = point_light(point(-10, 10, -10), color(1, 1, 1));
+
+	t_camera	cam;
+	cam = camera(100, 50, (double)(M_PI / 3.0));
+	cam.transform = view_transform(point(0, 1.5, -5), point(0, 1, 0), vector(0, 1, 0));
+
+	t_canvas image = render(cam, world);
+	return (image);
 }
