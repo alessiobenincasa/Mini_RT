@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:07:18 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/22 10:55:19 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/22 14:11:13 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ t_intersections	intersect_world(t_world *world, t_ray r)
 	{
 		s = world->objects[i].data;
 		sphere_xs = intersect(s, r);
+		// printf("sphere_xs.count = %d\n", sphere_xs.count);
 		for (int j = 0; j < sphere_xs.count; j++)
 		{
 			add_intersection(&xs, sphere_xs.intersections[j].t, s);

@@ -1438,3 +1438,22 @@ Test(ray_construction_tests, ray_when_camera_transformed)
     cr_assert_float_eq(r.direction.y, 0, 1e-5, "Expected ray direction y to be 0, got %f.", r.direction.y);
     cr_assert_float_eq(r.direction.z, -sqrt2_over_2, 1e-5, "Expected ray direction z to be %f, got %f.", -sqrt2_over_2, r.direction.z);
 }
+
+
+Test(rendering_tests, rendering_world_with_camera)
+{
+    t_world w = default_world();
+    t_camera c = camera(11, 11, M_PI / 2);
+    t_tuple from = point(0, 0, -5);
+    t_tuple to = point(0, 0, 0);
+    t_tuple up = vector(0, 1, 0);
+    c.transform = view_transform(from, to, up);
+
+    t_canvas image = render(c, w);
+    t_color color = pixel_at(image, 5, 5);
+
+    cr_assert_float_eq(color.red, 0.38066, 1e-5, "Expected pixel red value to be 0.38066, got %f.", color.red);
+    cr_assert_float_eq(color.green, 0.47583, 1e-5, "Expected pixel green value to be 0.47583, got %f.", color.green);
+    cr_assert_float_eq(color.blue, 0.2855, 1e-5, "Expected pixel blue value to be 0.2855, got %f.", color.blue);
+    free_world(&w);
+}

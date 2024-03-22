@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/22 12:46:52 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/22 13:53:15 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@
 # include <string.h>
 # include <unistd.h>
 
-# define WIDTH 1200
-# define HEIGHT 1200
+# define WIDTH 100
+# define HEIGHT 50
 # define MLX_ERROR 1
 # define M_PI 3.14159265358979323846
 # define EPSILON 0.00001
@@ -283,5 +283,7 @@ t_matrix			view_transform(t_tuple from, t_tuple to, t_tuple up);
 // Camera
 t_camera			camera(int hsize, int vsize, double fov);
 t_ray				ray_for_pixel(t_camera camera, int px, int py);
+t_canvas			render(t_camera cam, t_world w);
+void				render_scene(t_vars *vars);
 
 #endif

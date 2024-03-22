@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/22 12:12:58 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/22 14:11:31 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,8 @@ t_canvas canvas(int width, int height)
 
 void write_pixel(t_canvas* c, int x, int y, t_color color)
 {
-    if (x >= 0 && x < c->width && y >= 0 && y < c->height) {
+    if (x >= 0 && x < c->width && y >= 0 && y < c->height)
+    {
         c->pixels[y * c->width + x] = color;
     }
 }
@@ -835,7 +836,7 @@ void render_sphere(t_vars *vars)
 //     vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
 //                                      &vars.img.endian);
 
-//     render_sphere(&vars);
+//     render_scene(&vars);
 
 //     mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
 //     mlx_loop(vars.mlx);
