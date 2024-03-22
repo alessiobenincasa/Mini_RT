@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/22 09:36:11 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/22 10:54:16 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ t_tuple add_tuples(t_tuple a, t_tuple b)
     return result;
 }
 
-t_tuple substract_tuples(t_tuple a, t_tuple b)
+t_tuple subtract_tuples(t_tuple a, t_tuple b)
 {
     t_tuple result = {a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w};
     return result;
@@ -552,7 +552,7 @@ t_intersections intersect(t_sphere *s, t_ray r)
     t_ray transformed_ray = transform(r, inverse_transform);
 
 
-    t_tuple sphere_to_ray = substract_tuples(transformed_ray.origin, s->center);
+    t_tuple sphere_to_ray = subtract_tuples(transformed_ray.origin, s->center);
 
     double a = dot(transformed_ray.direction, transformed_ray.direction);
     double b = 2.0 * dot(transformed_ray.direction, sphere_to_ray);
@@ -629,7 +629,7 @@ t_intersection *hit(t_intersections *intersections)
     }
     return (hit);
 }
-void matrix_set(t_matrix *m, int row, int col, float value)\
+void matrix_set(t_matrix *m, int row, int col, float value)
 {
     int index = row * m->cols + col;
     m->elements[index] = value;
@@ -652,7 +652,7 @@ t_ray transform(t_ray ray, t_matrix m)
 t_tuple    normal_at(t_sphere sphere, t_tuple p)
 {
     t_tuple object_point = multiply_matrix_tuple(inverse(sphere.transform), p);
-    t_tuple object_normal = substract_tuples(object_point, (t_tuple){sphere.center.x, sphere.center.y, sphere.center.z, 1});
+    t_tuple object_normal = subtract_tuples(object_point, (t_tuple){sphere.center.x, sphere.center.y, sphere.center.z, 1});
     t_tuple world_normal = multiply_matrix_tuple(transpose_matrix(inverse(sphere.transform)), object_normal);
     
     world_normal.w = 0;
@@ -806,7 +806,7 @@ void render_sphere(t_vars *vars)
         {
             double world_x = -half + pixel_size * x + (wall_size / 2.0 - canvas_pixel / 2.0 * pixel_size);
             t_tuple pixel_position = {world_x, world_y, wall_z, 1};
-            t_tuple ray_direction = normalize(substract_tuples(pixel_position, (t_tuple){0, 0, -5, 1}));
+            t_tuple ray_direction = normalize(subtract_tuples(pixel_position, (t_tuple){0, 0, -5, 1}));
             t_ray r = ray((t_tuple){0, 0, -5, 1}, ray_direction);
             t_intersections result = intersect(&s, r);
             t_intersection *intersection = hit(&result);

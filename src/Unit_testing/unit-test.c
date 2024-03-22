@@ -1334,3 +1334,39 @@ Test(ray_color_tests, color_with_intersection_behind_ray)
     cr_assert_float_eq(c.blue, expected.blue, 1e-6, "Expected blue component to match inner material, got %f", c.blue);
     free_world(&w);
 }
+
+Test(view_transform_tests, default_orientation)
+{
+    t_tuple from = point(0, 0, 0);
+    t_tuple to = point(0, 0, -1);
+    t_tuple up = vector(0, 1, 0);
+    t_matrix t = view_transform(from, to, up);
+
+    t_matrix expected = identity_matrix();
+
+    cr_assert(matrices_equal(t, expected), "Expected view transformation to be the identity matrix.");
+}
+
+Test(view_transform_tests, positive_z_direction)
+{
+    t_tuple from = point(0, 0, 0);
+    t_tuple to = point(0, 0, 1);
+    t_tuple up = vector(0, 1, 0);
+    t_matrix t = view_transform(from, to, up);
+
+    t_matrix expected = scaling(-1, 1, -1);
+
+    cr_assert(matrices_equal(t, expected), "Expected view transformation to scale the scene by (-1, 1, -1).");
+}
+
+Test(view_transform_tests, moves_the_world)
+{
+    t_tuple from = point(0, 0, 8);
+    t_tuple to = point(0, 0, 0);
+    t_tuple up = vector(0, 1, 0);
+    t_matrix t = view_transform(from, to, up);
+
+    t_matrix expected = translation(0, 0, -8);
+
+    cr_assert(matrices_equal(t, expected), "Expected view transformation to translate the scene by (0, 0, -8).");
+}

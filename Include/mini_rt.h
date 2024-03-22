@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/22 09:40:25 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/22 10:51:44 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,7 +235,7 @@ t_tuple				divide_tuple_scalar(t_tuple a, double scalar);
 t_tuple				multiply_tuple_scalar(t_tuple a, double scalar);
 t_tuple				negate_tuple(t_tuple t);
 int					tuple_equals(t_tuple a, t_tuple b);
-t_tuple				substract_tuples(t_tuple a, t_tuple b);
+t_tuple				subtract_tuples(t_tuple a, t_tuple b);
 t_tuple				add_tuples(t_tuple a, t_tuple b);
 int					equal(double a, double b);
 t_color				lighting(t_material m, t_light light, t_tuple position,
@@ -274,6 +274,7 @@ t_world				default_world(void);
 void 				set_color(t_color *color, float red, float green, float blue);
 t_color				color_at(t_world w, t_ray r);
 void 				free_world(t_world *w);
+t_matrix			view_transform(t_tuple from, t_tuple to, t_tuple up);
 
 
 #endif

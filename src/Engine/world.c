@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:07:18 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/22 09:52:56 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/22 10:55:19 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,5 +142,21 @@ t_color	color_at(t_world w, t_ray r)
 	t_comps comps = prepare_computations(*i, r);
 	t_color result = shade_hit(w, comps);
 	return (result);
+}
+
+t_matrix	view_transform(t_tuple from, t_tuple to, t_tuple up)
+{
+	t_tuple		forward = normalize(subtract_tuples(to, from));
+	t_vector	left = cross(forward, normalize(up));
+	t_vector	true_up = cross(vector(left.x ,left.y, left.z), forward);
+
+	float orientation[16] = {
+        left.x, left.y, left.z, 0,
+        true_up.x, true_up.y, true_up.z, 0,
+        -(forward.x), -(forward.y), -(forward.z), 0,
+        0, 0, 0, 1
+    };
+	t_matrix result = create_matrix(4, 4, orientation);
+    return (multiply_matrices(result, translation(-from.x, -from.y, -from.z)));
 }
 
