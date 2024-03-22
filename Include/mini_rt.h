@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/22 10:51:44 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/22 12:46:52 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,17 +64,10 @@ typedef struct s_ambient
 	int color[3]; // RGB
 }					t_ambient;
 
-typedef struct s_camera
-{
-	t_vector		position;
-	t_vector		orientation;
-	double			fov;
-}					t_camera;
-
 typedef struct s_light
 {
-	t_tuple		position;
-	t_color		intensity;
+	t_tuple			position;
+	t_color			intensity;
 }					t_light;
 
 typedef struct s_plane
@@ -92,7 +85,6 @@ typedef struct s_cylinder
 	double			height;
 	int color[3]; // RGB
 }					t_cylinder;
-
 
 typedef struct s_projectile
 {
@@ -197,6 +189,17 @@ typedef struct s_comps
 
 }					t_comps;
 
+typedef struct s_camera
+{
+	int				hsize;
+	int				vsize;
+	double			fov;
+	t_matrix		transform;
+	double			pixel_size;
+	double			half_width;
+	double			half_height;
+}					t_camera;
+
 t_intersection		*hit(t_intersections *xs);
 int					compare_intersection_t(const void *a, const void *b);
 t_intersections		intersect_world(t_world *world, t_ray r);
@@ -210,7 +213,7 @@ t_matrix			rotation_x(float radians);
 int					convert_color_to_int(t_color color);
 t_comps				prepare_computations(t_intersection intersection,
 						t_ray ray);
-t_light 			point_light(t_tuple position, t_color intensity);
+t_light				point_light(t_tuple position, t_color intensity);
 t_sphere			sphere(void);
 t_intersections		intersect(t_sphere *s, t_ray r);
 t_matrix			scaling(float x, float y, float z);
@@ -271,10 +274,14 @@ t_ray				ray(t_tuple origin, t_tuple direction);
 void				my_mlx_pixel_put(t_vars *vars, int x, int y, int color);
 int					create_trgb(int t, int r, int g, int b);
 t_world				default_world(void);
-void 				set_color(t_color *color, float red, float green, float blue);
+void				set_color(t_color *color, float red, float green,
+						float blue);
 t_color				color_at(t_world w, t_ray r);
-void 				free_world(t_world *w);
+void				free_world(t_world *w);
 t_matrix			view_transform(t_tuple from, t_tuple to, t_tuple up);
 
+// Camera
+t_camera			camera(int hsize, int vsize, double fov);
+t_ray				ray_for_pixel(t_camera camera, int px, int py);
 
 #endif

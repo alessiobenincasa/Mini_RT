@@ -1370,3 +1370,71 @@ Test(view_transform_tests, moves_the_world)
 
     cr_assert(matrices_equal(t, expected), "Expected view transformation to translate the scene by (0, 0, -8).");
 }
+
+Test(camera_tests, constructing_a_camera)
+{
+    int hsize = 160;
+    int vsize = 120;
+    double field_of_view = M_PI / 2;
+    t_camera c = camera(hsize, vsize, field_of_view);
+
+    cr_assert_eq(c.hsize, 160, "Expected camera horizontal size to be 160, got %d.", c.hsize);
+    cr_assert_eq(c.vsize, 120, "Expected camera vertical size to be 120, got %d.", c.vsize);
+    cr_assert_float_eq(c.fov, M_PI / 2, 1e-6, "Expected camera field of view to be π/2, got %f.", c.fov);
+
+    t_matrix expected_transform = identity_matrix();
+    cr_assert(matrices_equal(c.transform, expected_transform), "Expected camera transform to be the identity matrix.");
+}
+
+Test(camera_pixel_size_tests, pixel_size_vertical_canvas)
+{
+    t_camera c = camera(125, 200, M_PI / 2);
+
+    cr_assert_float_eq(c.pixel_size, 0.01, 1e-6, "Expected pixel size to be 0.01 for a vertical canvas, got %f.", c.pixel_size);
+}
+
+Test(ray_construction_tests, ray_through_center_of_canvas)
+{
+    t_camera c = camera(201, 101, M_PI / 2);
+    t_ray r = ray_for_pixel(c, 100, 50);
+
+    cr_assert_eq(r.origin.x, 0, "Expected ray origin x to be 0, got %f.", r.origin.x);
+    cr_assert_eq(r.origin.y, 0, "Expected ray origin y to be 0, got %f.", r.origin.y);
+    cr_assert_eq(r.origin.z, 0, "Expected ray origin z to be 0, got %f.", r.origin.z);
+    cr_assert_float_eq(r.direction.x, 0, 1e-6, "Expected ray direction x to be 0, got %f.", r.direction.x);
+    cr_assert_float_eq(r.direction.y, 0, 1e-6, "Expected ray direction y to be 0, got %f.", r.direction.y);
+    cr_assert_float_eq(r.direction.z, -1, 1e-6, "Expected ray direction z to be -1, got %f.", r.direction.z);
+}
+
+Test(ray_construction_tests, ray_through_corner_of_canvas)
+{
+    t_camera c = camera(201, 101, M_PI / 2);
+    t_ray r = ray_for_pixel(c, 0, 0);
+
+    cr_assert_float_eq(r.origin.x, 0, 1e-6, "Expected ray origin x to be 0, got %f.", r.origin.x);
+    cr_assert_float_eq(r.origin.y, 0, 1e-6, "Expected ray origin y to be 0, got %f.", r.origin.y);
+    cr_assert_float_eq(r.origin.z, 0, 1e-6, "Expected ray origin z to be 0, got %f.", r.origin.z);
+    cr_assert_float_eq(r.direction.x, 0.66519, 1e-5, "Expected ray direction x to be 0.66519, got %f.", r.direction.x);
+    cr_assert_float_eq(r.direction.y, 0.33259, 1e-5, "Expected ray direction y to be 0.33259, got %f.", r.direction.y);
+    cr_assert_float_eq(r.direction.z, -0.66851, 1e-5, "Expected ray direction z to be -0.66851, got %f.", r.direction.z);
+}
+
+Test(ray_construction_tests, ray_when_camera_transformed)
+{
+    t_camera c = camera(201, 101, M_PI / 2);
+    c.transform = multiply_matrices(rotation_y(M_PI / 4), translation(0, -2, 5));
+    t_ray r = ray_for_pixel(c, 100, 50);
+
+    // Asserting the ray origin
+    cr_assert_float_eq(r.origin.x, 0, 1e-6, "Expected ray origin x to be 0, got %f.", r.origin.x);
+    cr_assert_float_eq(r.origin.y, 2, 1e-6, "Expected ray origin y to be 2, got %f.", r.origin.y);
+    cr_assert_float_eq(r.origin.z, -5, 1e-6, "Expected ray origin z to be -5, got %f.", r.origin.z);
+
+    // Calculate expected direction using sqrt(2)/2 for easier readability
+    double sqrt2_over_2 = sqrt(2) / 2;
+
+    // Asserting the ray direction
+    cr_assert_float_eq(r.direction.x, sqrt2_over_2, 1e-5, "Expected ray direction x to be %f, got %f.", sqrt2_over_2, r.direction.x);
+    cr_assert_float_eq(r.direction.y, 0, 1e-5, "Expected ray direction y to be 0, got %f.", r.direction.y);
+    cr_assert_float_eq(r.direction.z, -sqrt2_over_2, 1e-5, "Expected ray direction z to be %f, got %f.", -sqrt2_over_2, r.direction.z);
+}
