@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   camera.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 12:05:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/22 15:22:05 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/23 15:46:38 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,11 @@ t_ray	ray_for_pixel(t_camera camera, int px, int py)
 	double xoffset = ((double)(px) + 0.5) * camera.pixel_size;
 	double yoffset = ((double)(py) + 0.5) * camera.pixel_size;
 
-	double world_x = camera.half_width - xoffset;
+	double world_x = -camera.half_width + xoffset;
 	double world_y = camera.half_height - yoffset;
 
 	t_tuple	pixel = multiply_matrix_tuple(inverse(camera.transform), point(world_x, world_y, -1));
-	t_tuple	origin = multiply_matrix_tuple(inverse(camera.transform), point(0, 0, 0));
+	t_tuple	origin = multiply_matrix_tuple(inverse(camera.transform), point(0, 0, -5));
 	t_tuple	direction = normalize(subtract_tuples(pixel, origin));
 
 	return (ray(origin, direction));
@@ -72,13 +72,24 @@ t_canvas	render(t_camera cam, t_world w)
 
 void		render_mlx(t_vars *vars, t_camera cam, t_world w)
 {
-	for (int y = 0; y <= cam.vsize; y++)
+    double wall_size = 0.3;
+    double half = wall_size / 2.0;
+    double wall_z = 100;
+    double pixel_size = wall_size / 1200;
+
+
+	for (int y = 0; y < cam.vsize; y++)
 	{
-		for (int x = 0; x <= cam.hsize; x++)
+		double world_y = half - pixel_size * y - (wall_size / 2.0 - cam.vsize / 2.0 * pixel_size);
+		for (int x = 0; x < cam.hsize; x++)
 		{
-			t_ray r = ray_for_pixel(cam, x, y);
+			double world_x = -half + pixel_size * x + (wall_size / 2.0 - cam.hsize / 2.0 * pixel_size);
+			if (x % 500 < 1)
+				printf("WORLD: x = %f, y = %f, z = %f\n", world_x, world_y, wall_z);
+            t_tuple pixel_position = {world_x, world_y, wall_z, 1};
+            t_tuple ray_direction = normalize(subtract_tuples(pixel_position, (t_tuple){0, 0, -5, 1}));
+            t_ray r = ray((t_tuple){0, 0, -5, 1}, ray_direction);
 			t_color color = color_at(w, r);
-			// printf("color = rgb(%f, %f, %f)\n", color.red, color.green, color.blue);
 			int final_color = convert_color_to_int(color);
 			my_mlx_pixel_put(vars, x, y, final_color);
 		}
@@ -147,7 +158,7 @@ void	render_scene(t_vars *vars)
 	world.light = point_light(point(-10, 10, -10), color(1, 1, 1));
 
 	t_camera	cam;
-	cam = camera(100, 50, (double)(M_PI / 3.0));
+	cam = camera(WIDTH, HEIGHT, (double)(M_PI / 3));
 	cam.transform = view_transform(point(0, 1.5, -5), point(0, 1, 0), vector(0, 1, 0));
 
 	render_mlx(vars, cam, world);

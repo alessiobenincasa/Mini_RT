@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_rt.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/22 15:22:30 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/23 14:38:29 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@
 # include <string.h>
 # include <unistd.h>
 
-# define WIDTH 100
-# define HEIGHT 50
+# define WIDTH 1200
+# define HEIGHT 1200
 # define MLX_ERROR 1
 # define M_PI 3.14159265358979323846
 # define EPSILON 0.00001
@@ -189,17 +189,6 @@ typedef struct s_comps
 
 }					t_comps;
 
-typedef struct s_camera
-{
-	int				hsize;
-	int				vsize;
-	double			fov;
-	t_matrix		transform;
-	double			pixel_size;
-	double			half_width;
-	double			half_height;
-}					t_camera;
-
 t_intersection		*hit(t_intersections *xs);
 int					compare_intersection_t(const void *a, const void *b);
 t_intersections		intersect_world(t_world *world, t_ray r);
@@ -280,11 +269,26 @@ t_color				color_at(t_world w, t_ray r);
 void				free_world(t_world *w);
 t_matrix			view_transform(t_tuple from, t_tuple to, t_tuple up);
 
-// Camera
+
+//! Camera
+
+typedef struct s_camera
+{
+	int				hsize;
+	int				vsize;
+	double			fov;
+	t_matrix		transform;
+	double			pixel_size;
+	double			half_width;
+	double			half_height;
+}					t_camera;
+
 t_camera			camera(int hsize, int vsize, double fov);
 t_ray				ray_for_pixel(t_camera camera, int px, int py);
 t_canvas			render(t_camera cam, t_world w);
 void				render_scene(t_vars *vars);
 t_canvas			render_scene2(void);
+
+//! Shadow
 
 #endif
