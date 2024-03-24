@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/24 15:00:32 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/24 16:00:39 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -814,7 +814,7 @@ void render_sphere(t_vars *vars)
 
     t_sphere* left = malloc(sizeof(t_sphere));
 	*left = sphere();
-    left->center = point(-3, 0, 0);
+    left->center = point(-4, -1, -3);
 	left->transform = scaling(0.33, 0.33, 0.33);
 	left->material = material();
 	left->material.color = color(1, 0.8, 0.1);
