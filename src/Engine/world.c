@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   world.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:07:18 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/22 14:11:13 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/24 14:30:35 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,14 +122,17 @@ t_comps prepare_computations(t_intersection i, t_ray r)
         comps.normalv = negate_tuple(comps.normalv);
     }
     else
+	{
         comps.inside = 0;
-
+	}
+	comps.over_point = add_tuples(comps.point, multiply_tuple_scalar(comps.normalv, EPSILON));
     return (comps);
 }
 
 t_color shade_hit(t_world world, t_comps comps)
 {
-	t_color light = lighting(comps.sphere->material, world.light , comps.point, comps.eyev, comps.normalv);
+	int in_shadow = is_shadowed(world, comps.over_point);
+	t_color light = lighting(comps.sphere->material, world.light, comps.point, comps.eyev, comps.normalv, in_shadow);
 	return (light);
 }
 

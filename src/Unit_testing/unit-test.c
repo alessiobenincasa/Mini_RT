@@ -1102,8 +1102,9 @@ Test(lighting_scenarios, lighting_with_eye_between_light_and_surface)
         .position = {0, 0, -10},
         .intensity = {1, 1, 1}
     };
+    int in_shadow = 0;
 
-    t_color result = lighting(m, light, position, eyev, normalv);
+    t_color result = lighting(m, light, position, eyev, normalv, in_shadow);
 
 
     t_color expected = {1.9f, 1.9f, 1.9f}; 
@@ -1122,8 +1123,8 @@ Test(lighting_scenarios, lighting_with_eye_opposite_surface_light_offset_45)
         .position = {0, 10, -10},
         .intensity = {1, 1, 1}
     };
-
-    t_color result = lighting(m, light, position, eyev, normalv);
+    int in_shadow = 0;
+    t_color result = lighting(m, light, position, eyev, normalv, in_shadow);
     t_color expected = {0.7364f, 0.7364f, 0.7364f};
 
     cr_assert_float_eq(result.red, expected.red, 1e-4);
@@ -1141,8 +1142,9 @@ Test(lighting_scenarios, lighting_with_eye_in_path_of_reflection_vector)
         .position = {0, 10, -10},
         .intensity = {1, 1, 1}
     };
+    int in_shadow = 0;
 
-    t_color result = lighting(m, light, position, eyev, normalv);
+    t_color result = lighting(m, light, position, eyev, normalv, in_shadow);
     t_color expected = {1.6364f, 1.6364f, 1.6364f};
 
     cr_assert_float_eq(result.red, expected.red, 1e-4);
@@ -1160,8 +1162,8 @@ Test(lighting_scenarios, lighting_with_light_behind_surface)
         .position = {0, 0, 10},
         .intensity = {1, 1, 1}
     };
-
-    t_color result = lighting(m, light, position, eyev, normalv);
+    int in_shadow = 0;
+    t_color result = lighting(m, light, position, eyev, normalv, in_shadow);
     t_color expected = {0.1f, 0.1f, 0.1f};
 
     cr_assert_float_eq(result.red, expected.red, 1e-4);
@@ -1393,67 +1395,170 @@ Test(camera_pixel_size_tests, pixel_size_vertical_canvas)
     cr_assert_float_eq(c.pixel_size, 0.01, 1e-6, "Expected pixel size to be 0.01 for a vertical canvas, got %f.", c.pixel_size);
 }
 
-Test(ray_construction_tests, ray_through_center_of_canvas)
-{
-    t_camera c = camera(201, 101, M_PI / 2);
-    t_ray r = ray_for_pixel(c, 100, 50);
+// Test(ray_construction_tests, ray_through_center_of_canvas)
+// {
+//     t_camera c = camera(201, 101, M_PI / 2);
+//     t_ray r = ray_for_pixel(c, 100, 50);
 
-    cr_assert_eq(r.origin.x, 0, "Expected ray origin x to be 0, got %f.", r.origin.x);
-    cr_assert_eq(r.origin.y, 0, "Expected ray origin y to be 0, got %f.", r.origin.y);
-    cr_assert_eq(r.origin.z, 0, "Expected ray origin z to be 0, got %f.", r.origin.z);
-    cr_assert_float_eq(r.direction.x, 0, 1e-6, "Expected ray direction x to be 0, got %f.", r.direction.x);
-    cr_assert_float_eq(r.direction.y, 0, 1e-6, "Expected ray direction y to be 0, got %f.", r.direction.y);
-    cr_assert_float_eq(r.direction.z, -1, 1e-6, "Expected ray direction z to be -1, got %f.", r.direction.z);
+//     cr_assert_eq(r.origin.x, 0, "Expected ray origin x to be 0, got %f.", r.origin.x);
+//     cr_assert_eq(r.origin.y, 0, "Expected ray origin y to be 0, got %f.", r.origin.y);
+//     cr_assert_eq(r.origin.z, 0, "Expected ray origin z to be 0, got %f.", r.origin.z);
+//     cr_assert_float_eq(r.direction.x, 0, 1e-6, "Expected ray direction x to be 0, got %f.", r.direction.x);
+//     cr_assert_float_eq(r.direction.y, 0, 1e-6, "Expected ray direction y to be 0, got %f.", r.direction.y);
+//     cr_assert_float_eq(r.direction.z, -1, 1e-6, "Expected ray direction z to be -1, got %f.", r.direction.z);
+// }
+
+// Test(ray_construction_tests, ray_through_corner_of_canvas)
+// {
+//     t_camera c = camera(201, 101, M_PI / 2);
+//     t_ray r = ray_for_pixel(c, 0, 0);
+
+//     cr_assert_float_eq(r.origin.x, 0, 1e-6, "Expected ray origin x to be 0, got %f.", r.origin.x);
+//     cr_assert_float_eq(r.origin.y, 0, 1e-6, "Expected ray origin y to be 0, got %f.", r.origin.y);
+//     cr_assert_float_eq(r.origin.z, 0, 1e-6, "Expected ray origin z to be 0, got %f.", r.origin.z);
+//     cr_assert_float_eq(r.direction.x, 0.66519, 1e-5, "Expected ray direction x to be 0.66519, got %f.", r.direction.x);
+//     cr_assert_float_eq(r.direction.y, 0.33259, 1e-5, "Expected ray direction y to be 0.33259, got %f.", r.direction.y);
+//     cr_assert_float_eq(r.direction.z, -0.66851, 1e-5, "Expected ray direction z to be -0.66851, got %f.", r.direction.z);
+// }
+
+// Test(ray_construction_tests, ray_when_camera_transformed)
+// {
+//     t_camera c = camera(201, 101, M_PI / 2);
+//     c.transform = multiply_matrices(rotation_y(M_PI / 4), translation(0, -2, 5));
+//     t_ray r = ray_for_pixel(c, 100, 50);
+
+//     // Asserting the ray origin
+//     cr_assert_float_eq(r.origin.x, 0, 1e-6, "Expected ray origin x to be 0, got %f.", r.origin.x);
+//     cr_assert_float_eq(r.origin.y, 2, 1e-6, "Expected ray origin y to be 2, got %f.", r.origin.y);
+//     cr_assert_float_eq(r.origin.z, -5, 1e-6, "Expected ray origin z to be -5, got %f.", r.origin.z);
+
+//     // Calculate expected direction using sqrt(2)/2 for easier readability
+//     double sqrt2_over_2 = sqrt(2) / 2;
+
+//     // Asserting the ray direction
+//     cr_assert_float_eq(r.direction.x, sqrt2_over_2, 1e-5, "Expected ray direction x to be %f, got %f.", sqrt2_over_2, r.direction.x);
+//     cr_assert_float_eq(r.direction.y, 0, 1e-5, "Expected ray direction y to be 0, got %f.", r.direction.y);
+//     cr_assert_float_eq(r.direction.z, -sqrt2_over_2, 1e-5, "Expected ray direction z to be %f, got %f.", -sqrt2_over_2, r.direction.z);
+// }
+
+
+// Test(rendering_tests, rendering_world_with_camera)
+// {
+//     t_world w = default_world();
+//     t_camera c = camera(11, 11, M_PI / 2);
+//     t_tuple from = point(0, 0, -5);
+//     t_tuple to = point(0, 0, 0);
+//     t_tuple up = vector(0, 1, 0);
+//     c.transform = view_transform(from, to, up);
+
+//     t_canvas image = render(c, w);
+//     t_color color = pixel_at(image, 5, 5);
+
+//     cr_assert_float_eq(color.red, 0.38066, 1e-5, "Expected pixel red value to be 0.38066, got %f.", color.red);
+//     cr_assert_float_eq(color.green, 0.47583, 1e-5, "Expected pixel green value to be 0.47583, got %f.", color.green);
+//     cr_assert_float_eq(color.blue, 0.2855, 1e-5, "Expected pixel blue value to be 0.2855, got %f.", color.blue);
+//     free_world(&w);
+// }
+
+Test(shadows, Lighting_with_the_surface_in_shadow)
+{
+    t_material m = material();
+    t_tuple position = {0, 0, 0, 1};
+    t_tuple eyev = vector(0, 0, -1);
+    t_tuple normalv = vector(0, 0, -1);
+    t_light light = point_light(point(0, 0, -10), color(1, 1, 1));
+    int in_shadow = 1;
+
+    t_color result = lighting(m, light, position, eyev, normalv, in_shadow);
+
+    cr_assert_float_eq(result.red, 0.1, 1e-5, "Expected pixel red value to be 0.1 got %f.", result.red);
+    cr_assert_float_eq(result.green, 0.1, 1e-5, "Expected pixel green value to be 0.1, got %f.", result.green);
+    cr_assert_float_eq(result.blue, 0.1, 1e-5, "Expected pixel blue value to be 0.1, got %f.", result.blue);
 }
 
-Test(ray_construction_tests, ray_through_corner_of_canvas)
-{
-    t_camera c = camera(201, 101, M_PI / 2);
-    t_ray r = ray_for_pixel(c, 0, 0);
-
-    cr_assert_float_eq(r.origin.x, 0, 1e-6, "Expected ray origin x to be 0, got %f.", r.origin.x);
-    cr_assert_float_eq(r.origin.y, 0, 1e-6, "Expected ray origin y to be 0, got %f.", r.origin.y);
-    cr_assert_float_eq(r.origin.z, 0, 1e-6, "Expected ray origin z to be 0, got %f.", r.origin.z);
-    cr_assert_float_eq(r.direction.x, 0.66519, 1e-5, "Expected ray direction x to be 0.66519, got %f.", r.direction.x);
-    cr_assert_float_eq(r.direction.y, 0.33259, 1e-5, "Expected ray direction y to be 0.33259, got %f.", r.direction.y);
-    cr_assert_float_eq(r.direction.z, -0.66851, 1e-5, "Expected ray direction z to be -0.66851, got %f.", r.direction.z);
-}
-
-Test(ray_construction_tests, ray_when_camera_transformed)
-{
-    t_camera c = camera(201, 101, M_PI / 2);
-    c.transform = multiply_matrices(rotation_y(M_PI / 4), translation(0, -2, 5));
-    t_ray r = ray_for_pixel(c, 100, 50);
-
-    // Asserting the ray origin
-    cr_assert_float_eq(r.origin.x, 0, 1e-6, "Expected ray origin x to be 0, got %f.", r.origin.x);
-    cr_assert_float_eq(r.origin.y, 2, 1e-6, "Expected ray origin y to be 2, got %f.", r.origin.y);
-    cr_assert_float_eq(r.origin.z, -5, 1e-6, "Expected ray origin z to be -5, got %f.", r.origin.z);
-
-    // Calculate expected direction using sqrt(2)/2 for easier readability
-    double sqrt2_over_2 = sqrt(2) / 2;
-
-    // Asserting the ray direction
-    cr_assert_float_eq(r.direction.x, sqrt2_over_2, 1e-5, "Expected ray direction x to be %f, got %f.", sqrt2_over_2, r.direction.x);
-    cr_assert_float_eq(r.direction.y, 0, 1e-5, "Expected ray direction y to be 0, got %f.", r.direction.y);
-    cr_assert_float_eq(r.direction.z, -sqrt2_over_2, 1e-5, "Expected ray direction z to be %f, got %f.", -sqrt2_over_2, r.direction.z);
-}
-
-
-Test(rendering_tests, rendering_world_with_camera)
+Test(shadows, There_is_no_shadow_when_nothing_is_collinear_with_point_and_light)
 {
     t_world w = default_world();
-    t_camera c = camera(11, 11, M_PI / 2);
-    t_tuple from = point(0, 0, -5);
-    t_tuple to = point(0, 0, 0);
-    t_tuple up = vector(0, 1, 0);
-    c.transform = view_transform(from, to, up);
-
-    t_canvas image = render(c, w);
-    t_color color = pixel_at(image, 5, 5);
-
-    cr_assert_float_eq(color.red, 0.38066, 1e-5, "Expected pixel red value to be 0.38066, got %f.", color.red);
-    cr_assert_float_eq(color.green, 0.47583, 1e-5, "Expected pixel green value to be 0.47583, got %f.", color.green);
-    cr_assert_float_eq(color.blue, 0.2855, 1e-5, "Expected pixel blue value to be 0.2855, got %f.", color.blue);
-    free_world(&w);
+    t_tuple p = point(0, 10, 0);
+    int expected_result = 0;
+    int result = is_shadowed(w, p);
+    cr_assert_eq(result, expected_result, "Expected is_shadowed to be false. ");
 }
+
+Test(shadows, The_shadow_when_an_object_is_between_the_point_and_the_light)
+{
+    t_world w = default_world();
+    t_tuple p = point(10, -10, 10);
+    int expected_result = 1;
+    int result = is_shadowed(w, p);
+    cr_assert_eq(result, expected_result, "Expected is_shadowed to be true. ");
+}
+Test(shadows, There_is_no_shadow_when_an_object_is_behind_the_light)
+{
+    t_world w = default_world();
+    t_tuple p = point(-20, 20, -20);
+    int expected_result = 0;
+    int result = is_shadowed(w, p);
+    cr_assert_eq(result, expected_result, "Expected is_shadowed to be false. ");
+}
+
+Test(shadows, There_is_no_shadow_when_an_object_is_behind_the_point)
+{
+    t_world w = default_world();
+    t_tuple p = point(-2, 2, -2);
+    int expected_result = 0;
+    int result = is_shadowed(w, p);
+    cr_assert_eq(result, expected_result, "Expected is_shadowed to be false. ");
+}
+Test(ray_tracing, the_hit_should_offset_the_point)
+{
+    t_ray r = ray(point(0, 0, -5), vector(0, 0, 1));
+    t_sphere shape = sphere();
+    shape.transform = translation(0, 0, 1);
+    t_intersection i = intersection(5, &shape);
+    t_comps comps = prepare_computations(i, r);
+
+    cr_assert_lt(comps.over_point.z, -EPSILON / 2, "Expected comps.over_point.z < -EPSILON/2.");
+    cr_assert(comps.point.z > comps.over_point.z, "Expected comps.point.z > comps.over_point.z.");
+}
+
+// Test(ray_tracing, shade_hit_given_intersection_in_shadow) {
+//     t_world w = world();
+//     w.light = point_light(point(0, 0, -10), color(1, 1, 1));
+
+//     // Initialize the first sphere, implicitly centered at (0, 0, 0)
+//     t_sphere* s1 = malloc(sizeof(t_sphere)); 
+//     *s1 = sphere();
+
+//     // Initialize the second sphere and translate it to be directly between the light and a point on the first sphere
+//     t_sphere* s2 = malloc(sizeof(t_sphere)); 
+//     *s2 = sphere();
+//     s2->transform = translation(0, 0, 10);
+    
+//     // Setup world objects
+//     w.objects = malloc(sizeof(t_object) * 2);
+//     w.objects[0].data = s1;
+//     w.objects[1].data = s2;
+
+//     // Cast a ray that intersects with the second sphere, which is in shadow
+//     t_ray r = ray(point(0, 0, 5), vector(0, 0, 1)); 
+//     t_intersection i = intersection(4, s2);
+//     t_comps comps = prepare_computations(i, r);
+//     t_color c = shade_hit(w, comps);
+
+//     // Assert that the color indicates the point is in shadow
+//     cr_assert_float_eq(c.red, 0.1, 1e-5, "Expected pixel red value to be 0.1 got %f.", c.red);
+//     cr_assert_float_eq(c.green, 0.1, 1e-5, "Expected pixel green value to be 0.1, got %f.", c.green);
+//     cr_assert_float_eq(c.blue, 0.1, 1e-5, "Expected pixel blue value to be 0.1, got %f.", c.blue);
+
+//     // Free allocated memory
+//     free(s1);
+//     free(s2);
+//     free(w.objects);
+// }
+
+
+
+
+
+

@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/23 17:28:32 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/24 15:00:32 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -710,60 +710,51 @@ void set_color(t_color *color, float red, float green, float blue)
 }
 
 
-t_color lighting(t_material m, t_light light, t_tuple position, t_tuple eyev, t_tuple normalv)
+t_color lighting(t_material m, t_light light, t_tuple position, t_tuple eyev, t_tuple normalv, int in_shadow)
 {
     t_color effective_color = multiply_colors(m.color, light.intensity);
-
-
     t_color ambient = {
         effective_color.red * m.ambient,
         effective_color.green * m.ambient,
         effective_color.blue * m.ambient
     };
-
-    t_tuple lightv = normalize((t_tuple){
-        light.position.x - position.x,
-        light.position.y - position.y,
-        light.position.z - position.z,
-        0
-    });
-
-    float light_dot_normal = dot(lightv, normalv);
     
-    t_color diffuse;
-    t_color specular;
-    set_color(&diffuse, 0, 0 ,0);
-    set_color(&specular, 0, 0 ,0);
+    t_color diffuse = {0, 0, 0};
+    t_color specular = {0, 0, 0};
 
-    if (light_dot_normal > -EPSILON)
-    {
+    if (!in_shadow) {
+        t_tuple lightv = normalize((t_tuple){
+            light.position.x - position.x,
+            light.position.y - position.y,
+            light.position.z - position.z,
+            0
+        });
 
-        diffuse.red = effective_color.red * m.diffuse * light_dot_normal;
-        diffuse.green = effective_color.green * m.diffuse * light_dot_normal;
-        diffuse.blue = effective_color.blue * m.diffuse * light_dot_normal;
+        float light_dot_normal = dot(lightv, normalv);
+        
+        if (light_dot_normal > 0) {
+            diffuse.red = effective_color.red * m.diffuse * light_dot_normal;
+            diffuse.green = effective_color.green * m.diffuse * light_dot_normal;
+            diffuse.blue = effective_color.blue * m.diffuse * light_dot_normal;
 
-        t_tuple minus_lightv = vector(-lightv.x, -lightv.y, -lightv.z);
-        t_tuple reflectv = reflect(minus_lightv, normalv);
-        float reflect_dot_eye = dot(reflectv, eyev);
+            t_tuple reflectv = reflect(vector(-lightv.x, -lightv.y, -lightv.z), normalv);
+            float reflect_dot_eye = dot(reflectv, eyev);
 
-        if (reflect_dot_eye <= -EPSILON)
-            set_color(&specular, 0, 0 ,0);
-        else
-        {
-            float factor = powf(reflect_dot_eye, m.shininess);
-            specular.red = light.intensity.red * m.specular * factor;
-            specular.green = light.intensity.green * m.specular * factor;
-            specular.blue = light.intensity.blue * m.specular * factor;
+            if (reflect_dot_eye > 0) {
+                float factor = powf(reflect_dot_eye, m.shininess);
+                specular.red = light.intensity.red * m.specular * factor;
+                specular.green = light.intensity.green * m.specular * factor;
+                specular.blue = light.intensity.blue * m.specular * factor;
+            }
         }
     }
-
     t_color result = {
         ambient.red + diffuse.red + specular.red,
         ambient.green + diffuse.green + specular.green,
         ambient.blue + diffuse.blue + specular.blue
     };
 
-    return (result);
+    return result;
 }
 
 

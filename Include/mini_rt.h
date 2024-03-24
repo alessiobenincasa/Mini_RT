@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/23 14:38:29 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/24 13:49:18 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,7 @@ typedef struct s_comps
 	t_tuple			eyev;
 	t_tuple			normalv;
 	int				inside;
+	t_tuple			over_point;
 
 }					t_comps;
 
@@ -231,7 +232,7 @@ t_tuple				subtract_tuples(t_tuple a, t_tuple b);
 t_tuple				add_tuples(t_tuple a, t_tuple b);
 int					equal(double a, double b);
 t_color				lighting(t_material m, t_light light, t_tuple position,
-						t_tuple eyev, t_tuple normalv);
+						t_tuple eyev, t_tuple normalv, int in_shadow);
 t_ray				transform(t_ray ray, t_matrix m);
 t_intersection		intersection(double t, t_sphere *object);
 t_tuple				point(double x, double y, double z);
@@ -269,7 +270,6 @@ t_color				color_at(t_world w, t_ray r);
 void				free_world(t_world *w);
 t_matrix			view_transform(t_tuple from, t_tuple to, t_tuple up);
 
-
 //! Camera
 
 typedef struct s_camera
@@ -290,5 +290,6 @@ void				render_scene(t_vars *vars);
 t_canvas			render_scene2(void);
 
 //! Shadow
+int					is_shadowed(t_world world, t_tuple point);
 
 #endif
