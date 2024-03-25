@@ -6,47 +6,12 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/20 16:08:59 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/25 10:59:18 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINI_RT_H
 # define MINI_RT_H
-
-//! ---------------------------- COLORS ----------------------------- */
-//? Colors */
-//? Colors Interact */
-
-//! --------------------------- MATRICES ---------------------------- */
-//? Basic matrix operations */
-//? Matrix transformation */
-//? Matrix rotations */
-//? Matrix utility functions */
-//? Matrix advanced operations */
-
-//! --------------------------- GEOMETRY ---------------------------- */
-//? Tuples */
-//? Vectors */
-
-//! ------------------------- RAY-TRACING --------------------------- */
-//? Rays */
-//? Intersections */
-//? Material and Light */
-//? Scene */
-
-//! ---------------------------- SHAPES ----------------------------- */
-//? Spheres */
-//? Cylinder */
-//? Planes */
-
-//! --------------------------- GRAPHICS ---------------------------- */
-//? Canvas */
-//? MLX Utils */
-
-//! ---------------------------- PHYSICS ---------------------------- */
-
-//! ----------------------------- UTILS ----------------------------- */
-
 
 //*--------------------- 📚 𝙇𝙄𝘽𝙍𝘼𝙍𝙄𝙀𝙎 📚------------------------*//
 
@@ -94,6 +59,9 @@ typedef struct s_intersection	t_intersection;
 typedef struct s_intersections	t_intersections;
 typedef struct s_img			t_img;
 typedef struct s_vars			t_vars;
+typedef struct s_object			t_object;
+typedef struct s_world			t_world;
+typedef struct s_comps			t_comps;
 
 //*----------------------- 🎨 Colors 🎨 -----------------------*//
 
@@ -110,12 +78,16 @@ t_color							pixel_at(t_canvas c, int x, int y);
 int								make_color(float percent, int flag, int r,
 									int g);
 int								create_trgb(int t, int r, int g, int b);
+int								convert_color_to_int(t_color color);
+void							set_color(t_color *color, float red,
+									float green, float blue);
 
 // todo               ~~~ Colors Interact ~~~
 t_color							hadarmard_product(t_color c, t_color b);
 t_color							multiply_color_scalar(t_color c, float scalar);
 t_color							subtract_colors(t_color c1, t_color c2);
 t_color							add_colors(t_color c1, t_color c2);
+t_color							multiply_colors(t_color color1, t_color color2);
 
 //*---------------------- 🧮 Matrices 🧮 ----------------------*//
 
@@ -172,7 +144,7 @@ t_tuple							tuple(double x, double y, double z, double w);
 t_tuple							point(double x, double y, double z);
 t_tuple							vector(double x, double y, double z);
 t_tuple							add_tuples(t_tuple a, t_tuple b);
-t_tuple							substract_tuples(t_tuple a, t_tuple b);
+t_tuple							subtract_tuples(t_tuple a, t_tuple b);
 t_tuple							negate_tuple(t_tuple t);
 t_tuple							reflect(t_tuple incident, t_tuple normal);
 int								tuple_equals(t_tuple a, t_tuple b);
@@ -229,7 +201,7 @@ t_intersection					*hit(t_intersections *xs);
 // todo             ~~~ Material and Light
 typedef struct s_material
 {
-	int							color[3];
+	t_color						color;
 	double						ambient;
 	double						diffuse;
 	double						specular;
@@ -238,14 +210,16 @@ typedef struct s_material
 
 typedef struct s_light
 {
-	t_vector					position;
-	double						intensity;
-	int							color[3];
+	t_tuple						position;
+	t_color						intensity;
 }								t_light;
 
 t_material						material(void);
-t_light							point_light(t_vector position, double intensity,
-									int color[3]);
+t_light							point_light(t_tuple position,
+									t_color intensity);
+t_color							lighting(t_material m, t_light light,
+									t_tuple position, t_tuple eyev,
+									t_tuple normalv, int in_shadow);
 
 // todo               ~~~     Scene
 typedef struct s_scene_state
@@ -257,15 +231,8 @@ typedef struct s_scene_state
 typedef struct s_ambient
 {
 	double						ratio;
-	int							color[3];
+	t_color						color;
 }								t_ambient;
-
-typedef struct s_camera
-{
-	t_vector					position;
-	t_vector					orientation;
-	double						fov;
-}								t_camera;
 
 //*----------------------- 🌀 Shapes 🌀 -----------------------*//
 
@@ -276,7 +243,6 @@ typedef struct s_sphere
 	double						radius;
 	t_material					material;
 	t_matrix					transform;
-	int							color[3];
 }								t_sphere;
 
 t_sphere						sphere(void);
@@ -286,19 +252,21 @@ t_tuple							normal_at(t_sphere sphere, t_tuple p);
 // todo               ~~~    Cylinder
 typedef struct s_cylinder
 {
-	t_vector					center;
-	t_vector					direction;
+	t_tuple						center;
+	t_tuple						direction;
 	double						diameter;
 	double						height;
-	int							color[3];
+	t_material					material;
+	t_matrix					transform;
 }								t_cylinder;
 
 // todo               ~~~     Planes
 typedef struct s_plane
 {
-	t_vector					point;
-	t_vector					normal;
-	int							color[3];
+	t_tuple						point;
+	t_tuple						normal;
+	t_material					material;
+	t_matrix					transform;
 }								t_plane;
 
 //*---------------------- 🖥️ Graphics 🖥️ ----------------------*//
@@ -317,7 +285,7 @@ void							write_pixel(t_canvas *c, int x, int y,
 void							convert_and_display_canvas(t_vars *vars,
 									t_canvas canvas);
 
-// todo               ~~~   MLX Utils
+// todo               ~~~     MLX Utils
 typedef struct s_img
 {
 	void						*img_ptr;
@@ -350,6 +318,69 @@ typedef struct s_environnement
 	t_tuple						wind;
 	t_tuple						gravity;
 }								t_environnement;
+
+// todo               ~~~     Shadows
+int								is_shadowed(t_world world, t_tuple point);
+
+//*------------------------ 🌍 World 🌍 -----------------------*//
+typedef struct s_object
+{
+	int							id;
+	void						*data;
+}								t_object;
+
+typedef struct s_world
+{
+	t_object					*objects;
+	int							object_count;
+	t_light						light;
+}								t_world;
+
+typedef struct s_comps
+{
+	double						t;
+	t_sphere					*sphere;
+	t_tuple						point;
+	t_tuple						eyev;
+	t_tuple						normalv;
+	int							inside;
+	t_tuple						over_point;
+
+}								t_comps;
+
+t_world							world(void);
+t_world							default_world(void);
+void							free_world(t_world *w);
+void							add_intersection(t_intersections *xs, double t,
+									t_sphere *s);
+int								compare_intersections(const void *a,
+									const void *b);
+void							sort_intersections(t_intersections *intersections);
+t_intersections					intersect_world(t_world *world, t_ray r);
+t_comps							prepare_computations(t_intersection i, t_ray r);
+t_color							shade_hit(t_world world, t_comps comps);
+t_color							color_at(t_world w, t_ray r);
+t_matrix						view_transform(t_tuple from, t_tuple to,
+									t_tuple up);
+
+//*----------------------- 📷 Camera 📷 -----------------------*//
+
+typedef struct s_camera
+{
+	int							hsize;
+	int							vsize;
+	double						fov;
+	t_matrix					transform;
+	double						pixel_size;
+	double						half_width;
+	double						half_height;
+}								t_camera;
+
+t_camera						camera(int hsize, int vsize, double fov);
+t_ray							ray_for_pixel(t_camera camera, int px, int py);
+t_canvas						render(t_camera cam, t_world w);
+void							render_scene(t_vars *vars);
+t_canvas						render_scene2(void);
 
 //*----------------------- ❔ Utils ❔ ----------------------*//
 

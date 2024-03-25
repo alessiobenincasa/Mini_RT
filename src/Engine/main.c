@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/24 16:00:39 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/25 10:51:52 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -678,7 +678,7 @@ t_light point_light(t_tuple position, t_color intensity)
     return (light);
 }
 
-t_material material()
+t_material material(void)
 {
     t_material m;
     m.color.red = 1;
