@@ -1,41 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   atoi.c                                          :+:      :+:    :+:   */
+/*   ft_strtok.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/08 14:45:18 by svolodin          #+#    #+#             */
-/*   Updated: 2023/12/29 13:04:23 by svolodin         ###   ########.fr       */
+/*   Created: 2024/03/14 09:10:21 by svolodin          #+#    #+#             */
+/*   Updated: 2024/03/14 09:10:28 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "limits.h"
 
-int	ft_atoi(const char *str)
+char	*ft_strtok(char *str, char sepa)
 {
-	int		i;
-	int		sign;
-	long	result;
+	static char	*stock = NULL;
+	char		*ptr;
+	int			i;
 
 	i = 0;
-	sign = 1;
-	result = 0;
-	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
-		i++;
-	if (str[i] == '+' || str[i] == '-')
+	ptr = NULL;
+	if (str != NULL)
+		stock = ft_strdup(str);
+	while (*stock != '\0')
 	{
-		if (str[i] == '-')
-			sign = -1;
-		i++;
+		if (i == 0 && *stock != sepa)
+		{
+			i = 1;
+			ptr = stock;
+		}
+		else if (i == 1 && *stock == sepa)
+		{
+			*stock = '\0';
+			stock += 1;
+			break ;
+		}
+		stock++;
 	}
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		if (result > INT_MAX / 10)
-			return (INT_MIN);
-		result = result * 10 + (str[i] - '0');
-		i++;
-	}
-	return ((int)(result * sign));
+	return (ptr);
 }

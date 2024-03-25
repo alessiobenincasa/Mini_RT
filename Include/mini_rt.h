@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/25 13:53:10 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/25 14:50:10 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,29 +39,96 @@
 # define PIXEL_SIZE 1
 # define WALL_Z 10
 
+# define BLUE "\x1B[94m"
+# define GREEN "\x1B[32m"
+# define RED "\x1B[31m"
+# define RESET "\x1B[0m"
+
 //*------------------ 📜 Pre-declarations 📜 -------------------*//
 
-typedef struct s_scene_state	t_scene_state;
-typedef struct s_vector			t_vector;
 typedef struct s_ambient		t_ambient;
 typedef struct s_camera			t_camera;
-typedef struct s_light			t_light;
-typedef struct s_plane			t_plane;
-typedef struct s_cylinder		t_cylinder;
-typedef struct s_tuple			t_tuple;
-typedef struct s_projectile		t_projectile;
-typedef struct s_environnement	t_environnement;
 typedef struct s_canvas			t_canvas;
-typedef struct s_ray			t_ray;
-typedef struct s_material		t_material;
-typedef struct s_sphere			t_sphere;
+typedef struct s_color			t_color;
+typedef struct s_comps			t_comps;
+typedef struct s_cylinder		t_cylinder;
+typedef struct s_environnement	t_environnement;
+typedef struct s_img			t_img;
+typedef struct s_init			t_init;
 typedef struct s_intersection	t_intersection;
 typedef struct s_intersections	t_intersections;
-typedef struct s_img			t_img;
-typedef struct s_vars			t_vars;
+typedef struct s_light			t_light;
+typedef struct s_material		t_material;
 typedef struct s_object			t_object;
+typedef struct s_plane			t_plane;
+typedef struct s_projectile		t_projectile;
+typedef struct s_ray			t_ray;
+typedef struct s_scene_data		t_scene_data;
+typedef struct s_scene_state	t_scene_state;
+typedef struct s_sphere			t_sphere;
+typedef struct s_tuple			t_tuple;
+typedef struct s_vector			t_vector;
+typedef struct s_vars			t_vars;
 typedef struct s_world			t_world;
-typedef struct s_comps			t_comps;
+
+//*----------------------- 👁️ 𝙋𝘼𝙍𝙎𝙀 👁️ -----------------------*//
+typedef struct s_init
+{
+	int							ambient_light;
+	int							camera;
+	int							light;
+}								t_init;
+
+typedef struct s_scene_data
+{
+	t_ambient					*ambient_light;
+	t_camera					*camera;
+	t_light						*light;
+	t_init						initialised;
+	t_list						*shapes;
+	int							shape_count;
+}								t_scene_data;
+
+// todo              ~~~  parse errors  ~~~                  *//
+int								invalid_input(int ac, char **av);
+void							error(char *str);
+
+// todo              ~~~   data init    ~~~                  *//
+void							*init_data(t_scene_data *scene_data, int ac,
+									char **av);
+int								get_identifier(char **line,
+									t_identifier_type *type,
+									t_scene_data *scene_data);
+
+// todo              ~~~ value extract  ~~~                  *//
+void							parse_coordinates(char *input, t_tuple *vec);
+int								parse_colors(char *input, t_color *colors);
+
+// todo              ~~~     utils      ~~~                  *//
+double							ft_atof(const char *str);
+int								skip_spaces(char *str);
+char							*strdup_upto_whitespace(const char *s);
+void							get_next_value(char **value, char **line);
+
+// todo              ~~~   get shapes   ~~~                  *//
+t_sphere						*get_sphere_data(char *line);
+t_plane							*get_plane_data(char *line);
+t_cylinder						*get_cylinder_data(char *line);
+
+// todo              ~~~  add elements  ~~~                  *//
+int								add_shape_data(t_identifier_type type,
+									t_scene_data *scene_data, char *line);
+int								add_capital_element(t_identifier_type type,
+									t_scene_data *scene_data, char *line);
+
+// todo              ~~~     print      ~~~                  *//
+void							print_camera(const t_camera *camera);
+void							print_identifier_type(t_identifier_type type);
+void							print_sphere(const t_sphere *sphere);
+void							print_ambient(const t_ambient *ambient);
+void							print_light(const t_light *light);
+void							print_plane(const t_plane *plane);
+void							print_cylinder(const t_cylinder *cylinder);
 
 //*----------------------- 🎨 Colors 🎨 -----------------------*//
 
@@ -222,6 +289,7 @@ typedef struct s_light
 {
 	t_tuple						position;
 	t_color						intensity;
+	double						energy;
 }								t_light;
 
 t_light							point_light(t_tuple position,
@@ -379,6 +447,8 @@ typedef struct s_camera
 	double						pixel_size;
 	double						half_width;
 	double						half_height;
+	t_tuple						position;
+	t_tuple						orientation;
 }								t_camera;
 
 t_camera						camera(int hsize, int vsize, double fov);
