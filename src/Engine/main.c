@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/24 16:00:39 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/25 11:12:32 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -776,7 +776,7 @@ void render_sphere(t_vars *vars)
 {
     int x = 0; 
     int y = 0;
-    int canvas_pixel = 1200;
+    int canvas_pixel = HEIGHT;
     double wall_size = 0.5;
     double pixel_size = wall_size / canvas_pixel;
     double wall_z = -4.5;
@@ -865,6 +865,22 @@ void render_sphere(t_vars *vars)
 //     }
 // }
 
+int key_hook(int keycode, t_vars *vars)
+{
+    if (keycode == XK_Escape)
+    {
+        mlx_destroy_window(vars->mlx, vars->win);
+        exit(0);
+    }
+    return (0);
+}
+
+int close_program(void *param)
+{
+    (void)param;
+    exit(0);
+    return (0);
+}
 
 int main()
 {
@@ -875,7 +891,9 @@ int main()
     vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
     vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
                                      &vars.img.endian);
-
+    
+    mlx_hook(vars.win, DestroyNotify, StructureNotifyMask, close_program, &vars);
+    mlx_key_hook(vars.win, key_hook, &vars);
     render_sphere(&vars);
 
     mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
