@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/25 10:59:18 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/25 11:41:16 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,6 @@ typedef struct s_color
 // todo               ~~~      Colors     ~~~
 t_color							color(float red, float green, float blue);
 t_color							pixel_at(t_canvas c, int x, int y);
-int								make_color(float percent, int flag, int r,
-									int g);
-int								create_trgb(int t, int r, int g, int b);
 int								convert_color_to_int(t_color color);
 void							set_color(t_color *color, float red,
 									float green, float blue);
@@ -99,7 +96,7 @@ typedef struct s_matrix
 
 }								t_matrix;
 
-// todo           ~~~ Basic matrix operations
+// todo           ~~~ Matrix basic operations
 t_matrix						create_matrix(int rows, int cols,
 									float elements[]);
 void							free_matrix(t_matrix *m);
@@ -140,9 +137,12 @@ typedef struct s_tuple
 	double x, y, z, w;
 }								t_tuple;
 
+// todo              ~~~ Tuple conversion
 t_tuple							tuple(double x, double y, double z, double w);
 t_tuple							point(double x, double y, double z);
 t_tuple							vector(double x, double y, double z);
+
+// todo              ~~~ Tuples interact
 t_tuple							add_tuples(t_tuple a, t_tuple b);
 t_tuple							subtract_tuples(t_tuple a, t_tuple b);
 t_tuple							negate_tuple(t_tuple t);
@@ -198,7 +198,14 @@ t_intersections					intersections(int count,
 t_intersections					intersect(t_sphere *s, t_ray r);
 t_intersection					*hit(t_intersections *xs);
 
-// todo             ~~~ Material and Light
+// todo               ~~~  Intersect handle
+void							add_intersection(t_intersections *xs, double t,
+									t_sphere *s);
+int								compare_intersections(const void *a,
+									const void *b);
+void							sort_intersections(t_intersections *intersections);
+
+// todo             ~~~     Material
 typedef struct s_material
 {
 	t_color						color;
@@ -208,13 +215,15 @@ typedef struct s_material
 	double						shininess;
 }								t_material;
 
+t_material						material(void);
+
+// todo             ~~~      Light
 typedef struct s_light
 {
 	t_tuple						position;
 	t_color						intensity;
 }								t_light;
 
-t_material						material(void);
 t_light							point_light(t_tuple position,
 									t_color intensity);
 t_color							lighting(t_material m, t_light light,
@@ -282,8 +291,6 @@ typedef struct s_canvas
 t_canvas						canvas(int width, int height);
 void							write_pixel(t_canvas *c, int x, int y,
 									t_color color);
-void							convert_and_display_canvas(t_vars *vars,
-									t_canvas canvas);
 
 // todo               ~~~     MLX Utils
 typedef struct s_img
@@ -348,14 +355,12 @@ typedef struct s_comps
 
 }								t_comps;
 
+// todo               ~~~    World Init
 t_world							world(void);
 t_world							default_world(void);
 void							free_world(t_world *w);
-void							add_intersection(t_intersections *xs, double t,
-									t_sphere *s);
-int								compare_intersections(const void *a,
-									const void *b);
-void							sort_intersections(t_intersections *intersections);
+
+// todo               ~~~    World colors
 t_intersections					intersect_world(t_world *world, t_ray r);
 t_comps							prepare_computations(t_intersection i, t_ray r);
 t_color							shade_hit(t_world world, t_comps comps);

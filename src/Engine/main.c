@@ -6,41 +6,16 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/25 10:51:52 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/25 11:44:58 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_rt.h"
 
 
-t_color color(float red, float green, float blue)
-{
-    t_color c;
-    c.red = red;
-    c.green = green;
-    c.blue = blue;
-    return c;
-}
 
-t_color add_colors(t_color c1, t_color c2)
-{
-    return color(c1.red + c2.red, c1.green + c2.green, c1.blue + c2.blue);
-}
 
-t_color subtract_colors(t_color c1, t_color c2)
-{
-    return color(c1.red - c2.red, c1.green - c2.green, c1.blue - c2.blue);
-}
 
-t_color multiply_color_scalar(t_color c, float scalar)
-{
-    return color(c.red * scalar, c.green * scalar, c.blue * scalar);
-}
-
-t_color hadarmard_product(t_color c, t_color b)
-{
-    return color(c.red * b.red, c.green * b.green, c.blue * b.blue);
-}
 
 
 t_tuple vector(double x, double y, double z)
@@ -173,12 +148,7 @@ void write_pixel(t_canvas* c, int x, int y, t_color color)
     }
 }
 
-t_color pixel_at(t_canvas c, int x, int y)
-{
-    if (x >= 0 && x < c.width && y >= 0 && y < c.height)
-        return c.pixels[y * c.width + x];
-    return (t_color){0, 0, 0};
-}
+
 
 t_matrix create_matrix(int rows, int cols, float elements[])
 {
@@ -691,23 +661,9 @@ t_material material(void)
     return m;
 }
 
-t_color multiply_colors(t_color color1, t_color color2)
-{
-    t_color result;
-    
-    result.red = color1.red * color2.red;
-    result.green = color1.green * color2.green;
-    result.blue = color1.blue * color2.blue;
-    
-    return result;
-}
 
-void set_color(t_color *color, float red, float green, float blue)
-{
-    color->red = red;
-    color->green = green;
-    color->blue = blue;
-}
+
+
 
 
 t_color lighting(t_material m, t_light light, t_tuple position, t_tuple eyev, t_tuple normalv, int in_shadow)
@@ -758,19 +714,7 @@ t_color lighting(t_material m, t_light light, t_tuple position, t_tuple eyev, t_
 }
 
 
-int convert_color_to_int(t_color color)
-{
-    int red = (int)(color.red * 255);
-    int green = (int)(color.green * 255);
-    int blue = (int)(color.blue * 255);
 
-    red = red < 0 ? 0 : (red > 255 ? 255 : red);
-    green = green < 0 ? 0 : (green > 255 ? 255 : green);
-    blue = blue < 0 ? 0 : (blue > 255 ? 255 : blue);
-
-    int combined_color = (red << 16) | (green << 8) | blue;
-    return combined_color;
-}
 
 void render_sphere(t_vars *vars)
 {

@@ -3,108 +3,77 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+         #
+#    By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/08 16:18:07 by albeninc          #+#    #+#              #
-#    Updated: 2024/03/19 23:08:01 by albeninc         ###   ########.fr        #
+#    Updated: 2024/03/25 11:48:53 by svolodin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-_END=$'\033[0m'
-_BOLD=$'\033[1m'
-_UNDER=$'\033[4m'
-_REV=$'\033[7m'
+NAME 				= miniRT
+CC 					= cc
+CFLAGS 				= -Wall -Wextra -Werror
 
-# Colors
-_GREY=$'\033[30m'
-_RED=$'\033[31m'
-_GREEN=$'\033[32m'
-_YELLOW=$'\033[33m'
-_BLUE=$'\033[34m'
-_PURPLE=$'\033[35m'
-_CYAN=$'\033[36m'
-_WHITE=$'\033[37m'
+INCLUDES 			= -IInclude -IInclude/libft/srcs/includes -Iminilibx
 
-################################################################################
-#                                VARIABLES									   #
-################################################################################
+LIB_MINILIBX 		= -Lminilibx -lmlx -lXext -lX11 -lm -lz
+LIB_LIBFT 			= -LInclude/libft -lft
 
-SRCS_DIR		=	src/Engine
-SRCS			=	$(shell find $(SRCS_DIR) -name '*.c')
-MAIN_SRCS		=	$(SRCS_DIR)/main.c /world.c
-NAME			= 	MiniRT
-RM				= 	rm -rf
-CC				=	gcc $(CFLAGS)
-CFLAGS			=	-Wall -Werror -Wextra -IInclude -IInclude/libft/
-LDFLAGS			=	-LInclude/libft -lft -lm
-OBJECTS 		=	$(SRCS:.c=.o)
-MLX_DIR			= ./minilibx
-MLX_FLAGS		= -L$(MLX_DIR) -lmlx -lXext -lX11
-CFLAGS			+= -I$(MLX_DIR)
+SRCS_DIR			= ./src/
+OBJS_PATH			= ./objs/
 
-################################################################################
-#                                MAIN RULES								       #
-################################################################################
+SRCS				= $(shell find $(SRCS_DIR) -name '*.c')
+OBJS				= $(SRCS:$(SRCS_DIR)%.c=$(OBJS_PATH)%.o)
 
-all:	$(NAME)
+MAKEFLAGS 			+= --no-print-directory
+TOTAL_FILES     	= $(words $(SRCS))
+CURRENT_INDEX   	= 0
 
-$(NAME):	$(OBJECTS)
-	@echo "${_UNDER}${_RED}Creating binary for Project${_END}"
-	@$(CC) -o $(NAME) $(OBJECTS) $(LDFLAGS) $(MLX_FLAGS)
-	@echo "${_BOLD}${_GREEN}$(NAME) compiled successfully!${_END}"
+all: 				$(NAME)
 
-%.o: %.c
-	@echo "${_BOLD}${_BLUE}Compiling $<${_END}"
-	@$(CC) $(CFLAGS) -c $< -o $@
+$(NAME): 			lib $(OBJS)
+					@$(CC) $(OBJS) $(LIB_MINILIBX) $(LIB_LIBFT) $(INCLUDES) -o $(NAME)
+					@echo "\n$(BOLD)┗▷$(GREEN)『./miniRT Created』[✅]$(RESET)"
 
-################################################################################
-#                              	TEST VARIABLES					   		   	   #
-################################################################################
+$(OBJS_PATH)%.o: 	$(SRCS_DIR)%.c
+					@mkdir -p $(@D)
+					@$(eval CURRENT_INDEX=$(shell echo $$(($(CURRENT_INDEX)+1))))
+					@$(eval PERCENT=$(shell echo $$(($(CURRENT_INDEX) * 100 / $(TOTAL_FILES)))))
+					@printf "\r$(YELLOW)🔧 $(GREEN)%3d%% $(YELLOW)$(BOLD)Compiling: $(RESET)$(BLUE)$(ITALIC)%-50s $(MAGENTA)[%3d/%3d]$(RESET)" $(PERCENT) "$<" $(CURRENT_INDEX) $(TOTAL_FILES)
+					@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-CR_HEADER_PATH	=	-I${HOME}/Criterion/include/criterion
-T_NAME			= 	UNIT_TEST
-T_SRCS			=	src/Unit_testing/unit-test.c
-T_CC			=	gcc $(CFLAGS) $(CR_HEADER_PATH) $(CR_LIB_PATH) $(T_FLAGS)
-CR_LIB_PATH     =   -L${HOME}/Criterion/build/src -Wl,-rpath=${HOME}/Criterion/build/src
-T_FLAGS         =   -lcriterion $(CR_LIB_PATH)
-# Test object files (add more as needed)
-T_OBJECTS =	$(T_SRCS:.c=.o)
-
-# Possibly needed source object files excluding main.o
-# Adjust this list to include only the objects needed for testing
-TESTED_OBJECTS := $(filter-out $(MAIN_SRCS:.c=.o), $(OBJECTS)) src/Engine/main.o
-
-################################################################################
-#                                TEST RULES                                    #
-################################################################################
-
-
-$(T_OBJECTS): %.o: %.c
-	@echo "${_BOLD}${_BLUE}Compiling test $<${_END}"
-	@$(CC) $(CFLAGS) $(CR_HEADER_PATH) -c $< -o $@
-
-tests:	$(T_OBJECTS) $(TESTED_OBJECTS)
-	@echo "${_UNDER}${_RED}Linking tests...${_END}"
-	@$(CC) -o $(T_NAME) $(T_OBJECTS) $(TESTED_OBJECTS) $(LDFLAGS) $(T_FLAGS)
-	@echo "${_BOLD}${_GREEN}Running tests...${_END}"
-	@./$(T_NAME)
-
-
-
-################################################################################
-#                               	CLEANUP								       #
-################################################################################
+lib:
+					@make -C minilibx
+					@make -C Include/libft
 
 clean:
-	@echo "${_UNDER}${_RED}Deleting Objects and Dependencies${_END}"
-	@$(RM) $(OBJECTS) $(T_OBJECTS)
-	@echo "${_BOLD}${_YELLOW}Cleanup complete${_END}"
+					@echo "$(BOLD) [🗑️ ] $(YELLOW)$(REVERSED)Cleaning up$(RESET)"
+					@make -C minilibx clean
+					@make -C Include/libft clean
+					@echo "┗▷$(YELLOW)『Libraries cleaned』$(RESET)"
+					@rm -rf $(OBJS_PATH)
+					@echo "┗▷$(YELLOW)『Object files from $(ITALIC)./miniRT/$(RESET)$(YELLOW) cleaned』$(RESET)"
 
-fclean: clean
-	@echo "${_UNDER}${_RED}Deleting Executable${_END}"
-	@$(RM) $(NAME) $(T_NAME)
-	@echo "${_BOLD}${_RED}Executable removed${_END}"
+fclean:				 clean
+					@rm -f $(NAME)
+					@echo "┗▷$(YELLOW)『executables from $(ITALIC)./miniRT/$(RESET)$(YELLOW) cleaned』$(RESET)"
 
-re:	fclean all
+re: 				fclean all
 
-.PHONY:		all clean fclean re tests
+.PHONY:				all lib clean fclean re
+
+# Colors
+RED := \033[0;31m
+GREEN := \033[0;32m
+YELLOW := \033[0;33m
+BLUE := \033[0;34m
+MAGENTA := \033[0;35m
+CYAN := \033[0;36m
+WHITE := \033[0;37m
+RESET := \033[0m
+
+# Text Styles
+BOLD := \033[1m
+UNDERLINE := \033[4m
+REVERSED := \033[7m
+ITALIC := \033[3m
