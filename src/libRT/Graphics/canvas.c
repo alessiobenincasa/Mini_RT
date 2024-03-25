@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/25 11:31:30 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/25 12:00:45 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,3 +14,28 @@
 
 t_canvas	canvas(int width, int height);
 void		write_pixel(t_canvas *c, int x, int y, t_color color);
+
+t_canvas	canvas(int width, int height)
+{
+	t_canvas	c;
+	int			i;
+
+	i = 0;
+	c.width = width;
+	c.height = height;
+	c.pixels = (t_color *)malloc(width * height * sizeof(t_color));
+	while (i < width * height)
+	{
+		c.pixels[i] = (t_color){0, 0, 0};
+		i++;
+	}
+	return (c);
+}
+
+void	write_pixel(t_canvas *c, int x, int y, t_color color)
+{
+	if (x >= 0 && x < c->width && y >= 0 && y < c->height)
+	{
+		c->pixels[y * c->width + x] = color;
+	}
+}
