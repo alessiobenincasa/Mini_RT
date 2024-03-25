@@ -10,7 +10,7 @@ LIB_LIBFT 			= -LInclude/libft -lft
 SRCS_DIR			= ./src/
 OBJS_PATH			= ./objs/
 
-SRCS				= $(shell find $(SRCS_DIR) -name '*.c')
+SRCS				= $(shell find $(SRCS_DIR) -name '*.c' ! -name 'unit-test.c')
 OBJS				= $(SRCS:$(SRCS_DIR)%.c=$(OBJS_PATH)%.o)
 
 MAKEFLAGS 			+= --no-print-directory
