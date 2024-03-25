@@ -36,7 +36,7 @@ clean:
 
 fclean:		clean
 			@$(RM) $(NAME)
-			@if [ -d "$(OBJS_PATH)" ]; then rmdir $(OBJS_PATH); fi
+			@if [ -d "$(OBJS_PATH)" ]; then rm -rf $(OBJS_PATH); fi
 
 re:			fclean all
 

@@ -6,7 +6,7 @@
 #    By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/08 16:18:07 by albeninc          #+#    #+#              #
-#    Updated: 2024/03/25 11:48:53 by svolodin         ###   ########.fr        #
+#    Updated: 2024/03/25 13:48:45 by svolodin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,8 +54,9 @@ clean:
 					@rm -rf $(OBJS_PATH)
 					@echo "┗▷$(YELLOW)『Object files from $(ITALIC)./miniRT/$(RESET)$(YELLOW) cleaned』$(RESET)"
 
-fclean:				 clean
+fclean:				clean
 					@rm -f $(NAME)
+					@make -C Include/libft fclean
 					@echo "┗▷$(YELLOW)『executables from $(ITALIC)./miniRT/$(RESET)$(YELLOW) cleaned』$(RESET)"
 
 re: 				fclean all
