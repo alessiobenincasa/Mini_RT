@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/26 13:34:28 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/26 13:43:30 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -413,7 +413,7 @@ typedef struct s_object
 
 typedef struct s_world
 {
-	t_object					*objects;
+	t_list						*objects;
 	int							object_count;
 	t_light						light;
 }								t_world;

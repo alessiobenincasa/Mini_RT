@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/25 12:02:16 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/26 14:40:30 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,7 @@ t_intersections intersections(int count, t_intersection *intersectionsArray)
 t_intersections intersect(t_sphere *s, t_ray r)
 {
     t_matrix inverse_transform = inverse(s->transform);
-
-    
     t_ray transformed_ray = transform(r, inverse_transform);
-
-
     t_tuple sphere_to_ray = subtract_tuples(transformed_ray.origin, s->center);
 
     double a = dot(transformed_ray.direction, transformed_ray.direction);
@@ -56,10 +52,13 @@ t_intersections intersect(t_sphere *s, t_ray r)
     double discriminant = b * b - 4 * a * c;
 
     t_intersections xs;
-    if (discriminant < 0) {
-    xs.count = 0;
-    xs.intersections = NULL;
-    } else {
+    if (discriminant < 0)
+    {
+        xs.count = 0;
+        xs.intersections = NULL;
+    }
+    else
+    {
         xs.count = (discriminant == 0) ? 2 : 2;
         xs.intersections = malloc(xs.count * sizeof(t_intersection));
         if (xs.intersections == NULL) exit(EXIT_FAILURE);

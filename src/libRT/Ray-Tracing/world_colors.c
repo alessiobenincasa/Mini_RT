@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/25 12:04:25 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/26 14:13:02 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,23 @@ t_matrix		view_transform(t_tuple from, t_tuple to, t_tuple up);
 
 t_intersections	intersect_world(t_world *world, t_ray r)
 {
-	t_sphere		*s;
 	t_intersections	sphere_xs;
-
 	t_intersections xs = {0, 0};
-	for (int i = 0; i < world->object_count; i++)
+
+	t_sphere	*s;
+	t_list		*current = world->objects;
+	while (current)
 	{
-		s = world->objects[i].data;
-		sphere_xs = intersect(s, r);
-		for (int j = 0; j < sphere_xs.count; j++)
+		if (current->type == SPHERE)
 		{
-			add_intersection(&xs, sphere_xs.intersections[j].t, s);
+			s = (t_sphere *)current->content;
+			sphere_xs = intersect(s, r);
+			for (int j = 0; j < sphere_xs.count; j++)
+			{
+				add_intersection(&xs, sphere_xs.intersections[j].t, s);
+			}
 		}
+		current = current->next;
 	}
 	sort_intersections(&xs);
 	return (xs);

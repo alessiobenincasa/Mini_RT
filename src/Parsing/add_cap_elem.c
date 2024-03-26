@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:16:03 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/26 11:50:12 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/26 14:02:28 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int	add_capital_element(t_identifier_type type, t_scene_data *scene_data,
 			return (error("Multiple Light elements detected"), 1);
 		if (add_light_to_list(scene_data, line) != 0)
 			return (error("Failed to add light to list"), 1);
-		print_light(scene_data->light);
+		// print_light(scene_data->light);
 	}
 	return (0);
 }
