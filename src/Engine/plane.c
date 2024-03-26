@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   plane.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 11:37:26 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/26 14:48:28 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/26 17:39:58 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,11 @@ t_tuple local_normal_at_test(t_shape *shape, t_tuple local_point)
     (void)shape;
     return local_point;
 }
+t_tuple local_normal_at_plane(t_plane plane, t_tuple local_point)
+{
+	(void)local_point;
+    return (plane.normal);
+}
 
 t_shape *test_shape(void)
 {
@@ -72,4 +77,14 @@ t_tuple    normal_at_shape(t_shape *s, t_tuple p)
     return (normalize(world_normal));
 }
 
+t_plane		plane(void)
+{
+	t_plane	p;
 
+	p.point = point(0, 0, 0);
+	p.normal = vector(0, 1, 0);
+	p.material = material();
+	p.transform = identity_matrix();
+
+	return (p);
+}

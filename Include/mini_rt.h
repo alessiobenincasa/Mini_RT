@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_rt.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/26 16:22:50 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/26 17:40:53 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,6 @@ typedef struct s_light
 	t_color			intensity;
 }					t_light;
 
-typedef struct s_plane
-{
-	t_vector		point;
-	t_vector		normal;
-	int color[3]; // RGB
-}					t_plane;
-
 typedef struct s_cylinder
 {
 	t_vector		center;
@@ -136,6 +129,14 @@ typedef struct s_sphere
 	t_matrix		transform;
 	int				color[3];
 }					t_sphere;
+
+typedef struct s_plane
+{
+	t_tuple			point;
+	t_tuple			normal;
+	t_material		material;
+	t_matrix		transform;
+}					t_plane;
 
 typedef struct s_intersection
 {
@@ -308,5 +309,7 @@ void				set_transform_shape(t_shape *s, t_matrix t);
 t_intersections		intersect_shape(t_shape *shape, t_ray r);
 t_tuple				normal_at_shape(t_shape *s, t_tuple p);
 t_tuple				local_normal_at_test(t_shape *shape, t_tuple local_point);
+t_tuple 			local_normal_at_plane(t_plane plane, t_tuple local_point);
+t_plane				plane(void);
 
 #endif

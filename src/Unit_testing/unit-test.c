@@ -1664,4 +1664,24 @@ Test(shape_normal_tests, normal_on_transformed_shape)
     free(s);
 }
 
+Test(plane_normal_tests, normal_is_constant_everywhere)
+{
+    t_plane p = plane();
+    
+    t_tuple n1 = local_normal_at_plane(p, point(0, 0, 0));
+    t_tuple n2 = local_normal_at_plane(p, point(10, 0, -10));
+    t_tuple n3 = local_normal_at_plane(p, point(-5, 0, 150));
+    
+    cr_assert_float_eq(n1.x, 0, 1e-6, "Expected normal x component to be 0, got %f.", n1.x);
+    cr_assert_float_eq(n1.y, 1, 1e-6, "Expected normal y component to be 1, got %f.", n1.y);
+    cr_assert_float_eq(n1.z, 0, 1e-6, "Expected normal z component to be 0, got %f.", n1.z);
+    
+    cr_assert_float_eq(n2.x, 0, 1e-6, "Expected normal x component to be 0, got %f.", n2.x);
+    cr_assert_float_eq(n2.y, 1, 1e-6, "Expected normal y component to be 1, got %f.", n2.y);
+    cr_assert_float_eq(n2.z, 0, 1e-6, "Expected normal z component to be 0, got %f.", n2.z);
+    
+    cr_assert_float_eq(n3.x, 0, 1e-6, "Expected normal x component to be 0, got %f.", n3.x);
+    cr_assert_float_eq(n3.y, 1, 1e-6, "Expected normal y component to be 1, got %f.", n3.y);
+    cr_assert_float_eq(n3.z, 0, 1e-6, "Expected normal z component to be 0, got %f.", n3.z);
+}
 
