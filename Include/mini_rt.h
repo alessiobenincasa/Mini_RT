@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/24 13:49:18 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/26 16:22:50 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@
 # include <string.h>
 # include <unistd.h>
 
-# define WIDTH 1200
-# define HEIGHT 1200
+# define WIDTH 800
+# define HEIGHT 800
 # define MLX_ERROR 1
 # define M_PI 3.14159265358979323846
 # define EPSILON 0.00001
@@ -291,5 +291,22 @@ t_canvas			render_scene2(void);
 
 //! Shadow
 int					is_shadowed(t_world world, t_tuple point);
+
+//! Plane
+
+typedef struct s_shape
+{
+	t_matrix		transform;
+	t_ray			*saved_ray;
+	t_material		material;
+	t_intersections	(*local_intersect)(struct s_shape *, t_ray);
+	t_tuple			(*local_normal_at)(struct s_shape *, t_tuple);
+}					t_shape;
+
+t_shape				*test_shape(void);
+void				set_transform_shape(t_shape *s, t_matrix t);
+t_intersections		intersect_shape(t_shape *shape, t_ray r);
+t_tuple				normal_at_shape(t_shape *s, t_tuple p);
+t_tuple				local_normal_at_test(t_shape *shape, t_tuple local_point);
 
 #endif

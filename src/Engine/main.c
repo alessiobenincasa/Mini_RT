@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/25 11:12:32 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/26 16:32:01 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -593,6 +593,7 @@ t_intersections intersect(t_sphere *s, t_ray r)
     }
     return xs;
 }
+
 t_intersection intersection(double t, t_sphere *object)
 {
     t_intersection i;
@@ -865,41 +866,41 @@ void render_sphere(t_vars *vars)
 //     }
 // }
 
-int key_hook(int keycode, t_vars *vars)
-{
-    if (keycode == XK_Escape)
-    {
-        mlx_destroy_window(vars->mlx, vars->win);
-        exit(0);
-    }
-    return (0);
-}
+// int key_hook(int keycode, t_vars *vars)
+// {
+//     if (keycode == XK_Escape)
+//     {
+//         mlx_destroy_window(vars->mlx, vars->win);
+//         exit(0);
+//     }
+//     return (0);
+// }
 
-int close_program(void *param)
-{
-    (void)param;
-    exit(0);
-    return (0);
-}
+// int close_program(void *param)
+// {
+//     (void)param;
+//     exit(0);
+//     return (0);
+// }
 
-int main()
-{
-    t_vars  vars;
+// int main()
+// {
+//     t_vars  vars;
 
-    vars.mlx = mlx_init();
-    vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniLibX - Sphere Rendering");
-    vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
-    vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
-                                     &vars.img.endian);
+//     vars.mlx = mlx_init();
+//     vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniLibX - Sphere Rendering");
+//     vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
+//     vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
+//                                      &vars.img.endian);
     
-    mlx_hook(vars.win, DestroyNotify, StructureNotifyMask, close_program, &vars);
-    mlx_key_hook(vars.win, key_hook, &vars);
-    render_sphere(&vars);
+//     mlx_hook(vars.win, DestroyNotify, StructureNotifyMask, close_program, &vars);
+//     mlx_key_hook(vars.win, key_hook, &vars);
+//     render_sphere(&vars);
 
-    mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
-    mlx_loop(vars.mlx);
-    return (0);
-}
+//     mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
+//     mlx_loop(vars.mlx);
+//     return (0);
+// }
 
 // int main()
 // {

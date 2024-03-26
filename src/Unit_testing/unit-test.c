@@ -90,7 +90,8 @@ Test(matrix_operations, determinant_of_2x2_matrix)
     cr_assert_float_eq(det, 14, 0.001, "Expected determinant to be 14, but got %f", det);
 }
 
-Test(matrix_operations, submatrix_of_3x3_is_2x2) {
+Test(matrix_operations, submatrix_of_3x3_is_2x2)
+{
     t_matrix A = {
         .rows = 3,
         .cols = 3,
@@ -1557,8 +1558,110 @@ Test(ray_tracing, the_hit_should_offset_the_point)
 //     free(w.objects);
 // }
 
+Test(plane, the_hit_should_offset_the_point)
+{
+    t_shape *s = test_shape();
+    t_matrix identity = identity_matrix();
+    
+    cr_assert(matrices_equal(s->transform, identity), "Expected Shape default transformation to be the same as the identity matrix. ");
+    free(s);
+}
 
 
+Test(shape_transformation_tests, assigning_a_transformation)
+{
+    t_shape *s = test_shape();
+    t_matrix expected_transform = translation(2, 3, 4);
+    set_transform_shape(s, expected_transform);
 
+    cr_assert(matrices_equal(s->transform, expected_transform), "The transformation matrix was not set correctly");
+
+    free(s);
+}
+Test(shape_material_tests, default_material)
+{
+    t_shape *s = test_shape();
+    t_material m = s->material;
+    t_material default_mat = material();
+    
+    cr_assert_float_eq(m.ambient, default_mat.ambient, 1e-6, "Ambient property mismatch.");
+    cr_assert_float_eq(m.diffuse, default_mat.diffuse, 1e-6, "Diffuse property mismatch.");
+    cr_assert_float_eq(m.specular, default_mat.specular, 1e-6, "Specular property mismatch.");
+    cr_assert_float_eq(m.shininess, default_mat.shininess, 1e-6, "Shininess property mismatch.");
+    free(s);
+}
+
+Test(shape_material_tests, Assigning_material)
+{
+    t_shape *s = test_shape();
+    t_material m = material();
+    m.ambient = 1;
+    s->material = m;
+    
+    cr_assert_float_eq(s->material.ambient, m.ambient, 1e-6, "Ambient property mismatch.");
+    cr_assert_float_eq(s->material.diffuse, m.diffuse, 1e-6, "Diffuse property mismatch.");
+    cr_assert_float_eq(s->material.specular, m.specular, 1e-6, "Specular property mismatch.");
+    cr_assert_float_eq(s->material.shininess, m.shininess, 1e-6, "Shininess property mismatch.");
+    free(s);
+}
+
+Test(shape_intersection_tests, intersecting_a_scaled_shape_with_a_ray)
+{
+    t_ray r = ray(point(0, 0, -5), vector(0, 0, 1));
+    t_shape *s = test_shape();
+    set_transform_shape(s, scaling(2, 2, 2));
+    intersect_shape(s, r);
+
+    cr_assert_float_eq(s->saved_ray->origin.x, 0, 1e-6);
+    cr_assert_float_eq(s->saved_ray->origin.y, 0, 1e-6);
+    cr_assert_float_eq(s->saved_ray->origin.z, -2.5, 1e-6);
+    cr_assert_float_eq(s->saved_ray->direction.x, 0, 1e-6);
+    cr_assert_float_eq(s->saved_ray->direction.y, 0, 1e-6);
+    cr_assert_float_eq(s->saved_ray->direction.z, 0.5, 1e-6);
+
+    free(s);
+}
+
+Test(shape_intersection_tests, intersecting_a_translated_shape_with_a_ray)
+{
+    t_ray r = ray(point(0, 0, -5), vector(0, 0, 1));
+    t_shape *s = test_shape();
+    set_transform_shape(s, translation(5, 0, 0));
+    intersect_shape(s, r);
+
+    cr_assert_float_eq(s->saved_ray->origin.x, -5, 1e-6);
+    cr_assert_float_eq(s->saved_ray->origin.y, 0, 1e-6);
+    cr_assert_float_eq(s->saved_ray->origin.z, -5, 1e-6);
+    cr_assert_float_eq(s->saved_ray->direction.x, 0, 1e-6);
+    cr_assert_float_eq(s->saved_ray->direction.y, 0, 1e-6);
+    cr_assert_float_eq(s->saved_ray->direction.z, 1, 1e-6);
+
+    free(s);
+}
+
+Test(shape_normal_tests, normal_on_translated_shape)
+{
+    t_shape *s = test_shape();
+    set_transform_shape(s, translation(0, 1, 0));
+    t_tuple n = normal_at_shape(s, point(0, 1.70711, -0.70711));
+
+    cr_assert_float_eq(n.x, 0, 1e-5, "Expected normal.x to be 0");
+    cr_assert_float_eq(n.y, 0.70711, 1e-5, "Expected normal.y to be 0.70711");
+    cr_assert_float_eq(n.z, -0.70711, 1e-5, "Expected normal.z to be -0.70711");
+    free(s);
+}
+
+Test(shape_normal_tests, normal_on_transformed_shape)
+{
+    t_shape *s = test_shape();
+    t_matrix m = multiply_matrices(scaling(1, 0.5, 1), rotation_z(M_PI / 5));
+    set_transform_shape(s, m);
+    t_tuple n = normal_at_shape(s, point(0, sqrt(2)/2, -sqrt(2)/2));
+
+    cr_assert_float_eq(n.x, 0, 1e-5, "Expected normal.x to be 0");
+    cr_assert_float_eq(n.y, 0.97014, 1e-5, "Expected normal.y to be 0.97014");
+    cr_assert_float_eq(n.z, -0.24254, 1e-5, "Expected normal.z to be -0.24254");
+    free(s);
+}
 
 
