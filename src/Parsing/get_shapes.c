@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 09:18:39 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/25 14:50:56 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/26 11:35:00 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,27 +25,28 @@ int	check_coordinates(t_tuple vec)
 
 t_sphere	*get_sphere_data(char *line)
 {
-	t_sphere	*sphere;
+	t_sphere	*s;
 	char		*value;
 
-	sphere = malloc(sizeof(t_sphere));
-	if (!sphere)
+	s = malloc(sizeof(t_sphere));
+	if (!s)
 		return (NULL);
+	*s = sphere();
 	get_next_value(&value, &line);
-	parse_coordinates(value, &(sphere->center));
+	parse_coordinates(value, &(s->center));
 	free(value);
 	get_next_value(&value, &line);
-	sphere->radius = ft_atof(value);
+	s->radius = ft_atof(value);
 	free(value);
 	get_next_value(&value, &line);
-	if (parse_colors(value, &(sphere->material.color)) != 0)
+	if (parse_colors(value, &(s->material.color)) != 0)
 	{
 		free(value);
-		free(sphere);
+		free(s);
 		return (error("RGB Colors for Sphere are incorrect"), NULL);
 	}
 	free(value);
-	return (sphere);
+	return (s);
 }
 
 t_plane	*get_plane_data(char *line)

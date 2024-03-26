@@ -1,41 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strtok.c                                        :+:      :+:    :+:   */
+/*   cap_elem_init.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/14 09:10:21 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/26 12:14:40 by svolodin         ###   ########.fr       */
+/*   Created: 2024/03/26 11:46:25 by svolodin          #+#    #+#             */
+/*   Updated: 2024/03/26 11:50:00 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "mini_rt.h"
 
-char	*ft_strtok(char *str, char sepa)
+void	initialize_scene_light(t_scene_data *scene)
 {
-	static char	*stock = NULL;
-	char		*ptr;
-	int			i;
-
-	i = 0;
-	ptr = NULL;
-	if (str != NULL)
-		stock = ft_strdup(str);
-	while (*stock != '\0')
+	if (scene == NULL)
+		return ;
+	scene->light = (t_light *)malloc(sizeof(t_light));
+	if (scene->light != NULL)
 	{
-		if (i == 0 && *stock != sepa)
-		{
-			i = 1;
-			ptr = stock;
-		}
-		else if (i == 1 && *stock == sepa)
-		{
-			*stock = '\0';
-			stock += 1;
-			break ;
-		}
-		stock++;
+		scene->light->position = point(0.0, 0.0, 0.0);
+		scene->light->intensity = color(0.0, 0.0, 0.0);
+		scene->light->energy = 1.0;                            
 	}
-	return (ptr);
 }

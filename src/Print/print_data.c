@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:29:59 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/25 14:59:42 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/26 11:53:25 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,4 +114,8 @@ void	print_cylinder(const t_cylinder *cylinder)
 		cylinder->material.color.blue);
 	printf("---------------\n");
 	printf("\033[0m");
+}
+void print_color(const t_color *color)
+{
+	printf("Color - Red: %.2f, Green: %.2f, Blue: %.2f\n", color->red, color->green, color->blue);
 }

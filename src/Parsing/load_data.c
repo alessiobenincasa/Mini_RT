@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:27:10 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/16 07:04:51 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/26 13:36:46 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,9 @@ static void	set_data_to_zero(t_scene_data *scene_data)
 	scene_data->initialised.ambient_light = 0;
 	scene_data->initialised.camera = 0;
 	scene_data->initialised.light = 0;
+	scene_data->ambient_light = NULL;
+	scene_data->camera = NULL;
+	scene_data->light = NULL;
 }
 
 static int	load_scene_data(t_scene_data *scene_data, int fd)

@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/25 12:06:36 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/26 13:35:00 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,20 +89,45 @@ void render_sphere(t_vars *vars)
     }
 }
 
-
-int main()
+void	print_shapes(t_vars *vars, t_scene_data *scene_data)
 {
-    t_vars  vars;
+	t_list	*current;
 
-    vars.mlx = mlx_init();
-    vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniLibX - Sphere Rendering");
-    vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
-    vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
-                                     &vars.img.endian);
+    (void)vars;
+	current = scene_data->shapes;
+	while (current)
+	{
+        if (current->type == SPHERE)
+            print_sphere((t_sphere *)current->content);
+        else if (current->type == PLANE)
+            print_plane((t_plane *)current->content);
+        else if (current->type == CYLINDER)
+            print_cylinder((t_cylinder *)current->content);
+		current = current->next;
+	}
+}
 
-    render_sphere(&vars);
 
-    mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
-    mlx_loop(vars.mlx);
+int	main(int ac, char **av)
+{
+    t_vars          vars;
+	t_scene_data	scene_data;
+
+	if (init_data(&scene_data, ac, av) == NULL)
+		return (1);
+	printf("shape count : %d\n", scene_data.shape_count);
+    print_shapes(&vars, &scene_data);
+
+    // vars.mlx = mlx_init();
+    // vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniLibX - Sphere Rendering");
+    // vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
+    // vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
+    //                                  &vars.img.endian);
+
+    // render_sphere(&vars);
+
+    // mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
+    // mlx_loop(vars.mlx);
+    free_scene_data(&scene_data);
     return (0);
 }

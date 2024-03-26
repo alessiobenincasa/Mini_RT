@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/25 14:50:10 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/26 13:34:28 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,12 @@ int								add_shape_data(t_identifier_type type,
 int								add_capital_element(t_identifier_type type,
 									t_scene_data *scene_data, char *line);
 
+// todo              ~~~  cap elem init ~~~                  *//
+void							initialize_scene_light(t_scene_data *scene);
+
+// todo              ~~~     frees      ~~~                  *//
+void							free_scene_data(t_scene_data *scene);
+
 // todo              ~~~     print      ~~~                  *//
 void							print_camera(const t_camera *camera);
 void							print_identifier_type(t_identifier_type type);
@@ -129,6 +135,7 @@ void							print_ambient(const t_ambient *ambient);
 void							print_light(const t_light *light);
 void							print_plane(const t_plane *plane);
 void							print_cylinder(const t_cylinder *cylinder);
+void							print_color(const t_color *color);
 
 //*----------------------- 🎨 Colors 🎨 -----------------------*//
 

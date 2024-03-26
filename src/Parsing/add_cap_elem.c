@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:16:03 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/25 14:49:27 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/26 11:50:12 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static int	add_amblight_to_list(t_scene_data *scene_data, char *line)
 	char	*value;
 
 	get_next_value(&value, &line);
+	
 	scene_data->ambient_light->ratio = ft_atof(value);
 	free(value);
 	if (scene_data->ambient_light->ratio < 0
@@ -71,6 +72,7 @@ static int	add_light_to_list(t_scene_data *scene_data, char *line)
 {
 	char	*value;
 
+	initialize_scene_light(scene_data);
 	get_next_value(&value, &line);
 	parse_coordinates(value, &(scene_data->light->position));
 	free(value);
