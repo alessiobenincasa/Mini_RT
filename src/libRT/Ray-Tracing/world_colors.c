@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/26 14:13:02 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/27 15:11:23 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ t_intersections	intersect_world(t_world *world, t_ray r)
 
 	t_sphere	*s;
 	t_list		*current = world->objects;
-	while (current)
+
+	for (int i = 0; i < world->object_count; i++)
 	{
 		if (current->type == SPHERE)
 		{
