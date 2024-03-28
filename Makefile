@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+         #
+#    By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/08 16:18:07 by albeninc          #+#    #+#              #
-#    Updated: 2024/03/19 23:08:01 by albeninc         ###   ########.fr        #
+#    Updated: 2024/03/27 16:12:39 by svolodin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ MAIN_SRCS		=	$(SRCS_DIR)/main.c /world.c
 NAME			= 	MiniRT
 RM				= 	rm -rf
 CC				=	gcc $(CFLAGS)
-CFLAGS			=	-Wall -Werror -Wextra -IInclude -IInclude/libft/
+CFLAGS			=	-Wall -Werror -Wextra -IInclude -IInclude/libft/ -g3
 LDFLAGS			=	-LInclude/libft -lft -lm
 OBJECTS 		=	$(SRCS:.c=.o)
 MLX_DIR			= ./minilibx

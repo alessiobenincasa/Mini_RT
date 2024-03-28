@@ -1685,3 +1685,33 @@ Test(plane_normal_tests, normal_is_constant_everywhere)
     cr_assert_float_eq(n3.z, 0, 1e-6, "Expected normal z component to be 0, got %f.", n3.z);
 }
 
+Test(plane_intersection_tests, no_intersection_parallel_or_coplanar_ray)
+{
+    t_plane p = plane();
+    t_ray parallel_ray = ray(point(0, 10, 0), vector(0, 0, 1));
+    t_ray coplanar_ray = ray(point(0, 0, 0), vector(0, 0, 1));
+
+    t_intersections xs_parallel = local_intersect_plane(&p, parallel_ray);
+    t_intersections xs_coplanar = local_intersect_plane(&p, coplanar_ray);
+
+    cr_assert_eq(xs_parallel.count, 0, "Expected no intersections for a ray parallel to the plane, got %d.", xs_parallel.count);
+    cr_assert_eq(xs_coplanar.count, 0, "Expected no intersections for a coplanar ray, got %d.", xs_coplanar.count);
+}
+
+Test(plane_intersection_tests, intersection_from_above_and_below)
+{
+    t_plane p = plane();
+    t_ray ray_from_above = ray(point(0, 1, 0), vector(0, -1, 0));
+    t_ray ray_from_below = ray(point(0, -1, 0), vector(0, 1, 0));
+
+    t_intersections xs_from_above = local_intersect_plane(&p, ray_from_above);
+    t_intersections xs_from_below = local_intersect_plane(&p, ray_from_below);
+
+    cr_assert_eq(xs_from_above.count, 1, "Expected 1 intersection for a ray from above, got %d.", xs_from_above.count);
+    cr_assert_float_eq(xs_from_above.intersections[0].t, 1, 1e-6, "Expected intersection 't' value to be 1 for a ray from above, got %f.", xs_from_above.intersections[0].t);
+    cr_assert_eq(xs_from_above.intersections[0].plane, &p, "Expected intersection object to be the plane for a ray from above.");
+
+    cr_assert_eq(xs_from_below.count, 1, "Expected 1 intersection for a ray from below, got %d.", xs_from_below.count);
+    cr_assert_float_eq(xs_from_below.intersections[0].t, 1, 1e-6, "Expected intersection 't' value to be 1 for a ray from below, got %f.", xs_from_below.intersections[0].t);
+    cr_assert_eq(xs_from_below.intersections[0].plane, &p, "Expected intersection object to be the plane for a ray from below.");
+}

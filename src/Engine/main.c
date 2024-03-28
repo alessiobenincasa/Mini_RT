@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/26 16:32:01 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/27 17:51:10 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -548,11 +548,7 @@ void set_transform(t_sphere *s, t_matrix t)
 t_intersections intersect(t_sphere *s, t_ray r)
 {
     t_matrix inverse_transform = inverse(s->transform);
-
-    
     t_ray transformed_ray = transform(r, inverse_transform);
-
-
     t_tuple sphere_to_ray = subtract_tuples(transformed_ray.origin, s->center);
 
     double a = dot(transformed_ray.direction, transformed_ray.direction);
@@ -562,13 +558,17 @@ t_intersections intersect(t_sphere *s, t_ray r)
     double discriminant = b * b - 4 * a * c;
 
     t_intersections xs;
-    if (discriminant < 0) {
-    xs.count = 0;
-    xs.intersections = NULL;
-    } else {
+    if (discriminant < 0)
+    {
+        xs.count = 0;
+        xs.intersections = NULL;
+    }
+    else
+    {
         xs.count = (discriminant == 0) ? 2 : 2;
         xs.intersections = malloc(xs.count * sizeof(t_intersection));
-        if (xs.intersections == NULL) exit(EXIT_FAILURE);
+        if (xs.intersections == NULL)
+            exit(EXIT_FAILURE);
 
         double root = sqrt(discriminant);
 
@@ -784,50 +784,64 @@ void render_sphere(t_vars *vars)
     double half = wall_size / 2.0;
     
 	t_world		world;
-	world.object_count = 4;
+	world.object_count = 1;
     world.objects = malloc(sizeof(t_object) * world.object_count);
 
-    t_sphere* floor = malloc(sizeof(t_sphere));
-	*floor = sphere();
-	floor->transform = scaling(10, 0.01, 10);
-    floor->center = point(0, -125, 0);
+    // t_sphere* floor = malloc(sizeof(t_sphere));
+	// *floor = sphere();
+	// floor->transform = scaling(10, 0.01, 10);
+    // floor->center = point(0, -125, 0);
+	// floor->material = material();
+	// floor->material.color = color(1, 0.9, 0.9);
+	// floor->material.specular = 0;
+
+    t_plane *floor = malloc(sizeof(t_plane));
+    *floor = plane();
+    floor->point = point(0, -4, 0);
 	floor->material = material();
-	floor->material.color = color(1, 0.9, 0.9);
+	floor->material.color = color(1, 0, 0);
 	floor->material.specular = 0;
-
-	t_sphere* right = malloc(sizeof(t_sphere));
-	*right = sphere();
-	right->transform = scaling(0.5, 0.5, 0.5);
-    right->center = point(3.5, 2, 0);
-	right->material = material();
-	right->material.color = color(0.5, 1, 0.1);
-	right->material.diffuse = 0.7;
-	right->material.specular = 0.3;
     
-	t_sphere* middle = malloc(sizeof(t_sphere));
-	*middle = sphere();
-	// middle->transform = translation(-0.5, 1, 0.5);
-    middle->center = point(0, -0.5, 0);
-	middle->material = material();
-	middle->material.color = color(0.1, 1, 0.5);
-	middle->material.diffuse = 0.7;
-	middle->material.specular = 0.3;
+	// t_sphere* right = malloc(sizeof(t_sphere));
+	// *right = sphere();
+	// right->transform = scaling(0.5, 0.5, 0.5);
+    // right->center = point(3.5, -1.6, 1);
+	// right->material = material();
+	// right->material.color = color(0.5, 1, 0.1);
+	// right->material.diffuse = 0.7;
+	// right->material.specular = 0.3;
+    
+	// t_sphere* middle = malloc(sizeof(t_sphere));
+	// *middle = sphere();
+	// // middle->transform = translation(-0.5, 1, 0.5);
+    // middle->center = point(0, -0.5, 0);
+	// middle->material = material();
+	// middle->material.color = color(0.1, 1, 0.5);
+	// middle->material.diffuse = 0.7;
+	// middle->material.specular = 0.3;
 
-    t_sphere* left = malloc(sizeof(t_sphere));
-	*left = sphere();
-    left->center = point(-4, -1, -3);
-	left->transform = scaling(0.33, 0.33, 0.33);
-	left->material = material();
-	left->material.color = color(1, 0.8, 0.1);
-	left->material.diffuse = 0.7;
-	left->material.specular = 0.3;
+    // t_sphere* left = malloc(sizeof(t_sphere));
+	// *left = sphere();
+    // left->center = point(-4, -3, -3);
+	// left->transform = scaling(0.33, 0.33, 0.33);
+	// left->material = material();
+	// left->material.color = color(1, 0.8, 0.1);
+	// left->material.diffuse = 0.7;
+	// left->material.specular = 0.3;
 
     
     
-    world.objects[0].data = middle;
-    world.objects[1].data = right;
-    world.objects[2].data = left;
-    world.objects[3].data = floor;
+    // world.objects[0].data = middle;
+    // world.objects[0].type = SPHERE;
+
+    // world.objects[1].data = right;
+    // world.objects[1].type = SPHERE;
+
+    // world.objects[2].data = left;
+    // world.objects[2].type = SPHERE;
+    
+    world.objects[0].data = floor;
+    world.objects[0].type = PLANE;
 	world.light = point_light(point(-10, 10, -10), color(1, 1, 1));
 
     while (y < canvas_pixel)
@@ -850,22 +864,6 @@ void render_sphere(t_vars *vars)
     }
 }
 
-
-// void display_canvas(t_vars *vars, t_canvas *canvas)
-// {
-//     int x, y;
-//     int color;
-
-//     for (y = 0; y < canvas->height; y++)
-//     {
-//         for (x = 0; x < canvas->width; x++)
-//         {
-//             color = color_to_int(canvas->pixels[y * canvas->width + x]);
-//             *(int *)(vars->img.addr + (y * vars->img.line_length + x * (vars->img.bits_per_pixel / 8))) = color;
-//         }
-//     }
-// }
-
 // int key_hook(int keycode, t_vars *vars)
 // {
 //     if (keycode == XK_Escape)
@@ -883,41 +881,23 @@ void render_sphere(t_vars *vars)
 //     return (0);
 // }
 
-// int main()
-// {
-//     t_vars  vars;
+int main()
+{
+    t_vars  vars;
 
-//     vars.mlx = mlx_init();
-//     vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniLibX - Sphere Rendering");
-//     vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
-//     vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
-//                                      &vars.img.endian);
+    vars.mlx = mlx_init();
+    vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniLibX - Sphere Rendering");
+    vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
+    vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
+                                     &vars.img.endian);
     
-//     mlx_hook(vars.win, DestroyNotify, StructureNotifyMask, close_program, &vars);
-//     mlx_key_hook(vars.win, key_hook, &vars);
-//     render_sphere(&vars);
+    // mlx_hook(vars.win, DestroyNotify, StructureNotifyMask, close_program, &vars);
+    // mlx_key_hook(vars.win, key_hook, &vars);
+    render_sphere(&vars);
 
-//     mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
-//     mlx_loop(vars.mlx);
-//     return (0);
-// }
-
-// int main()
-// {
-//     t_vars      vars;
-//     t_canvas    canvas = render_scene2();
-
-//     vars.mlx = mlx_init();
-//     vars.win = mlx_new_window(vars.mlx, canvas.width, canvas.height, "MiniLibX - Sphere Rendering");
-//     vars.img.img_ptr = mlx_new_image(vars.mlx, canvas.width, canvas.height);
-//     vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
-//                                      &vars.img.endian);
-
-//     display_canvas(&vars, &canvas);
-
-//     mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
-//     mlx_loop(vars.mlx);
-//     return (0);
-// }
+    mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
+    mlx_loop(vars.mlx);
+    return (0);
+}
 
 

@@ -6,11 +6,27 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 11:37:26 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/26 17:39:58 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/27 18:01:52 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_rt.h"
+
+
+t_ray transform_ray(t_ray r, t_matrix transform)
+{
+    t_tuple new_origin = multiply_matrix_tuple(transform, r.origin);
+    t_tuple new_direction = multiply_matrix_tuple(transform, r.direction);
+    return (ray(new_origin, new_direction));
+}
+
+t_tuple transform_normal(t_tuple normal, t_matrix transform)
+{
+    t_matrix inverse_transform = inverse(transform);
+    t_matrix transpose_inverse = transpose_matrix(inverse_transform);
+    t_tuple transformed_normal = multiply_matrix_tuple(transpose_inverse, normal);
+    return (normalize(transformed_normal));
+}
 
 void set_transform_shape(t_shape *s, t_matrix t)
 {
@@ -46,8 +62,8 @@ t_tuple local_normal_at_test(t_shape *shape, t_tuple local_point)
 }
 t_tuple local_normal_at_plane(t_plane plane, t_tuple local_point)
 {
-	(void)local_point;
-    return (plane.normal);
+    (void)local_point;
+	return (transform_normal(plane.normal, plane.transform));
 }
 
 t_shape *test_shape(void)
@@ -87,4 +103,22 @@ t_plane		plane(void)
 	p.transform = identity_matrix();
 
 	return (p);
+}
+
+t_intersections local_intersect_plane(t_plane *plane, t_ray ray)
+{
+    t_intersections xs;
+    xs.count = 0;
+    xs.intersections = NULL;
+    if (fabs(ray.direction.y) < EPSILON)
+    {
+        return (xs);
+    }
+    xs.intersections = malloc(sizeof(t_intersection));
+    xs.count = 1;
+
+    t_ray transformed_ray = transform_ray(ray, inverse(plane->transform));
+    xs.intersections[0].t = -transformed_ray.origin.y / transformed_ray.direction.y;
+    xs.intersections[0].plane = plane;
+    return (xs);
 }

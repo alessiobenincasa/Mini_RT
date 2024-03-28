@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   world.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:07:18 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/24 14:30:35 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/27 17:39:30 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,23 @@ void	add_intersection(t_intersections *xs, double t, t_sphere *s)
 		exit(EXIT_FAILURE);
 	xs->intersections[xs->count].t = t;
 	xs->intersections[xs->count].sphere = s;
+	xs->intersections[xs->count].type = SPHERE;
+	xs->count = new_count;
+}
+
+
+void	add_intersection_plane(t_intersections *xs, double t, t_plane *p)
+{
+	int	new_count;
+
+	new_count = xs->count + 1;
+	xs->intersections = realloc(xs->intersections, new_count
+			* sizeof(t_intersection));
+	if (xs->intersections == NULL)
+		exit(EXIT_FAILURE);
+	xs->intersections[xs->count].t = t;
+	xs->intersections[xs->count].plane = p;
+	xs->intersections[xs->count].type = PLANE;
 	xs->count = new_count;
 }
 
@@ -91,17 +108,28 @@ void	sort_intersections(t_intersections *intersections)
 t_intersections	intersect_world(t_world *world, t_ray r)
 {
 	t_sphere		*s;
+	t_plane			*p;
 	t_intersections	sphere_xs;
+	t_intersections	plane_xs;
 
 	t_intersections xs = {0, 0};
 	for (int i = 0; i < world->object_count; i++)
 	{
-		s = world->objects[i].data;
-		sphere_xs = intersect(s, r);
-		// printf("sphere_xs.count = %d\n", sphere_xs.count);
-		for (int j = 0; j < sphere_xs.count; j++)
+		if (world->objects[i].type == SPHERE)
 		{
-			add_intersection(&xs, sphere_xs.intersections[j].t, s);
+			s = world->objects[i].data;
+			sphere_xs = intersect(s, r);
+			for (int j = 0; j < sphere_xs.count; j++)
+			{
+				add_intersection(&xs, sphere_xs.intersections[j].t, s);
+			}
+		}
+		if (world->objects[i].type == PLANE)
+		{
+			p = world->objects[i].data;
+			plane_xs = local_intersect_plane(p, r);
+			if (plane_xs.count)
+				add_intersection_plane(&xs, 1, p);
 		}
 	}
 	sort_intersections(&xs);
@@ -112,20 +140,30 @@ t_comps prepare_computations(t_intersection i, t_ray r)
 {
     t_comps comps;
     comps.t = i.t;
-    comps.sphere = i.sphere;
     comps.point = position(r, comps.t);
     comps.eyev = negate_tuple(r.direction);
-    comps.normalv = normal_at(*comps.sphere, comps.point);
-    if (dot(comps.normalv, comps.eyev) < -EPSILON)
-    {
-        comps.inside = 1;
-        comps.normalv = negate_tuple(comps.normalv);
-    }
-    else
+
+	if (i.type == SPHERE)
 	{
-        comps.inside = 0;
+		t_sphere *sphere = (t_sphere *)i.sphere;
+		comps.normalv = normal_at(*sphere, comps.point);
+		if (dot(comps.normalv, comps.eyev) < -EPSILON)
+		{
+			comps.inside = 1;
+			comps.normalv = negate_tuple(comps.normalv);
+		}
+		else
+		{
+			comps.inside = 0;
+		}
+		comps.over_point = add_tuples(comps.point, multiply_tuple_scalar(comps.normalv, EPSILON));
 	}
-	comps.over_point = add_tuples(comps.point, multiply_tuple_scalar(comps.normalv, EPSILON));
+	else if (i.type == PLANE)
+	{
+		t_plane *plane = (t_plane *)i.plane;
+		comps.normalv = local_normal_at_plane(*plane, comps.point);
+	}
+
     return (comps);
 }
 
@@ -144,7 +182,14 @@ t_color	color_at(t_world w, t_ray r)
 	if (!i)
 		return (color(0, 0, 0));
 	t_comps comps = prepare_computations(*i, r);
-	t_color result = shade_hit(w, comps);
+	t_color result = color(0, 0, 0);
+	if (i->type == SPHERE)
+		result = shade_hit(w, comps);
+	else if (i->type == PLANE)
+	{
+		result = i->plane->material.color;
+		printf("Intersection avec plane\n");
+	}	
 	return (result);
 }
 
