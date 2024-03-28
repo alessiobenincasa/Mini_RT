@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 11:37:26 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/28 09:03:38 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/28 15:20:44 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,12 +101,22 @@ t_intersections	intersect_plane(t_plane *p, t_ray r)
 
 	xs.count = 0;
 	xs.intersections = NULL;
-	if (fabs(r.direction.y) < EPSILON)
+	
+	double	denominator = dot(r.direction, p->normal);
+	if (fabs(denominator) < EPSILON)
 		return (xs);
+
+	t_tuple plane_to_ray = subtract_tuples(r.origin, p->point);
+	double t = -dot(plane_to_ray, p->normal) / denominator;
+	if (t < EPSILON)
+		return (xs);
+
 	xs.count = 1;
 	xs.intersections = malloc(xs.count * sizeof(t_intersection));
-	xs.intersections[0].type = PLANE;
+	if (xs.intersections == NULL)
+		exit(EXIT_FAILURE);
+	xs.intersections[0].t = t;
 	xs.intersections[0].plane = p;
-	xs.intersections[0].t = -r.origin.y / r.direction.y;
+	xs.intersections[0].type = PLANE;
     return (xs);
 }

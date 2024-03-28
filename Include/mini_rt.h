@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/28 09:45:02 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/28 14:59:52 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,10 @@
 
 //*--------------------- 📚 𝙇𝙄𝘽𝙍𝘼𝙍𝙄𝙀𝙎 📚------------------------*//
 
+# include "../minilibx/mlx.h"
+# include "X11/X.h"
+# include "X11/keysym.h"
 # include "libft/libft.h"
-# include "mlx.h"
 # include <errno.h>
 # include <fcntl.h>
 # include <math.h>

@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/28 09:53:33 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/28 15:27:45 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ t_comps	prepare_computations(t_intersection i, t_ray r)
 	t_comps	comps;
 
 	comps.t = i.t;
-	comps.type = i.type;
 	comps.point = position(r, comps.t);
 	comps.eyev = negate_tuple(r.direction);
+	comps.type = i.type;
 	if (comps.type == SPHERE)
 	{
 		comps.object.sphere = i.sphere;
@@ -78,11 +78,8 @@ t_comps	prepare_computations(t_intersection i, t_ray r)
 		comps.normalv = negate_tuple(comps.normalv);
 	}
 	else
-	{
 		comps.inside = 0;
-	}
-	comps.over_point = add_tuples(comps.point,
-			multiply_tuple_scalar(comps.normalv, EPSILON));
+	comps.over_point = add_tuples(comps.point, multiply_tuple_scalar(comps.normalv, EPSILON));
 	return (comps);
 }
 
@@ -91,13 +88,9 @@ t_material	extract_material_comps(t_comps comps)
 	t_material	m;
 
 	if (comps.type == SPHERE)
-	{
 		m = comps.object.sphere->material;
-	}
 	else if (comps.type == PLANE)
-	{
 		m = comps.object.plane->material;
-	}
 	else
 		m = material();
 	return (m);
@@ -111,8 +104,7 @@ t_color	shade_hit(t_world world, t_comps comps)
 
 	material = extract_material_comps(comps);
 	in_shadow = is_shadowed(world, comps.over_point);
-	light = lighting(material, world.light, comps.point, comps.eyev,
-			comps.normalv, in_shadow);
+	light = lighting(material, world.light, comps.point, comps.eyev, comps.normalv, in_shadow);
 	return (light);
 }
 

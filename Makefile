@@ -1,28 +1,16 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/03/08 16:18:07 by albeninc          #+#    #+#              #
-#    Updated: 2024/03/28 09:56:57 by svolodin         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME 				= miniRT
 CC 					= cc
-CFLAGS 				= -Wall -Wextra -Werror
+CFLAGS 				= -Wall -Wextra -Werror -g3
 
-INCLUDES 			= -IInclude -IInclude/libft/srcs/includes -Iminilibx_macos
+INCLUDES 			= -IInclude -IInclude/libft/srcs/includes -Iminilibx
 
-LIB_MINILIBX 		= -Lminilibx_macos -lmlx -framework OpenGL -framework AppKit
+LIB_MINILIBX 		= -Lminilibx -lmlx -lXext -lX11 -lm -lz
 LIB_LIBFT 			= -LInclude/libft -lft
 
 SRCS_DIR			= ./src/
 OBJS_PATH			= ./objs/
 
-SRCS				= $(shell find $(SRCS_DIR) -name '*.c')
+SRCS				= $(shell find $(SRCS_DIR) -name '*.c' ! -name 'unit-test.c')
 OBJS				= $(SRCS:$(SRCS_DIR)%.c=$(OBJS_PATH)%.o)
 
 MAKEFLAGS 			+= --no-print-directory
@@ -43,12 +31,12 @@ $(OBJS_PATH)%.o: 	$(SRCS_DIR)%.c
 					@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 lib:
-					@make -C minilibx_macos
+					@make -C minilibx
 					@make -C Include/libft
 
 clean:
 					@echo "$(BOLD) [🗑️ ] $(YELLOW)$(REVERSED)Cleaning up$(RESET)"
-					@make -C minilibx_macos clean
+					@make -C minilibx clean
 					@make -C Include/libft clean
 					@echo "┗▷$(YELLOW)『Libraries cleaned』$(RESET)"
 					@rm -rf $(OBJS_PATH)
@@ -71,9 +59,15 @@ BLUE := \033[0;34m
 MAGENTA := \033[0;35m
 CYAN := \033[0;36m
 WHITE := \033[0;37m
-RESET := \033[0m
-
-# Text Styles
+RESET := \033[0m# include "libft/libft.h"
+# include "mlx.h"
+# include <errno.h>
+# include <fcntl.h>
+# include <math.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <unistd.h>
 BOLD := \033[1m
 UNDERLINE := \033[4m
 REVERSED := \033[7m

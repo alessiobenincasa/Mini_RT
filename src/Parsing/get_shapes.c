@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 09:18:39 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/26 11:35:00 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/28 15:35:42 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ t_plane	*get_plane_data(char *line)
 	if (check_coordinates(plane->normal) != 0)
 		return (free(plane), error("Plane vector value incorrect"), NULL);
 	get_next_value(&value, &line);
+	plane->material = material();
+	plane->material.shininess = 0;
 	if (parse_colors(value, &(plane->material.color)) != 0)
 	{
 		free(value);

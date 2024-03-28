@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/27 14:56:04 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/28 15:05:56 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ void render_sphere(t_vars *vars, t_scene_data *scene)
         }
         y++;
     }
+    printf("Finished\n");
 }
 
 
