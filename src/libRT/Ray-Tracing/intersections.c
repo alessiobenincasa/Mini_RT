@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/26 14:40:30 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/28 08:39:17 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ t_intersections intersect(t_sphere *s, t_ray r)
 
         xs.intersections[0].t = t1;
         xs.intersections[0].sphere = s;
+        xs.intersections[0].type = SPHERE;
 
         if (discriminant == 0) {
             xs.intersections[1].t = t1;
@@ -83,6 +84,7 @@ t_intersections intersect(t_sphere *s, t_ray r)
             xs.intersections[1].t = t2;
         }
         xs.intersections[1].sphere = s;
+        xs.intersections[1].type = SPHERE;
     }
     return xs;
 }

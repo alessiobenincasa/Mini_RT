@@ -6,18 +6,17 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/25 12:01:29 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/28 09:44:53 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_rt.h"
 
-
-void	add_intersection(t_intersections *xs, double t, t_sphere *s);
+void	add_intersection(t_intersections *xs, t_intersection inter);
 int		compare_intersections(const void *a, const void *b);
 void	sort_intersections(t_intersections *intersections);
 
-void	add_intersection(t_intersections *xs, double t, t_sphere *s)
+void	add_intersection(t_intersections *xs, t_intersection inter)
 {
 	int	new_count;
 
@@ -26,8 +25,17 @@ void	add_intersection(t_intersections *xs, double t, t_sphere *s)
 			* sizeof(t_intersection));
 	if (xs->intersections == NULL)
 		exit(EXIT_FAILURE);
-	xs->intersections[xs->count].t = t;
-	xs->intersections[xs->count].sphere = s;
+	xs->intersections[xs->count].t = inter.t;
+	if (inter.type == SPHERE)
+	{
+		xs->intersections[xs->count].type = SPHERE;
+		xs->intersections[xs->count].sphere = inter.sphere;
+	}
+	else if (inter.type == PLANE)
+	{
+		xs->intersections[xs->count].type = PLANE;
+		xs->intersections[xs->count].plane = inter.plane;
+	}
 	xs->count = new_count;
 }
 

@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/27 14:57:20 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/28 09:45:02 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,8 @@
 
 //*--------------------- 📚 𝙇𝙄𝘽𝙍𝘼𝙍𝙄𝙀𝙎 📚------------------------*//
 
-# include "../minilibx/mlx.h"
-# include "X11/X.h"
-# include "X11/keysym.h"
 # include "libft/libft.h"
+# include "mlx.h"
 # include <errno.h>
 # include <fcntl.h>
 # include <math.h>
@@ -32,7 +30,6 @@
 # define WIDTH 1200
 # define HEIGHT 1200
 # define MLX_ERROR 1
-# define M_PI 3.14159265358979323846
 # define EPSILON 0.00001
 # define PI 3.14159265358979323846
 # define HALF (WIDTH / 2)
@@ -192,7 +189,7 @@ t_matrix						rotation_z(float radians);
 // todo          ~~~ Matrix utility functions
 t_matrix						submatrix(t_matrix matrix, int remove_row,
 									int remove_col);
-float							minor(t_matrix matrix, int row, int col);
+float							minor_matrix(t_matrix matrix, int row, int col);
 float							cofactor(t_matrix matrix, int row, int col);
 float							determinant(t_matrix M);
 
@@ -258,6 +255,8 @@ typedef struct s_intersection
 {
 	double						t;
 	t_sphere					*sphere;
+	t_plane						*plane;
+	t_identifier_type			type;
 }								t_intersection;
 
 typedef struct s_intersections
@@ -273,8 +272,8 @@ t_intersections					intersect(t_sphere *s, t_ray r);
 t_intersection					*hit(t_intersections *xs);
 
 // todo               ~~~  Intersect handle
-void							add_intersection(t_intersections *xs, double t,
-									t_sphere *s);
+void							add_intersection(t_intersections *xs,
+									t_intersection inter);
 int								compare_intersections(const void *a,
 									const void *b);
 void							sort_intersections(t_intersections *intersections);
@@ -353,6 +352,9 @@ typedef struct s_plane
 	t_matrix					transform;
 }								t_plane;
 
+t_intersections					intersect_plane(t_plane *p, t_ray r);
+t_plane							plane(void);
+
 //*---------------------- 🖥️ Graphics 🖥️ ----------------------*//
 
 // todo               ~~~     Canvas
@@ -418,16 +420,22 @@ typedef struct s_world
 	t_light						light;
 }								t_world;
 
+typedef union s_object_union
+{
+	t_sphere					*sphere;
+	t_plane						*plane;
+}								t_object_union;
+
 typedef struct s_comps
 {
 	double						t;
-	t_sphere					*sphere;
+	t_object_union				object;
+	t_identifier_type			type;
 	t_tuple						point;
 	t_tuple						eyev;
 	t_tuple						normalv;
-	int							inside;
 	t_tuple						over_point;
-
+	int							inside;
 }								t_comps;
 
 // todo               ~~~    World Init
