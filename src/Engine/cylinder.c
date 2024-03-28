@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 19:03:28 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/28 19:09:12 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/28 19:50:10 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,3 +60,9 @@ t_cylinder cylinder(void)
     return cyl;
 }
 
+t_tuple local_normal_at_cylinder(t_cylinder cylinder, t_tuple p)
+{
+    (void)cylinder;
+    t_tuple normal = point(p.x, 0, p.z);
+    return normal;
+}

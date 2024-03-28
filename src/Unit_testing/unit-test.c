@@ -1700,3 +1700,24 @@ Test(cylinder_ray_intersections, ray_strikes_cylinder) {
         cr_assert_float_eq(xs.intersections[1].t, test_cases[i].t1, 1e-5, "Second intersection t value incorrect on test case %d.", i + 1);
     }
 }
+
+Test(cylinder_normals, normal_vector_on_a_cylinder) {
+    t_cylinder cyl = cylinder(); // Assuming this correctly initializes a cylinder
+
+    struct {
+        t_tuple point;
+        t_tuple expected_normal;
+    } test_cases[] = {
+        {point(1, 0, 0), vector(1, 0, 0)},
+        {point(0, 5, -1), vector(0, 0, -1)},
+        {point(0, -2, 1), vector(0, 0, 1)},
+        {point(-1, 1, 0), vector(-1, 0, 0)}
+    };
+    size_t test_cases_count = sizeof(test_cases) / sizeof(test_cases[0]);
+    for (size_t i = 0; i < test_cases_count; i++) {
+        t_tuple normal = local_normal_at_cylinder(cyl, test_cases[i].point); // Correct usage
+        cr_assert_float_eq(normal.x, test_cases[i].expected_normal.x, 1e-6, "Normal x component mismatch on case %zu.", i + 1);
+        cr_assert_float_eq(normal.y, test_cases[i].expected_normal.y, 1e-6, "Normal y component mismatch on case %zu.", i + 1);
+        cr_assert_float_eq(normal.z, test_cases[i].expected_normal.z, 1e-6, "Normal z component mismatch on case %zu.", i + 1);
+    }
+}

@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/28 19:19:38 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/28 19:40:31 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -325,5 +325,7 @@ typedef struct s_cylinder
 
 t_cylinder			cylinder(void);
 t_intersections		local_intersect_cylinder(t_cylinder *cyl, t_ray r);
+t_tuple				local_normal_at_cylinder(t_cylinder cylinder,
+						t_tuple point);
 
 #endif
