@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_rt.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/26 17:40:53 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/28 19:19:38 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,14 @@ typedef struct s_light
 	t_color			intensity;
 }					t_light;
 
-typedef struct s_cylinder
-{
-	t_vector		center;
-	t_vector		direction;
-	double			diameter;
-	double			height;
-	int color[3]; // RGB
-}					t_cylinder;
+// typedef struct s_cylinder
+// {
+// 	t_vector		center;
+// 	t_vector		direction;
+// 	double			diameter;
+// 	double			height;
+// 	int color[3]; // RGB
+// }					t_cylinder;
 
 typedef struct s_projectile
 {
@@ -142,6 +142,7 @@ typedef struct s_intersection
 {
 	double			t;
 	t_sphere		*sphere;
+	void			*object;
 }					t_intersection;
 
 typedef struct s_intersections
@@ -309,7 +310,20 @@ void				set_transform_shape(t_shape *s, t_matrix t);
 t_intersections		intersect_shape(t_shape *shape, t_ray r);
 t_tuple				normal_at_shape(t_shape *s, t_tuple p);
 t_tuple				local_normal_at_test(t_shape *shape, t_tuple local_point);
-t_tuple 			local_normal_at_plane(t_plane plane, t_tuple local_point);
+t_tuple				local_normal_at_plane(t_plane plane, t_tuple local_point);
 t_plane				plane(void);
+
+//! Cylinder
+typedef struct s_cylinder
+{
+	t_matrix		transform;
+	double			minimum;
+	double			maximum;
+	int				closed;
+	t_material		material;
+}					t_cylinder;
+
+t_cylinder			cylinder(void);
+t_intersections		local_intersect_cylinder(t_cylinder *cyl, t_ray r);
 
 #endif

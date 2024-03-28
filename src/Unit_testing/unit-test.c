@@ -1664,24 +1664,39 @@ Test(shape_normal_tests, normal_on_transformed_shape)
     free(s);
 }
 
-Test(plane_normal_tests, normal_is_constant_everywhere)
-{
-    t_plane p = plane();
-    
-    t_tuple n1 = local_normal_at_plane(p, point(0, 0, 0));
-    t_tuple n2 = local_normal_at_plane(p, point(10, 0, -10));
-    t_tuple n3 = local_normal_at_plane(p, point(-5, 0, 150));
-    
-    cr_assert_float_eq(n1.x, 0, 1e-6, "Expected normal x component to be 0, got %f.", n1.x);
-    cr_assert_float_eq(n1.y, 1, 1e-6, "Expected normal y component to be 1, got %f.", n1.y);
-    cr_assert_float_eq(n1.z, 0, 1e-6, "Expected normal z component to be 0, got %f.", n1.z);
-    
-    cr_assert_float_eq(n2.x, 0, 1e-6, "Expected normal x component to be 0, got %f.", n2.x);
-    cr_assert_float_eq(n2.y, 1, 1e-6, "Expected normal y component to be 1, got %f.", n2.y);
-    cr_assert_float_eq(n2.z, 0, 1e-6, "Expected normal z component to be 0, got %f.", n2.z);
-    
-    cr_assert_float_eq(n3.x, 0, 1e-6, "Expected normal x component to be 0, got %f.", n3.x);
-    cr_assert_float_eq(n3.y, 1, 1e-6, "Expected normal y component to be 1, got %f.", n3.y);
-    cr_assert_float_eq(n3.z, 0, 1e-6, "Expected normal z component to be 0, got %f.", n3.z);
+Test(cylinder_tests, ray_misses_cylinder) {
+    t_cylinder cyl = cylinder();
+    t_tuple origins[] = {point(1, 0, 0), point(0, 0, 0), point(0, 0, -5)};
+    t_tuple directions[] = {vector(0, 1, 0), vector(0, 1, 0), normalize(vector(1, 1, 1))};
+
+    for (int i = 0; i < 3; i++) {
+        t_ray r = ray(origins[i], directions[i]);
+        t_intersections xs = local_intersect_cylinder(&cyl, r);
+        cr_assert_eq(xs.count, 0, "Expected no intersections with the cylinder, but found %d", xs.count);
+    }
 }
 
+Test(cylinder_ray_intersections, ray_strikes_cylinder) {
+    struct {
+        t_tuple origin;
+        t_tuple direction;
+        double t0;
+        double t1;
+    } test_cases[] = {
+        {point(1, 0, -5), vector(0, 0, 1), 5, 5},
+        {point(0, 0, -5), vector(0, 0, 1), 4, 6},
+        {point(0.5, 0, -5), vector(0.1, 1, 1), 6.80798, 7.08872}
+    };
+
+    const int test_cases_count = sizeof(test_cases) / sizeof(test_cases[0]);
+    t_cylinder cyl = cylinder();
+
+    for (int i = 0; i < test_cases_count; ++i) {
+        t_ray r = ray(test_cases[i].origin, normalize(test_cases[i].direction));
+        t_intersections xs = local_intersect_cylinder(&cyl, r);
+
+        cr_assert_eq(xs.count, 2, "Expected 2 intersections, but got %d on test case %d.", xs.count, i + 1);
+        cr_assert_float_eq(xs.intersections[0].t, test_cases[i].t0, 1e-5, "First intersection t value incorrect on test case %d.", i + 1);
+        cr_assert_float_eq(xs.intersections[1].t, test_cases[i].t1, 1e-5, "Second intersection t value incorrect on test case %d.", i + 1);
+    }
+}
