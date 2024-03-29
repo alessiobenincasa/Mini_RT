@@ -41,11 +41,6 @@ void transfer_scene_data_to_world(t_scene_data *scene, t_world *world)
         printf("\nAmbient Light\n");
         print_ambient(scene->ambient_light);
     }
-    // if (scene->camera)
-    // {
-    //     printf("\nCamera:\n");
-    //     print_camera(scene->camera);
-    // }
     if (scene->light)
     {
         world->light = *(scene->light);
