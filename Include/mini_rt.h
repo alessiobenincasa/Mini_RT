@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/29 15:32:48 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/29 16:54:57 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@
 
 //*-------------------- 📖 𝘿𝙀𝙁𝙄𝙉𝙄𝙏𝙄𝙊𝙉𝙎 📖 ---------------------*//
 
-# define WIDTH 1000
-# define HEIGHT 1000
+# define WIDTH 400
+# define HEIGHT 400
 # define MLX_ERROR 1
 # define EPSILON 0.00001
 # define PI 3.14159265358979323846
@@ -136,7 +136,8 @@ void							print_plane(const t_plane *plane);
 void							print_cylinder(const t_cylinder *cylinder);
 void							print_color(const t_color *color);
 void							print_tuple(t_tuple tuple);
-void							print_camera_direction(t_tuple from, t_tuple to, t_tuple up);
+void							print_camera_direction(t_tuple from, t_tuple to,
+									t_tuple up);
 
 //*----------------------- 🎨 Colors 🎨 -----------------------*//
 
@@ -260,6 +261,7 @@ typedef struct s_intersection
 	double						t;
 	t_sphere					*sphere;
 	t_plane						*plane;
+	t_cylinder					*cyl;
 	t_identifier_type			type;
 }								t_intersection;
 
@@ -337,15 +339,6 @@ void							set_transform(t_sphere *s, t_matrix t);
 t_tuple							normal_at(t_sphere sphere, t_tuple p);
 
 // todo               ~~~    Cylinder
-typedef struct s_cylinder
-{
-	t_tuple						center;
-	t_tuple						direction;
-	double						diameter;
-	double						height;
-	t_material					material;
-	t_matrix					transform;
-}								t_cylinder;
 
 // todo               ~~~     Planes
 typedef struct s_plane
@@ -428,6 +421,7 @@ typedef union s_object_union
 {
 	t_sphere					*sphere;
 	t_plane						*plane;
+	t_cylinder					*cylinder;
 }								t_object_union;
 
 typedef struct s_comps
@@ -476,5 +470,45 @@ t_canvas						render(t_camera cam, t_world w);
 
 t_projectile					tick(t_environnement env, t_projectile proj);
 int								equal(double a, double b);
+
+//*-----------------------  Cylinder  -----------------------*//
+
+typedef struct s_cylinder
+{
+	t_tuple						center;
+	t_tuple						direction;
+	double						diameter;
+	double						height;
+
+	t_matrix					transform;
+	double						minimum;
+	double						maximum;
+	int							closed;
+	t_material					material;
+}								t_cylinder;
+
+typedef struct s_cone
+{
+	t_matrix					transform;
+	double						minimum;
+	double						maximum;
+	int							closed;
+	t_material					material;
+}								t_cone;
+
+t_cylinder						cylinder(void);
+t_intersections					local_intersect_cylinder(t_cylinder *cyl,
+									t_ray r);
+t_tuple							local_normal_at_cylinder(t_cylinder cylinder,
+									t_tuple point);
+void							add_intersection_cylinder(t_intersections *xs,
+									double t, t_cylinder *cyl);
+int								check_cap(t_ray ray, double t, double radius);
+t_tuple							local_normal_at_cone(t_cone cylinder,
+									t_tuple point);
+t_intersections					local_intersect_cone(t_cone *cyl, t_ray ray);
+t_cone							cone(void);
+int								check_cap_cylinder(t_ray ray, double t,
+									double y, int is_lower);
 
 #endif

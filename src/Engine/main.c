@@ -98,7 +98,7 @@ int	main(int ac, char **av)
 	t_scene_data	scene_data;
 
 	if (init_data(&scene_data, ac, av) == NULL)
-		return (1);
+		return (error("Problem with Parsing"), 1);
 	printf("shape count : %d\n", scene_data.shape_count);
 
     vars.mlx = mlx_init();

@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 09:18:39 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/29 15:22:58 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/29 17:17:34 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,34 +84,38 @@ t_plane	*get_plane_data(char *line, double amb)
 
 t_cylinder	*get_cylinder_data(char *line, double amb)
 {
-	t_cylinder	*cylinder;
+	t_cylinder	*cyl;
 	char		*value;
 
-	cylinder = malloc(sizeof(t_cylinder));
-	if (!cylinder)
+	cyl = malloc(sizeof(t_cylinder));
+	if (!cyl)
 		return (NULL);
+	*cyl = cylinder();
 	get_next_value(&value, &line);
-	parse_coordinates(value, &(cylinder->center));
+	parse_coordinates(value, &(cyl->center));
 	free(value);
 	get_next_value(&value, &line);
-	parse_coordinates(value, &(cylinder->direction));
+	parse_coordinates(value, &(cyl->direction));
 	free(value);
-	if (check_coordinates(cylinder->direction) != 0)
-		return (free(cylinder), error("Cylinder vector value incorrect"), NULL);
+	if (check_coordinates(cyl->direction) != 0)
+		return (free(cyl), error("Cylinder vector value incorrect"), NULL);
 	get_next_value(&value, &line);
-	cylinder->diameter = ft_atof(value);
-	free(value);
-	get_next_value(&value, &line);
-	cylinder->height = ft_atof(value);
+	cyl->diameter = ft_atof(value);
 	free(value);
 	get_next_value(&value, &line);
-	if (parse_colors(value, &(cylinder->material.color)) != 0)
+	cyl->height = ft_atof(value);
+	free(value);
+	get_next_value(&value, &line);
+	if (parse_colors(value, &(cyl->material.color)) != 0)
 	{
 		free(value);
-		free(cylinder);
+		free(cyl);
 		return (error("RGB Colors for Plane are incorrect"), NULL);
 	}
 	free(value);
-	cylinder->material.ambient = amb;
-	return (cylinder);
+	cyl->material.diffuse = 0.6;
+	cyl->material.specular = 0;
+	cyl->material.shininess = 50;
+	cyl->material.ambient = amb;
+	return (cyl);
 }
