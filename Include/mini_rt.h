@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/28 19:40:31 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/29 15:21:57 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -323,9 +323,26 @@ typedef struct s_cylinder
 	t_material		material;
 }					t_cylinder;
 
+typedef struct s_cone
+{
+	t_matrix		transform;
+	double			minimum;
+	double			maximum;
+	int				closed;
+	t_material		material;
+}					t_cone;
+
 t_cylinder			cylinder(void);
 t_intersections		local_intersect_cylinder(t_cylinder *cyl, t_ray r);
 t_tuple				local_normal_at_cylinder(t_cylinder cylinder,
 						t_tuple point);
+void				add_intersection_cylinder(t_intersections *xs, double t,
+						void *object);
+int					check_cap(t_ray ray, double t, double radius);
+t_tuple				local_normal_at_cone(t_cone cylinder, t_tuple point);
+t_intersections		local_intersect_cone(t_cone *cyl, t_ray ray);
+t_cone				cone(void);
+int					check_cap_cylinder(t_ray ray, double t, double y,
+						int is_lower);
 
 #endif

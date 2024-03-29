@@ -1676,7 +1676,8 @@ Test(cylinder_tests, ray_misses_cylinder) {
     }
 }
 
-Test(cylinder_ray_intersections, ray_strikes_cylinder) {
+Test(cylinder_ray_intersections, ray_strikes_cylinder)
+{
     struct {
         t_tuple origin;
         t_tuple direction;
@@ -1701,8 +1702,9 @@ Test(cylinder_ray_intersections, ray_strikes_cylinder) {
     }
 }
 
-Test(cylinder_normals, normal_vector_on_a_cylinder) {
-    t_cylinder cyl = cylinder(); // Assuming this correctly initializes a cylinder
+Test(cylinder_normals, normal_vector_on_a_cylinder)
+{
+    t_cylinder cyl = cylinder();
 
     struct {
         t_tuple point;
@@ -1721,3 +1723,211 @@ Test(cylinder_normals, normal_vector_on_a_cylinder) {
         cr_assert_float_eq(normal.z, test_cases[i].expected_normal.z, 1e-6, "Normal z component mismatch on case %zu.", i + 1);
     }
 }
+
+Test(cylinder_properties, default_min_max)
+{
+    t_cylinder cyl = cylinder();
+    
+    cr_expect(isinf(cyl.minimum) && cyl.minimum < 0, "Cylinder minimum should default to -INFINITY");
+    cr_expect(isinf(cyl.maximum) && cyl.maximum > 0, "Cylinder maximum should default to INFINITY");
+
+}
+
+Test(cylinder_intersection_tests, constrained_cylinder)
+{
+    struct {
+        t_tuple point;
+        t_tuple direction;
+        int count;
+    } test_cases[] = {
+        {point(0, 1.5, 0), vector(0.1, 1, 0), 0},
+        {point(0, 3, -5), vector(0, 0, 1), 0},
+        {point(0, 0, -5), vector(0, 0, 1), 0},
+        {point(0, 2, -5), vector(0, 0, 1), 0},
+        {point(0, 1, -5), vector(0, 0, 1), 0},
+        {point(0, 1.5, -2), vector(0, 0, 1), 2}
+    };
+
+    t_cylinder cyl = cylinder();
+    cyl.minimum = 1;
+    cyl.maximum = 2;
+
+    for (size_t i = 0; i < sizeof(test_cases) / sizeof(test_cases[0]); ++i)
+    {
+        t_ray r = ray(test_cases[i].point, normalize(test_cases[i].direction));
+        t_intersections xs = local_intersect_cylinder(&cyl, r);
+
+        cr_expect_eq(xs.count, test_cases[i].count, "Expected %d intersections, but got %d for case %zu.", test_cases[i].count, xs.count, i + 1);
+
+    }
+
+}
+
+Test(cylinder_properties, default_closed_value)
+{
+    t_cylinder cyl = cylinder();
+
+    cr_expect_eq(cyl.closed, 0, "Expected default cylinder.closed to be false (0)");
+}
+
+Test(intersecting_caps_of_closed_cylinder_various_rays, checks_intersection_counts) {
+    struct {
+        t_tuple origin;
+        t_tuple direction;
+        size_t count;
+    } test_cases[] = {
+        {point(0, 3, 0), vector(0, -1, 0), 2},
+        {point(0, 3, -2), vector(0, -1, 2), 2},
+        {point(0, 4, -2), vector(0, -1, 1), 2},
+        {point(0, 0, -2), vector(0, 1, 2), 2},
+        {point(0, -1, -2), vector(0, 1, 1), 2}
+    };
+
+    t_cylinder cyl = cylinder();
+    cyl.minimum = 1;
+    cyl.maximum = 2;
+    cyl.closed = true;
+
+    for (size_t i = 0; i < sizeof(test_cases) / sizeof(test_cases[0]); i++) {
+        t_ray r = ray(test_cases[i].origin, normalize(test_cases[i].direction));
+        t_intersections xs = local_intersect_cylinder(&cyl, r);
+
+        cr_assert_eq((size_t)xs.count, test_cases[i].count, "Expected %zu intersections, but got %d on test case %zu.", test_cases[i].count, xs.count, i + 1);
+
+
+    }
+
+}
+
+Test(cylinder_normals, normal_vector_on_end_caps)
+{
+    t_cylinder cyl = cylinder();
+    cyl.minimum = 1;
+    cyl.maximum = 2;
+    cyl.closed = true;
+
+    struct {
+        t_tuple point;
+        t_tuple expected_normal;
+    } test_cases[] = {
+        {point(0, 1, 0), vector(0, -1, 0)},
+        {point(0.5, 1, 0), vector(0, -1, 0)},
+        {point(0, 1, 0.5), vector(0, -1, 0)},
+        {point(0, 2, 0), vector(0, 1, 0)},
+        {point(0.5, 2, 0), vector(0, 1, 0)},
+        {point(0, 2, 0.5), vector(0, 1, 0)}
+    };
+
+    for (size_t i = 0; i < sizeof(test_cases) / sizeof(test_cases[0]); ++i) {
+        t_tuple actual_normal = local_normal_at_cylinder(cyl, test_cases[i].point);
+
+        cr_expect_float_eq(actual_normal.x, test_cases[i].expected_normal.x, 1e-6,
+            "Expected normal x component to be %f, got %f for point %f, %f, %f.", 
+            test_cases[i].expected_normal.x, actual_normal.x, 
+            test_cases[i].point.x, test_cases[i].point.y, test_cases[i].point.z);
+
+        cr_expect_float_eq(actual_normal.y, test_cases[i].expected_normal.y, 1e-6,
+            "Expected normal y component to be %f, got %f for point %f, %f, %f.", 
+            test_cases[i].expected_normal.y, actual_normal.y, 
+            test_cases[i].point.x, test_cases[i].point.y, test_cases[i].point.z);
+
+        cr_expect_float_eq(actual_normal.z, test_cases[i].expected_normal.z, 1e-6,
+            "Expected normal z component to be %f, got %f for point %f, %f, %f.", 
+            test_cases[i].expected_normal.z, actual_normal.z, 
+            test_cases[i].point.x, test_cases[i].point.y, test_cases[i].point.z);
+    }
+}
+
+Test(cone_ray_intersections, intersects_with_ray)
+{
+    t_cone c = cone();
+
+    struct {
+        t_tuple origin;
+        t_tuple direction;
+        double t0;
+        double t1;
+    } test_cases[] = {
+        {point(0, 0, -5), normalize(vector(0, 0, 1)), 5, 5},
+        {point(0, 0, -5), normalize(vector(1, 1, 1)), 8.66025, 8.66025},
+        {point(1, 1, -5), normalize(vector(-0.5, -1, 1)), 4.55006, 49.44994}
+    };
+
+    for (size_t i = 0; i < (sizeof(test_cases) / sizeof(test_cases[0])); ++i) {
+        t_ray r = ray(test_cases[i].origin, test_cases[i].direction);
+        t_intersections xs = local_intersect_cone(&c, r);
+        // if(xs.count > 0) {
+          
+        // }  for(int j = 0; j < xs.count && j < 2; ++j) {
+        //         printf("Intersection %d: t=%f\n", j+1, xs.intersections[j].t);
+        //     }
+
+        cr_expect_eq(xs.count, 2, "Expected 2 intersections, got %d on test case %zu.", xs.count, i+1);
+        if (xs.count >= 2) {
+            cr_expect_float_eq(xs.intersections[0].t, test_cases[i].t0, 1e-5, "First t value mismatch on test case %zu.", i+1);
+            cr_expect_float_eq(xs.intersections[1].t, test_cases[i].t1, 1e-5, "Second t value mismatch on test case %zu.", i+1);
+        }
+    }
+}
+
+
+Test(cone_ray_intersections, parallel_to_half)
+{
+    t_cone c = cone();
+    t_tuple direction = normalize(vector(0, 1, 1));
+    t_ray r = ray(point(0, 0, -1), direction);
+
+    t_intersections xs = local_intersect_cone(&c, r);
+    cr_expect_eq(xs.count, 1, "Expected 1 intersection, got %d", xs.count);
+    if (xs.count >= 1) {
+        cr_expect_float_eq(xs.intersections[0].t, 0.35355, 1e-5, "t value mismatch for parallel ray");
+    }
+}
+
+Test(cone, cone_end_caps_intersections)
+{
+    t_cone c = cone();
+    c.minimum = -0.5;
+    c.maximum = 0.5;
+    c.closed = 1;
+    struct {
+        t_tuple origin;
+        t_tuple direction;
+        int expected_count;
+    } test_cases[] = {
+        {point(0, 0, -5), normalize(vector(0, 1, 0)), 0},
+        {point(0, 0, -0.25), normalize(vector(0, 1, 1)), 2},
+        {point(0, 0, -0.25), normalize(vector(0, 1, 0)), 4}
+    };
+
+    for (size_t i = 0; i < sizeof(test_cases) / sizeof(test_cases[0]); ++i) {
+        t_ray r = ray(test_cases[i].origin, test_cases[i].direction);
+        t_intersections xs = local_intersect_cone(&c, r);
+
+        cr_expect_eq(xs.count, test_cases[i].expected_count,
+            "Expected intersection count %d, got %d for test case %zu",
+            test_cases[i].expected_count, xs.count, i + 1);
+    }
+}
+
+Test(normal_cone, Computing_normal_vector_on_cone)
+{
+    t_cone shape = cone();
+
+    t_tuple normal_1 = local_normal_at_cone(shape, point(0, 0, 0));
+    t_tuple normal_2 = local_normal_at_cone(shape, point(1, 1, 1));
+    t_tuple normal_3 = local_normal_at_cone(shape, point(-1, -1, 0));
+
+    cr_expect_eq(normal_1.x, 0, "Normal vector at point (0, 0, 0) should have x-coordinate 0");
+    cr_expect_eq(normal_1.y, 0, "Normal vector at point (0, 0, 0) should have y-coordinate 0");
+    cr_expect_eq(normal_1.z, 0, "Normal vector at point (0, 0, 0) should have z-coordinate 0");
+
+    cr_expect_float_eq(normal_2.x, 1, 1e-6, "Normal vector at point (1, 1, 1) should have x-coordinate 1");
+    cr_expect_float_eq(normal_2.y, -sqrt(2), 1e-6, "Normal vector at point (1, 1, 1) should have y-coordinate -√2");
+    cr_expect_float_eq(normal_2.z, 1, 1e-6, "Normal vector at point (1, 1, 1) should have z-coordinate 1");
+
+    cr_expect_eq(normal_3.x, -1, "Normal vector at point (-1, -1, 0) should have x-coordinate -1");
+    cr_expect_eq(normal_3.y, 1, "Normal vector at point (-1, -1, 0) should have y-coordinate 1");
+    cr_expect_eq(normal_3.z, 0, "Normal vector at point (-1, -1, 0) should have z-coordinate 0");
+}
+
