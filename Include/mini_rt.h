@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/29 09:27:17 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/29 14:43:40 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@
 
 //*-------------------- 📖 𝘿𝙀𝙁𝙄𝙉𝙄𝙏𝙄𝙊𝙉𝙎 📖 ---------------------*//
 
-# define WIDTH 1200
-# define HEIGHT 1200
+# define WIDTH 600
+# define HEIGHT 600
 # define MLX_ERROR 1
 # define EPSILON 0.00001
 # define PI 3.14159265358979323846
@@ -135,6 +135,8 @@ void							print_light(const t_light *light);
 void							print_plane(const t_plane *plane);
 void							print_cylinder(const t_cylinder *cylinder);
 void							print_color(const t_color *color);
+void							print_tuple(t_tuple tuple);
+void							print_camera_direction(t_tuple from, t_tuple to, t_tuple up);
 
 //*----------------------- 🎨 Colors 🎨 -----------------------*//
 
@@ -442,8 +444,6 @@ typedef struct s_comps
 
 // todo               ~~~    World Init
 t_world							world(void);
-t_world							default_world(void);
-void							free_world(t_world *w);
 
 // todo               ~~~    World colors
 t_intersections					intersect_world(t_world *world, t_ray r);
@@ -471,8 +471,6 @@ typedef struct s_camera
 t_camera						camera(int hsize, int vsize, double fov);
 t_ray							ray_for_pixel(t_camera camera, int px, int py);
 t_canvas						render(t_camera cam, t_world w);
-void							render_scene(t_vars *vars);
-t_canvas						render_scene2(void);
 
 //*----------------------- ❔ Utils ❔ ----------------------*//
 

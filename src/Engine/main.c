@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main.c		                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/29 09:46:08 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/29 14:08:17 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,11 @@ void transfer_scene_data_to_world(t_scene_data *scene, t_world *world)
         printf("\nAmbient Light\n");
         print_ambient(scene->ambient_light);
     }
-    if (scene->camera)
-    {
-        printf("\nCamera:\n");
-        print_camera(scene->camera);
-    }
+    // if (scene->camera)
+    // {
+    //     printf("\nCamera:\n");
+    //     print_camera(scene->camera);
+    // }
     if (scene->light)
     {
         world->light = *(scene->light);
@@ -54,31 +54,37 @@ void transfer_scene_data_to_world(t_scene_data *scene, t_world *world)
     }
 }
 
-void render_sphere(t_vars *vars, t_scene_data *scene)
+t_camera    prepare_camera(t_camera *cam)
+{	
+	t_camera new_cam;
+
+	t_tuple from = point(cam->position.x, cam->position.y, cam->position.z);
+    t_tuple to = point(0, 0, fabs(cam->position.z - 1));
+    t_tuple up = vector(cam->orientation.x, cam->orientation.y, cam->orientation.z);
+	print_camera_direction(from, to, up);
+
+    new_cam = camera(WIDTH, HEIGHT, cam->fov * (M_PI / 180.0));
+	new_cam.transform = view_transform(from, to, up);
+
+	return (new_cam);
+}
+
+void    render_scene(t_vars *vars, t_scene_data *scene)
 {
     int x = 0; 
     int y = 0;
-    int canvas_pixel = 1200;
-    double wall_size = 0.5;
-    double pixel_size = wall_size / canvas_pixel;
-    double wall_z = -4.5;
-    double half = wall_size / 2.0;
 
-	t_world	world;
+	t_world		world;
     transfer_scene_data_to_world(scene, &world);
-    t_tuple cam = scene->camera->position;
     
-    while (y < canvas_pixel)
+    t_camera cam = prepare_camera(scene->camera);
+    
+    while (y < HEIGHT)
     {
-        double world_y = half - pixel_size * y - (wall_size / 2.0 - canvas_pixel / 2.0 * pixel_size);
         x = 0;
-        while (x < canvas_pixel)
+        while (x < WIDTH)
         {
-            double world_x = -half + pixel_size * x + (wall_size / 2.0 - canvas_pixel / 2.0 * pixel_size);
-            t_tuple pixel_position = {world_x, world_y, wall_z, 1};
-            t_tuple ray_direction = normalize(subtract_tuples(pixel_position, cam));
-            t_ray r = ray(cam, ray_direction);
-
+            t_ray r = ray_for_pixel(cam, x, y);
 			t_color color = color_at(world, r);
 			int final_color = convert_color_to_int(color);
 			my_mlx_pixel_put(vars, x, y, final_color);
@@ -99,7 +105,6 @@ int	main(int ac, char **av)
 	if (init_data(&scene_data, ac, av) == NULL)
 		return (1);
 	printf("shape count : %d\n", scene_data.shape_count);
-    // print_shapes(&vars, &scene_data->shapes);
 
     vars.mlx = mlx_init();
     vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniLibX - Sphere Rendering");
@@ -107,7 +112,7 @@ int	main(int ac, char **av)
     vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
                                      &vars.img.endian);
 
-    render_sphere(&vars, &scene_data);
+    render_scene(&vars, &scene_data);
 
     mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
     mlx_loop(vars.mlx);

@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:29:59 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/26 11:53:25 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/29 14:43:13 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,18 @@ void	print_camera(const t_camera *camera)
 	printf("Orientation: x = %f, y = %f, z = %f\n", camera->orientation.x,
 		camera->orientation.y, camera->orientation.z);
 	printf("FOV: %f\n", camera->fov);
+	printf("---------------\n");
+	printf("\033[0m");
+}
+
+void	print_camera_direction(t_tuple from, t_tuple to, t_tuple up)
+{
+	printf("\033[35m");
+	printf("---------------\n");
+	printf("Camera Looking:\n");
+	printf("FROM: x = %f, y = %f, z = %f\n", from.x, from.y, from.z);
+	printf("TO: x = %f, y = %f, z = %f\n", to.x, to.y, to.z);
+	printf("UP: x = %f, y = %f, z = %f\n", up.x, up.y, up.z);
 	printf("---------------\n");
 	printf("\033[0m");
 }
@@ -118,4 +130,9 @@ void	print_cylinder(const t_cylinder *cylinder)
 void print_color(const t_color *color)
 {
 	printf("Color - Red: %.2f, Green: %.2f, Blue: %.2f\n", color->red, color->green, color->blue);
+}
+
+void print_tuple(t_tuple tuple)
+{
+    printf("Tuple(x: %f, y: %f, z: %f, w: %f)\n", tuple.x, tuple.y, tuple.z, tuple.w);
 }

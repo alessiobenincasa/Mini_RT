@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/28 15:27:45 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/29 10:21:17 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,17 +126,16 @@ t_color	color_at(t_world w, t_ray r)
 
 t_matrix	view_transform(t_tuple from, t_tuple to, t_tuple up)
 {
-	t_tuple		forward;
-	t_vector	left;
-	t_vector	true_up;
-	float		orientation[16] = {left.x, left.y, left.z, 0, true_up.x,
-				true_up.y, true_up.z, 0, -(forward.x), -(forward.y),
-				-(forward.z), 0, 0, 0, 0, 1};
-	t_matrix	result;
+	t_tuple		forward = normalize(subtract_tuples(to, from));
+	t_vector	left = cross(forward, normalize(up));
+	t_vector	true_up = cross(vector(left.x ,left.y, left.z), forward);
 
-	forward = normalize(subtract_tuples(to, from));
-	left = cross(forward, normalize(up));
-	true_up = cross(vector(left.x, left.y, left.z), forward);
-	result = create_matrix(4, 4, orientation);
-	return (multiply_matrices(result, translation(-from.x, -from.y, -from.z)));
+	float orientation[16] = {
+        left.x, left.y, left.z, 0,
+        true_up.x, true_up.y, true_up.z, 0,
+        -(forward.x), -(forward.y), -(forward.z), 0,
+        0, 0, 0, 1
+    };
+	t_matrix result = create_matrix(4, 4, orientation);
+    return (multiply_matrices(result, translation(-from.x, -from.y, -from.z)));
 }

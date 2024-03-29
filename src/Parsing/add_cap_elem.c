@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:16:03 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/29 09:40:28 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/29 14:03:57 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ static int	add_camera_to_list(t_scene_data *scene_data, char *line)
 
 	get_next_value(&value, &line);
 	parse_coordinates(value, &(scene_data->camera->position));
+	print_tuple(scene_data->camera->position);
 	free(value);
 	get_next_value(&value, &line);
 	parse_coordinates(value, &(scene_data->camera->orientation));

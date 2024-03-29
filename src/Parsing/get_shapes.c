@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 09:18:39 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/29 09:29:01 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/29 13:16:43 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,9 @@ t_plane	*get_plane_data(char *line, double amb)
 		return (free(plane), error("Plane vector value incorrect"), NULL);
 	get_next_value(&value, &line);
 	plane->material = material();
-	plane->material.shininess = 0;
+	plane->material.diffuse = 0.6;
+	plane->material.specular = 0.1;
+	plane->material.shininess = 50;
 	if (parse_colors(value, &(plane->material.color)) != 0)
 	{
 		free(value);
