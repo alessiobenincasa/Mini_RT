@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:27:10 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/26 13:36:46 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/29 09:52:25 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,11 @@ static void	set_data_to_zero(t_scene_data *scene_data)
 	scene_data->initialised.ambient_light = 0;
 	scene_data->initialised.camera = 0;
 	scene_data->initialised.light = 0;
-	scene_data->ambient_light = NULL;
-	scene_data->camera = NULL;
+	scene_data->ambient_light = malloc(sizeof(t_ambient));
+	scene_data->ambient_light->color = color(255, 255, 255);
+	scene_data->ambient_light->ratio = 0.1;
+	scene_data->camera = malloc(sizeof(t_camera));
+	scene_data->camera->position = point(0, 0, -4.95);
 	scene_data->light = NULL;
 }
 

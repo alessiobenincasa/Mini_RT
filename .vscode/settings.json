@@ -3,7 +3,8 @@
     "mini_rt.h": "c",
     "criterion.h": "c",
     "keysym.h": "c",
-    "errno.h": "c"
+    "errno.h": "c",
+    "type_traits": "c"
   },
   "C_Cpp.errorSquiggles": "disabled",
   "C_Cpp_Runner.msvcBatchPath": ""

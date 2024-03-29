@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/28 14:59:52 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/29 09:27:17 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,9 +110,9 @@ char							*strdup_upto_whitespace(const char *s);
 void							get_next_value(char **value, char **line);
 
 // todo              ~~~   get shapes   ~~~                  *//
-t_sphere						*get_sphere_data(char *line);
-t_plane							*get_plane_data(char *line);
-t_cylinder						*get_cylinder_data(char *line);
+t_sphere						*get_sphere_data(char *line, double amb);
+t_plane							*get_plane_data(char *line, double amb);
+t_cylinder						*get_cylinder_data(char *line, double amb);
 
 // todo              ~~~  add elements  ~~~                  *//
 int								add_shape_data(t_identifier_type type,

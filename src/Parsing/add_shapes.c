@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:11:43 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/16 07:19:38 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/29 09:31:49 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	add_sphere_to_list(t_identifier_type type, t_scene_data *scene_data, 
 	t_sphere 	*sphere;
 	t_list		*new_node;
 	
-	sphere = get_sphere_data(line);
+	sphere = get_sphere_data(line, scene_data->ambient_light->ratio);
 	if (!sphere)
 		return (1);
 	new_node = ft_lstnew(sphere);
@@ -41,7 +41,7 @@ static int	add_plane_to_list(t_identifier_type type, t_scene_data *scene_data, c
 	t_plane 	*plane;
 	t_list		*new_node;
 	
-	plane = get_plane_data(line);
+	plane = get_plane_data(line, scene_data->ambient_light->ratio);
 	if (!plane)
 		return (1);
 	new_node = ft_lstnew(plane);
@@ -57,7 +57,7 @@ static int	add_cylinder_to_list(t_identifier_type type, t_scene_data *scene_data
 	t_cylinder 	*cylinder;
 	t_list		*new_node;
 	
-	cylinder = get_cylinder_data(line);
+	cylinder = get_cylinder_data(line, scene_data->ambient_light->ratio);
 	if (!cylinder)
 		return (1);
 	print_cylinder(cylinder);

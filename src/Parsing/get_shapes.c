@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 09:18:39 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/28 15:35:42 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/29 09:29:01 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	check_coordinates(t_tuple vec)
 	return (0);
 }
 
-t_sphere	*get_sphere_data(char *line)
+t_sphere	*get_sphere_data(char *line, double amb)
 {
 	t_sphere	*s;
 	char		*value;
@@ -46,10 +46,11 @@ t_sphere	*get_sphere_data(char *line)
 		return (error("RGB Colors for Sphere are incorrect"), NULL);
 	}
 	free(value);
+	s->material.ambient = amb;
 	return (s);
 }
 
-t_plane	*get_plane_data(char *line)
+t_plane	*get_plane_data(char *line, double amb)
 {
 	t_plane	*plane;
 	char	*value;
@@ -75,10 +76,11 @@ t_plane	*get_plane_data(char *line)
 		return (error("RGB Colors for Plane are incorrect"), NULL);
 	}
 	free(value);
+	plane->material.ambient = amb;
 	return (plane);
 }
 
-t_cylinder	*get_cylinder_data(char *line)
+t_cylinder	*get_cylinder_data(char *line, double amb)
 {
 	t_cylinder	*cylinder;
 	char		*value;
@@ -108,5 +110,6 @@ t_cylinder	*get_cylinder_data(char *line)
 		return (error("RGB Colors for Plane are incorrect"), NULL);
 	}
 	free(value);
+	cylinder->material.ambient = amb;
 	return (cylinder);
 }

@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/28 15:05:56 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/29 09:46:08 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,17 @@ void transfer_scene_data_to_world(t_scene_data *scene, t_world *world)
 
     printf("\nWorlds objects:\n");
     print_shapes(world->objects);
-    if (scene->light) 
+    if (scene->ambient_light)
+    {
+        printf("\nAmbient Light\n");
+        print_ambient(scene->ambient_light);
+    }
+    if (scene->camera)
+    {
+        printf("\nCamera:\n");
+        print_camera(scene->camera);
+    }
+    if (scene->light)
     {
         world->light = *(scene->light);
         printf("\nWorlds Light:\n");
@@ -53,10 +63,11 @@ void render_sphere(t_vars *vars, t_scene_data *scene)
     double pixel_size = wall_size / canvas_pixel;
     double wall_z = -4.5;
     double half = wall_size / 2.0;
-    
-	t_world		world;
-    transfer_scene_data_to_world(scene, &world);
 
+	t_world	world;
+    transfer_scene_data_to_world(scene, &world);
+    t_tuple cam = scene->camera->position;
+    
     while (y < canvas_pixel)
     {
         double world_y = half - pixel_size * y - (wall_size / 2.0 - canvas_pixel / 2.0 * pixel_size);
@@ -65,8 +76,8 @@ void render_sphere(t_vars *vars, t_scene_data *scene)
         {
             double world_x = -half + pixel_size * x + (wall_size / 2.0 - canvas_pixel / 2.0 * pixel_size);
             t_tuple pixel_position = {world_x, world_y, wall_z, 1};
-            t_tuple ray_direction = normalize(subtract_tuples(pixel_position, (t_tuple){0, 0, -5, 1}));
-            t_ray r = ray((t_tuple){0, 0, -5, 1}, ray_direction);
+            t_tuple ray_direction = normalize(subtract_tuples(pixel_position, cam));
+            t_ray r = ray(cam, ray_direction);
 
 			t_color color = color_at(world, r);
 			int final_color = convert_color_to_int(color);
