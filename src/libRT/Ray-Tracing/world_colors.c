@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/30 14:43:13 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/30 17:06:02 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ t_comps	prepare_computations(t_intersection i, t_ray r)
 	else if (comps.type == CYLINDER)
 	{
 		comps.object.cylinder = i.cyl;
-		comps.normalv = local_normal_at_cylinder(*comps.object.cylinder, comps.point);
+		comps.normalv = normal_at_cylinder(*comps.object.cylinder, comps.point);
 	}
 	if (dot(comps.normalv, comps.eyev) < -EPSILON)
 	{

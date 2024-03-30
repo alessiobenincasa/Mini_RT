@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 09:18:39 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/30 14:04:21 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/30 17:40:24 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ t_plane	*get_plane_data(char *line, double amb)
 		return (error("RGB Colors for Plane are incorrect"), NULL);
 	}
 	free(value);
-	plane->material.ambient = amb;
+	plane->material.ambient = amb;	
 	return (plane);
 }
 
@@ -103,7 +103,7 @@ t_cylinder	*get_cylinder_data(char *line, double amb)
 	cyl->diameter = ft_atof(value);
 	free(value);
 	get_next_value(&value, &line);
-	cyl->height = ft_atof(value);
+	cyl->maximum = ft_atof(value);
 	free(value);
 	get_next_value(&value, &line);
 	if (parse_colors(value, &(cyl->material.color)) != 0)
@@ -114,5 +114,9 @@ t_cylinder	*get_cylinder_data(char *line, double amb)
 	}
 	free(value);
 	cyl->material.ambient = amb;
+
+	t_matrix rotation = multiply_matrices(rotation_x(cyl->direction.x), multiply_matrices(rotation_y(cyl->direction.y), rotation_z(cyl->direction.z)));
+	cyl->transform = multiply_matrices(rotation, cyl->transform);
+	
 	return (cyl);
 }
