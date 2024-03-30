@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 09:18:39 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/29 17:17:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/30 14:04:21 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,9 +113,6 @@ t_cylinder	*get_cylinder_data(char *line, double amb)
 		return (error("RGB Colors for Plane are incorrect"), NULL);
 	}
 	free(value);
-	cyl->material.diffuse = 0.6;
-	cyl->material.specular = 0;
-	cyl->material.shininess = 50;
 	cyl->material.ambient = amb;
 	return (cyl);
 }

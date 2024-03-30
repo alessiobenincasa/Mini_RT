@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/29 16:54:57 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/30 14:26:18 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -510,5 +510,6 @@ t_intersections					local_intersect_cone(t_cone *cyl, t_ray ray);
 t_cone							cone(void);
 int								check_cap_cylinder(t_ray ray, double t,
 									double y, int is_lower);
+t_tuple 						normal_at_cylinder(t_cylinder cylinder, t_tuple p);
 
 #endif
