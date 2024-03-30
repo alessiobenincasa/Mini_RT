@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 13:32:48 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/30 17:46:06 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/30 18:12:36 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,9 @@ t_cylinder cylinder(void)
     cyl.maximum = 3;
     cyl.closed = 1;
     cyl.material = material();
-    // cyl.material.specular = 0;
-    // cyl.material.diffuse = 0.6;
-    // cyl.material.shininess = 50;
+    cyl.material.specular = 0;
+    cyl.material.diffuse = 0.6;
+    cyl.material.shininess = 50;
     return cyl;
 }
 

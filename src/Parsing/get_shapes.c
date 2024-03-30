@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 09:18:39 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/30 17:40:24 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/30 17:58:05 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ t_cylinder	*get_cylinder_data(char *line, double amb)
 
 	t_matrix rotation = multiply_matrices(rotation_x(cyl->direction.x), multiply_matrices(rotation_y(cyl->direction.y), rotation_z(cyl->direction.z)));
 	cyl->transform = multiply_matrices(rotation, cyl->transform);
+	cyl->transform = multiply_matrices(translation(cyl->center.x, cyl->center.y, cyl->center.z), cyl->transform);
 	
 	return (cyl);
 }
