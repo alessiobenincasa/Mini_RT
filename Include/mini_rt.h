@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/29 15:21:57 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/31 18:48:58 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -344,5 +344,16 @@ t_intersections		local_intersect_cone(t_cone *cyl, t_ray ray);
 t_cone				cone(void);
 int					check_cap_cylinder(t_ray ray, double t, double y,
 						int is_lower);
+
+//! Patterns
+
+typedef struct s_pattern
+{
+	t_color			a;
+	t_color			b;
+}					t_pattern;
+
+t_pattern			stripe_pattern(t_color color_a, t_color color_b);
+t_color				stripe_at(t_pattern pattern, t_tuple point);
 
 #endif

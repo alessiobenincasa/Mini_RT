@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/26 16:32:01 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/31 18:50:08 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -893,8 +893,8 @@ void render_sphere(t_vars *vars)
 //     vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
 //                                      &vars.img.endian);
     
-//     mlx_hook(vars.win, DestroyNotify, StructureNotifyMask, close_program, &vars);
-//     mlx_key_hook(vars.win, key_hook, &vars);
+//     // mlx_hook(vars.win, DestroyNotify, StructureNotifyMask, close_program, &vars);
+//     // mlx_key_hook(vars.win, key_hook, &vars);
 //     render_sphere(&vars);
 
 //     mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);

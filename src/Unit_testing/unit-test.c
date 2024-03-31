@@ -1931,3 +1931,53 @@ Test(normal_cone, Computing_normal_vector_on_cone)
     cr_expect_eq(normal_3.z, 0, "Normal vector at point (-1, -1, 0) should have z-coordinate 0");
 }
 
+int eq_color(t_color c1, t_color c2)
+{
+    return (fabs(c1.red - c2.red) < EPSILON) &&
+           (fabs(c1.green - c2.green) < EPSILON) &&
+           (fabs(c1.blue - c2.blue) < EPSILON);
+}
+
+Test(pattern_creation, creates_a_stripe_pattern)
+{
+    t_color black = color(0, 0, 0);
+    t_color white = color(1, 1, 1);
+    t_pattern pattern = stripe_pattern(white, black);
+    
+    cr_assert(eq_color(pattern.a, white), "Pattern a is not white.");
+    cr_assert(eq_color(pattern.b, black), "Pattern b is not black.");
+}
+
+
+Test(pattern_consistency, stripe_pattern_constant_in_y) {
+    t_color black = color(0, 0, 0);
+    t_color white = color(1, 1, 1);
+    t_pattern pattern = stripe_pattern(white, black);
+    
+    cr_assert(eq_color(stripe_at(pattern, point(0, 0, 0)), white));
+    cr_assert(eq_color(stripe_at(pattern, point(0, 1, 0)), white));
+    cr_assert(eq_color(stripe_at(pattern, point(0, 2, 0)), white));
+}
+
+Test(pattern_consistency, stripe_pattern_constant_in_z) {
+    t_color black = color(0, 0, 0);
+    t_color white = color(1, 1, 1);
+    t_pattern pattern = stripe_pattern(white, black);
+    
+    cr_assert(eq_color(stripe_at(pattern, point(0, 0, 0)), white));
+    cr_assert(eq_color(stripe_at(pattern, point(0, 0, 1)), white));
+    cr_assert(eq_color(stripe_at(pattern, point(0, 0, 2)), white));
+}
+
+Test(pattern_variation, stripe_pattern_alternates_in_x) {
+    t_color black = color(0, 0, 0);
+    t_color white = color(1, 1, 1);
+    t_pattern pattern = stripe_pattern(white, black);
+    
+    cr_assert(eq_color(stripe_at(pattern, point(0, 0, 0)), white));
+    cr_assert(eq_color(stripe_at(pattern, point(0.9, 0, 0)), white));
+    cr_assert(eq_color(stripe_at(pattern, point(1, 0, 0)), black));
+    cr_assert(eq_color(stripe_at(pattern, point(-0.1, 0, 0)), black));
+    cr_assert(eq_color(stripe_at(pattern, point(-1, 0, 0)), black));
+    cr_assert(eq_color(stripe_at(pattern, point(-1.1, 0, 0)), white));
+}
