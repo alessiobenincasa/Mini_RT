@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/31 20:46:04 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/31 22:13:56 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -783,6 +783,7 @@ void render_sphere(t_vars *vars)
     floor->center = point(0, -125, 0);
 	floor->material = material();
 	floor->material.color = color(1, 0.9, 0.9);
+    floor->material.pattern = stripe_pattern(color(1, 0, 0), color(0, 0, 0));
 	floor->material.specular = 0;
 
 	t_sphere* right = malloc(sizeof(t_sphere));
