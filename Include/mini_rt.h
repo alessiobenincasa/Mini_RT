@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/31 18:48:58 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/03/31 19:40:06 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,12 @@ typedef struct s_ray
 	t_tuple			direction;
 }					t_ray;
 
+typedef struct s_pattern
+{
+	t_color			a;
+	t_color			b;
+}					t_pattern;
+
 typedef struct s_material
 {
 	t_color			color;
@@ -119,6 +125,7 @@ typedef struct s_material
 	double			diffuse;
 	double			specular;
 	double			shininess;
+	t_pattern		*pattern;
 }					t_material;
 
 typedef struct s_sphere
@@ -347,13 +354,7 @@ int					check_cap_cylinder(t_ray ray, double t, double y,
 
 //! Patterns
 
-typedef struct s_pattern
-{
-	t_color			a;
-	t_color			b;
-}					t_pattern;
-
-t_pattern			stripe_pattern(t_color color_a, t_color color_b);
-t_color				stripe_at(t_pattern pattern, t_tuple point);
+t_pattern			*stripe_pattern(t_color color_a, t_color color_b);
+t_color				stripe_at(t_pattern *pattern, t_tuple point);
 
 #endif

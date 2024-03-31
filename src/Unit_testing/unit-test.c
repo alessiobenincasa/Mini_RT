@@ -1938,46 +1938,54 @@ int eq_color(t_color c1, t_color c2)
            (fabs(c1.blue - c2.blue) < EPSILON);
 }
 
-Test(pattern_creation, creates_a_stripe_pattern)
+Test(pattern_creation, creates_stripe_pattern) {
+    t_color white = color(1, 1, 1);
+    t_color black = color(0, 0, 0);
+    t_pattern *pattern = stripe_pattern(white, black);
+
+    cr_expect(eq_color(pattern->a, white), "Pattern's first color should be white");
+    cr_expect(eq_color(pattern->b, black), "Pattern's second color should be black");
+    free(pattern);
+}
+
+
+Test(pattern_behavior, stripe_pattern_constant_in_y_and_z_alternates_in_x) {
+    t_color white = color(1, 1, 1);
+    t_color black = color(0, 0, 0);
+    t_pattern *pattern = stripe_pattern(white, black);
+
+    cr_expect(eq_color(stripe_at(pattern, point(0, 0, 0)), white), "Stripe at (0, 0, 0) should be white");
+    cr_expect(eq_color(stripe_at(pattern, point(0, 1, 0)), white), "Stripe at (0, 1, 0) should be white");
+    cr_expect(eq_color(stripe_at(pattern, point(0, 0, 1)), white), "Stripe at (0, 0, 1) should be white");
+    cr_expect(eq_color(stripe_at(pattern, point(0.9, 0, 0)), white), "Stripe at (0.9, 0, 0) should be white");
+    cr_expect(eq_color(stripe_at(pattern, point(1, 0, 0)), black), "Stripe at (1, 0, 0) should be black");
+    cr_expect(eq_color(stripe_at(pattern, point(-0.1, 0, 0)), black), "Stripe at (-0.1, 0, 0) should be black");
+    cr_expect(eq_color(stripe_at(pattern, point(-1, 0, 0)), black), "Stripe at (-1, 0, 0) should be black");
+    cr_expect(eq_color(stripe_at(pattern, point(-1.1, 0, 0)), white), "Stripe at (-1.1, 0, 0) should be white");
+
+    free(pattern);
+}
+
+Test(material_lighting, lighting_with_pattern)
 {
-    t_color black = color(0, 0, 0);
-    t_color white = color(1, 1, 1);
-    t_pattern pattern = stripe_pattern(white, black);
-    
-    cr_assert(eq_color(pattern.a, white), "Pattern a is not white.");
-    cr_assert(eq_color(pattern.b, black), "Pattern b is not black.");
-}
+    t_material m = material();
+    m.pattern = stripe_pattern(color(1, 1, 1), color(0, 0, 0));
+    m.ambient = 1;
+    m.diffuse = 0;
+    m.specular = 0;
 
-
-Test(pattern_consistency, stripe_pattern_constant_in_y) {
-    t_color black = color(0, 0, 0);
-    t_color white = color(1, 1, 1);
-    t_pattern pattern = stripe_pattern(white, black);
+    t_tuple eyev = vector(0, 0, -1);
+    t_tuple normalv = vector(0, 0, -1);
+    t_light light = point_light(point(0, 0, -10), color(1, 1, 1));
     
-    cr_assert(eq_color(stripe_at(pattern, point(0, 0, 0)), white));
-    cr_assert(eq_color(stripe_at(pattern, point(0, 1, 0)), white));
-    cr_assert(eq_color(stripe_at(pattern, point(0, 2, 0)), white));
-}
+    int in_shadow = 0;
+    t_tuple position1 = point(0.9, 0, 0);
+    t_tuple position2 = point(1.1, 0, 0);
+    t_color c1 = lighting(m, light, position1, eyev, normalv, in_shadow);
+    t_color c2 = lighting(m, light, position2, eyev, normalv, in_shadow);
 
-Test(pattern_consistency, stripe_pattern_constant_in_z) {
-    t_color black = color(0, 0, 0);
-    t_color white = color(1, 1, 1);
-    t_pattern pattern = stripe_pattern(white, black);
-    
-    cr_assert(eq_color(stripe_at(pattern, point(0, 0, 0)), white));
-    cr_assert(eq_color(stripe_at(pattern, point(0, 0, 1)), white));
-    cr_assert(eq_color(stripe_at(pattern, point(0, 0, 2)), white));
-}
-
-Test(pattern_variation, stripe_pattern_alternates_in_x) {
-    t_color black = color(0, 0, 0);
-    t_color white = color(1, 1, 1);
-    t_pattern pattern = stripe_pattern(white, black);
-    
-    cr_assert(eq_color(stripe_at(pattern, point(0, 0, 0)), white));
-    cr_assert(eq_color(stripe_at(pattern, point(0.9, 0, 0)), white));
-    cr_assert(eq_color(stripe_at(pattern, point(1, 0, 0)), black));
-    cr_assert(eq_color(stripe_at(pattern, point(-0.1, 0, 0)), black));
-    cr_assert(eq_color(stripe_at(pattern, point(-1, 0, 0)), black));
-    cr_assert(eq_color(stripe_at(pattern, point(-1.1, 0, 0)), white));
+    cr_assert(eq_color(c1, color(1, 1, 1)), "c1 should be white");
+    cr_assert(eq_color(c2, color(0, 0, 0)), "c2 should be black");
+    if (m.pattern != NULL)
+        free(m.pattern);
 }
