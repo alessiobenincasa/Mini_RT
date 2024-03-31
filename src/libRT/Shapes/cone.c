@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 14:27:48 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/31 18:33:16 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/31 19:04:55 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void add_intersection_cone(t_intersections *xs, double t, t_cone *cone)
     xs->count++;
     xs->intersections = realloc(xs->intersections, xs->count * sizeof(t_intersection));
     xs->intersections[xs->count - 1].t = t;
-    xs->intersections[xs->count - 1].cone = cone;
+    xs->intersections[xs->count - 1].object.cone = cone;
     xs->intersections[xs->count - 1].type = CONE;
 }
 

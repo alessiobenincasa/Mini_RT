@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 13:32:48 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/31 18:34:01 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/31 18:59:16 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,6 @@ void add_intersection_cylinder(t_intersections *xs, double t, t_cylinder *cyl)
     xs->count++;
     xs->intersections = realloc(xs->intersections, xs->count * sizeof(t_intersection));
     xs->intersections[xs->count - 1].t = t;
-    xs->intersections[xs->count - 1].cyl = cyl;
+    xs->intersections[xs->count - 1].object.cylinder = cyl;
     xs->intersections[xs->count - 1].type = CYLINDER;
 }

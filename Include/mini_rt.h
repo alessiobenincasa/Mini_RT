@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/31 18:41:54 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/31 18:54:10 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,13 +259,18 @@ t_ray							ray(t_tuple origin, t_tuple direction);
 t_tuple							position(t_ray r, double t);
 
 // todo               ~~~  Intersections
+
+typedef union s_object_union
+{
+	t_sphere					*sphere;
+	t_plane						*plane;
+	t_cylinder					*cylinder;
+	t_cone						*cone;
+}								t_object_union;
 typedef struct s_intersection
 {
 	double						t;
-	t_sphere					*sphere;
-	t_plane						*plane;
-	t_cylinder					*cyl;
-	t_cone						*cone;
+	t_object_union				object;
 	t_identifier_type			type;
 }								t_intersection;
 
@@ -422,13 +427,6 @@ typedef struct s_world
 	int							object_count;
 	t_light						light;
 }								t_world;
-
-typedef union s_object_union
-{
-	t_sphere					*sphere;
-	t_plane						*plane;
-	t_cylinder					*cylinder;
-}								t_object_union;
 
 typedef struct s_comps
 {
