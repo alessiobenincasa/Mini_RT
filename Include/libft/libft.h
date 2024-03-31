@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 11:56:27 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/25 14:54:00 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/31 18:29:05 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ typedef enum s_identifier_type
 	LIGHT,
 	SPHERE,
 	PLANE,
-	CYLINDER
+	CYLINDER,
+	CONE
 }						t_identifier_type;
 typedef struct s_list
 {

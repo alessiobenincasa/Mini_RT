@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/29 16:38:48 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/31 18:34:46 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,11 @@ void	add_intersection(t_intersections *xs, t_intersection inter)
 	{
 		xs->intersections[xs->count].type = CYLINDER;
 		xs->intersections[xs->count].cyl = inter.cyl;
+	}
+	else if (inter.type == CONE)
+	{
+		xs->intersections[xs->count].type = CONE;
+		xs->intersections[xs->count].cone = inter.cone;
 	}
 	xs->count = new_count;
 }

@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/30 17:06:02 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/31 18:36:04 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,17 @@ t_matrix		view_transform(t_tuple from, t_tuple to, t_tuple up);
 t_intersections	intersect_world(t_world *world, t_ray r)
 {
 	t_intersections	sphere_xs;
-	t_intersections	planes_xs;
-	t_intersections	cyl_xs;
 	t_sphere		*s;
+
+	t_intersections	planes_xs;
 	t_plane			*p;
+
+	t_intersections	cyl_xs;
 	t_cylinder		*cyl;
+
+	t_intersections	cone_xs;
+	t_cone			*cone;
+
 	t_list			*current;
 
 	t_intersections	xs = {0, 0};
@@ -57,6 +63,15 @@ t_intersections	intersect_world(t_world *world, t_ray r)
 			for (int j = 0; j < cyl_xs.count; j++)
 			{
 				add_intersection(&xs, cyl_xs.intersections[j]);
+			}
+		}
+		else if (current->type == CONE)
+		{
+			cone = (t_cone *)current->content;
+			cone_xs = local_intersect_cone(cone, r);
+			for (int j = 0; j < cone_xs.count; j++)
+			{
+				add_intersection(&xs, cone_xs.intersections[j]);
 			}
 		}
 		current = current->next;

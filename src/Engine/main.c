@@ -25,6 +25,8 @@ void	print_shapes(t_list *list)
             print_plane((t_plane *)current->content);
         else if (current->type == CYLINDER)
             print_cylinder((t_cylinder *)current->content);
+        else if (current->type == CONE)
+            print_cone((t_cone *)current->content);
 		current = current->next;
 	}
 }
