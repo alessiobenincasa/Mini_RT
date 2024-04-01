@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_rt.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/01 14:39:11 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 16:52:15 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -297,6 +297,13 @@ int								compare_intersections(const void *a,
 void							sort_intersections(t_intersections *intersections);
 
 // todo             ~~~     Material
+
+typedef struct s_pattern
+{
+	t_color						a;
+	t_color						b;
+}								t_pattern;
+
 typedef struct s_material
 {
 	t_color						color;
@@ -304,6 +311,7 @@ typedef struct s_material
 	double						diffuse;
 	double						specular;
 	double						shininess;
+	t_pattern					*pattern;
 }								t_material;
 
 t_material						material(void);
@@ -530,5 +538,10 @@ void							add_intersection_cone(t_intersections *xs,
 									double t, t_cone *cone);
 t_intersections					local_intersect_cone(t_cone *cyl, t_ray ray);
 t_tuple							normal_at_cone(t_cone cone, t_tuple p);
+
+//*-------------------------  Cone  -------------------------*//
+t_pattern						*stripe_pattern(t_color color_a,
+									t_color color_b);
+t_color							stripe_at(t_pattern *pattern, t_tuple point);
 
 #endif

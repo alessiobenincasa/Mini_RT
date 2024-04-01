@@ -1,30 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   material.c                                         :+:      :+:    :+:   */
+/*   design_texture.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/01 16:56:51 by albeninc         ###   ########.fr       */
+/*   Created: 2024/04/01 16:55:21 by albeninc          #+#    #+#             */
+/*   Updated: 2024/04/01 16:55:30 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_rt.h"
 
-t_material	material(void);
-
-t_material	material(void)
+t_pattern *stripe_pattern(t_color a, t_color b)
 {
-	t_material m;
-
-	m.color.red = 1;
-	m.color.green = 1;
-	m.color.blue = 1;
-	m.ambient = 0.1;
-	m.diffuse = 0.9;
-	m.specular = 0.9;
-	m.shininess = 200.0;
-	m.pattern = NULL;
-	return (m);
+    t_pattern *pattern = malloc(sizeof(t_pattern));
+    if (!pattern)
+        exit(EXIT_FAILURE);
+    pattern->a = a;
+    pattern->b = b;
+    return pattern;
 }
+
+t_color stripe_at(t_pattern *pattern, t_tuple point)
+{
+    if (((int)floor(fabs(point.x * 10.0)) + (int)floor(fabs(point.y * 10.0))) % 2 == 0) {
+        return pattern->a;
+    } else {
+        return pattern->b;
+    }
+}
+
