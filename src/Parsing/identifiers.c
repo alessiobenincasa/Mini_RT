@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   data_identifiers.c                                 :+:      :+:    :+:   */
+/*   identifiers.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:28:21 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/14 14:30:38 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/31 18:38:18 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,11 @@ int	get_identifier(char **line, t_identifier_type *type, t_scene_data *scene_dat
 		*type = CYLINDER;
 	else if (ft_strcmp(identifier, "pl") == 0)
 		*type = PLANE;
+	else if (ft_strcmp(identifier, "co") == 0)
+		*type = CONE;
 	else
 		return (free(identifier), 1);
-	if (*type == SPHERE || *type == CYLINDER || *type == PLANE)
+	if (is_shape(*type))
 		(scene_data->shape_count)++;
 	*line += ft_strlen(identifier);
 	*line += skip_spaces(*line);

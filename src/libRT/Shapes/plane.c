@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 11:37:26 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/29 08:38:14 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/31 18:58:55 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ t_intersections	intersect_plane(t_plane *p, t_ray r)
 	if (xs.intersections == NULL)
 		exit(EXIT_FAILURE);
 	xs.intersections[0].t = t;
-	xs.intersections[0].plane = p;
+	xs.intersections[0].object.plane = p;
 	xs.intersections[0].type = PLANE;
     return (xs);
 }

@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/30 17:06:02 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/31 19:05:16 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,17 @@ t_matrix		view_transform(t_tuple from, t_tuple to, t_tuple up);
 t_intersections	intersect_world(t_world *world, t_ray r)
 {
 	t_intersections	sphere_xs;
-	t_intersections	planes_xs;
-	t_intersections	cyl_xs;
 	t_sphere		*s;
+
+	t_intersections	planes_xs;
 	t_plane			*p;
+
+	t_intersections	cyl_xs;
 	t_cylinder		*cyl;
+
+	t_intersections	cone_xs;
+	t_cone			*cone;
+
 	t_list			*current;
 
 	t_intersections	xs = {0, 0};
@@ -59,6 +65,15 @@ t_intersections	intersect_world(t_world *world, t_ray r)
 				add_intersection(&xs, cyl_xs.intersections[j]);
 			}
 		}
+		else if (current->type == CONE)
+		{
+			cone = (t_cone *)current->content;
+			cone_xs = local_intersect_cone(cone, r);
+			for (int j = 0; j < cone_xs.count; j++)
+			{
+				add_intersection(&xs, cone_xs.intersections[j]);
+			}
+		}
 		current = current->next;
 	}
 	sort_intersections(&xs);
@@ -75,19 +90,24 @@ t_comps	prepare_computations(t_intersection i, t_ray r)
 	comps.type = i.type;
 	if (comps.type == SPHERE)
 	{
-		comps.object.sphere = i.sphere;
+		comps.object.sphere = i.object.sphere;
 		comps.normalv = normal_at(*comps.object.sphere, comps.point);
 	}
 	else if (comps.type == PLANE)
 	{
-		comps.object.plane = i.plane;
+		comps.object.plane = i.object.plane;
 		comps.normalv = comps.object.plane->normal;
 	}
 	else if (comps.type == CYLINDER)
 	{
-		comps.object.cylinder = i.cyl;
+		comps.object.cylinder = i.object.cylinder;
 		comps.normalv = normal_at_cylinder(*comps.object.cylinder, comps.point);
 	}
+	// else if (comps.type == CONE)
+	// {
+	// 	comps.object.cone = i.object.cone;
+	// 	comps.normalv = normal_at_cone(*comps.object.cone, comps.point);
+	// }
 	if (dot(comps.normalv, comps.eyev) < -EPSILON)
 	{
 		comps.inside = 1;
@@ -109,6 +129,8 @@ t_material	extract_material_comps(t_comps comps)
 		m = comps.object.plane->material;
 	else if (comps.type == CYLINDER)
 		m = comps.object.cylinder->material;
+	// else if (comps.type == CONE)
+	// 	m = comps.object.cone->material;
 	else
 		m = material();
 	return (m);

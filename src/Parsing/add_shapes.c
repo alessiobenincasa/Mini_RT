@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:11:43 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/29 17:00:51 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/31 18:29:50 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,22 @@ static int	add_cylinder_to_list(t_identifier_type type, t_scene_data *scene_data
 	return (0);
 }
 
+static int	add_cone_to_list(t_identifier_type type, t_scene_data *scene_data, char *line)
+{
+	t_cone 		*cone;
+	t_list		*new_node;
+	
+	cone = get_cone_data(line, scene_data->ambient_light->ratio);
+	if (!cone)
+		return (error("failed to get cone data"), 1);
+	new_node = ft_lstnew(cone);
+	if (!new_node)
+		return (free(cone), 1);
+	new_node->type = type;
+	add_shape_to_list(scene_data, new_node);
+	return (0);
+}
+
 int	add_shape_data(t_identifier_type type, t_scene_data *scene_data, char *line)
 {
 	if (type == SPHERE)
@@ -84,6 +100,11 @@ int	add_shape_data(t_identifier_type type, t_scene_data *scene_data, char *line)
 	{
 		if (add_cylinder_to_list(type, scene_data, line) != 0)
 			return (error("Failed to add cylinder"), 1);
+    }
+	else if (type == CONE)
+	{
+		if (add_cone_to_list(type, scene_data, line) != 0)
+			return (error("Failed to add cone"), 1);
     }
 	else
 		return (error("Tried to add unknown shape"), 1);
