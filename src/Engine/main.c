@@ -109,11 +109,12 @@ int	main(int ac, char **av)
     t_vars          vars;
 	t_scene_data	scene_data;
 
-	if (init_data(&scene_data, ac, av) == NULL)
+    vars.mlx = mlx_init();
+	if (init_data(&scene_data, ac, av, vars.mlx) == NULL)
 		return (error("Problem with Parsing"), 1);
 	printf("shape count : %d\n", scene_data.shape_count);
+    scene_data.mlx = vars.mlx;
 
-    vars.mlx = mlx_init();
     vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniLibX - Sphere Rendering");
     vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
     vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,

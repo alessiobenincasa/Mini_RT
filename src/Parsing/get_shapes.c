@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 09:18:39 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/31 18:30:27 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 18:21:07 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	check_coordinates(t_tuple vec)
 	return (0);
 }
 
-t_sphere	*get_sphere_data(char *line, double amb)
+t_sphere	*get_sphere_data(char *line, double amb, void *mlx)
 {
 	t_sphere	*s;
 	char		*value;
@@ -32,6 +32,7 @@ t_sphere	*get_sphere_data(char *line, double amb)
 	if (!s)
 		return (NULL);
 	*s = sphere();
+	s->material.ambient = amb;
 	get_next_value(&value, &line);
 	parse_coordinates(value, &(s->center));
 	free(value);
@@ -40,13 +41,26 @@ t_sphere	*get_sphere_data(char *line, double amb)
 	free(value);
 	get_next_value(&value, &line);
 	if (parse_colors(value, &(s->material.color)) != 0)
-	{
-		free(value);
-		free(s);
-		return (error("RGB Colors for Sphere are incorrect"), NULL);
-	}
+		return (free(value), free(s), error("RGB Colors for Sphere are incorrect"), NULL);
 	free(value);
-	s->material.ambient = amb;
+	get_next_value(&value, &line);
+	if (value == NULL)
+		return (s);
+	parse_coordinates(value, &(s->scale));
+	free(value);
+	s->transform = scaling(s->scale.x, s->scale.y, s->scale.z);
+	get_next_value(&value, &line);
+	if (value == NULL)
+		return (s);
+	s->motif = ft_strdup(value);
+	free(value);
+	if (ft_strcmp(s->motif, "Stripe") == 0)
+		s->material.pattern = stripe_pattern(color(1,1,1), color(0,0,0));
+	else
+	{
+		t_texture *texture = load_texture(mlx, "textures/earth.xpm");
+		s->material.texture = texture;
+	}
 	return (s);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_rt.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/01 17:31:46 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/04/01 18:11:16 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@
 
 //*-------------------- 📖 𝘿𝙀𝙁𝙄𝙉𝙄𝙏𝙄𝙊𝙉𝙎 📖 ---------------------*//
 
-# define WIDTH 400
-# define HEIGHT 400
+# define WIDTH 800
+# define HEIGHT 800
 # define MLX_ERROR 1
 # define EPSILON 0.00001
 # define PI 3.14159265358979323846
@@ -90,6 +90,7 @@ typedef struct s_scene_data
 	t_list						*shapes;
 	t_list						*extra_lights;
 	int							shape_count;
+	void						*mlx;
 }								t_scene_data;
 
 // todo              ~~~  parse errors  ~~~                  *//
@@ -98,7 +99,7 @@ void							error(char *str);
 
 // todo              ~~~   data init    ~~~                  *//
 void							*init_data(t_scene_data *scene_data, int ac,
-									char **av);
+									char **av, void *mlx);
 int								get_identifier(char **line,
 									t_identifier_type *type,
 									t_scene_data *scene_data);
@@ -114,7 +115,7 @@ char							*strdup_upto_whitespace(const char *s);
 void							get_next_value(char **value, char **line);
 
 // todo              ~~~   get shapes   ~~~                  *//
-t_sphere						*get_sphere_data(char *line, double amb);
+t_sphere						*get_sphere_data(char *line, double amb, void *mlx);
 t_plane							*get_plane_data(char *line, double amb);
 t_cylinder						*get_cylinder_data(char *line, double amb);
 t_cone							*get_cone_data(char *line, double amb);
@@ -350,6 +351,8 @@ typedef struct s_sphere
 	double						radius;
 	t_material					material;
 	t_matrix					transform;
+	t_tuple						scale;
+	char						*motif;
 }								t_sphere;
 
 t_sphere						sphere(void);

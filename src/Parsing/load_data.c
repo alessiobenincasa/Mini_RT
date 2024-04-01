@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:27:10 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/01 14:08:26 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 18:01:17 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,12 +78,13 @@ static int	load_scene_data(t_scene_data *scene_data, int fd)
 	return (0);
 }
 
-void	*init_data(t_scene_data *scene_data, int ac, char **av)
+void	*init_data(t_scene_data *scene_data, int ac, char **av, void *mlx)
 {
 	int	fd;
 
 	if (invalid_input(ac, av))
 		return (NULL);
+	scene_data->mlx = mlx;
 	fd = open(av[1], O_RDONLY);
 	if (load_scene_data(scene_data, fd))
 		return (NULL);

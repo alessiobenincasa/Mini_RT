@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:44:50 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/15 17:16:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 17:37:22 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ char	*strdup_upto_whitespace(const char *s)
 	len = 0;
 	while (s[len] && s[len] != ' ' && s[len] != '\t')
 		len++;
+	if (len == 0)
+		return (NULL);
 	result = malloc((len + 1) * sizeof(char));
 	if (!result)
 		return (NULL);
@@ -80,6 +82,9 @@ int	skip_spaces(char *str)
 void	get_next_value(char **value, char **line)
 {
 	*value = strdup_upto_whitespace(*line);
-	*line += ft_strlen(*value);
-	*line += skip_spaces(*line);
+	if (*value)
+	{
+		*line += ft_strlen(*value);
+		*line += skip_spaces(*line);
+	}
 }

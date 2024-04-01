@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:11:43 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/31 18:29:50 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 17:58:30 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	add_sphere_to_list(t_identifier_type type, t_scene_data *scene_data, 
 	t_sphere 	*sphere;
 	t_list		*new_node;
 	
-	sphere = get_sphere_data(line, scene_data->ambient_light->ratio);
+	sphere = get_sphere_data(line, scene_data->ambient_light->ratio, scene_data->mlx);
 	if (!sphere)
 		return (error("failed to get sphere data"), 1);
 	new_node = ft_lstnew(sphere);

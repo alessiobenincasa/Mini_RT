@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   design_texture.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 16:55:21 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/01 17:30:36 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/04/01 18:17:46 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ t_texture    *load_texture(void *mlx_ptr, char *filepath)
 {
     t_texture    *texture;
 
+    printf("\n\ndetected filepath = %s\n\n", filepath);
     texture = malloc(sizeof(t_texture));
     if (!texture)
         return (NULL);

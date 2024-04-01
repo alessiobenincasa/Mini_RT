@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/25 12:05:27 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 17:38:28 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ t_sphere	sphere(void)
 	s.radius = 1;
 	s.transform = identity_matrix();
 	s.material = material();
+	s.motif = NULL;
+	s.scale = point(1, 1, 1);
 	return (s);
 }
 

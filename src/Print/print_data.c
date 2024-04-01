@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:29:59 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/01 14:11:41 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 17:32:56 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,9 @@ void	print_sphere(const t_sphere *sphere)
 	printf("Diameter: %f\n", sphere->radius);
 	printf("Color: (%f, %f, %f)\n", sphere->material.color.red, sphere->material.color.green,
 		sphere->material.color.blue);
+	printf("Scaling: (%f, %f, %f)\n", sphere->scale.x, sphere->scale.y,
+		sphere->scale.z);
+	printf("Motif: %s\n", sphere->motif);
 	printf("---------------\n");
 	printf("\033[0m");
 }
