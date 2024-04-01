@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:29:59 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/31 18:41:35 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 14:11:41 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	print_identifier_type(t_identifier_type type)
 		printf("CAMERA\n");
 	else if (type == LIGHT)
 		printf("LIGHT\n");
+	else if (type == EXTRA_LIGHT)
+		printf("EXTRA_LIGHT\n");
 	else if (type == SPHERE)
 		printf("SPHERE\n");
 	else if (type == PLANE)

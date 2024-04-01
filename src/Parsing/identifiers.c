@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:28:21 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/31 18:38:18 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 14:07:42 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ int	get_identifier(char **line, t_identifier_type *type, t_scene_data *scene_dat
 		*type = CAMERA;
 	else if (ft_strcmp(identifier, "L") == 0)
 		*type = LIGHT;
+	else if (ft_strcmp(identifier, "L2") == 0)
+		*type = EXTRA_LIGHT;
 	else if (ft_strcmp(identifier, "sp") == 0)
 		*type = SPHERE;
 	else if (ft_strcmp(identifier, "cy") == 0)

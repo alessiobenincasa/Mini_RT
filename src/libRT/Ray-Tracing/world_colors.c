@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/31 19:05:16 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 14:55:24 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,17 +136,32 @@ t_material	extract_material_comps(t_comps comps)
 	return (m);
 }
 
-t_color	shade_hit(t_world world, t_comps comps)
+
+t_color shade_hit(t_world world, t_comps comps)
 {
-	t_color		light;
+	t_color		total_light;
 	t_material	material;
 	int			in_shadow;
+	t_list		*current_light;
 
 	material = extract_material_comps(comps);
-	in_shadow = is_shadowed(world, comps.over_point);
-	light = lighting(material, world.light, comps.point, comps.eyev, comps.normalv, in_shadow);
-	return (light);
+
+	in_shadow = is_shadowed(world, comps.over_point, world.light.position);
+	total_light = lighting(material, world.light, comps.point, comps.eyev, comps.normalv, in_shadow);
+
+	current_light = world.extra_lights;
+	while (current_light != NULL)
+	{
+		t_light *light = (t_light *)(current_light->content);
+		in_shadow = is_shadowed(world, comps.over_point, light->position);
+		total_light = add_colors(total_light, lighting(material, *light, comps.point, comps.eyev, comps.normalv, in_shadow));
+
+		current_light = current_light->next;
+	}
+
+	return (total_light);
 }
+
 
 t_color	color_at(t_world w, t_ray r)
 {

@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/31 18:54:10 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 14:39:11 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ typedef struct s_scene_data
 	t_light						*light;
 	t_init						initialised;
 	t_list						*shapes;
+	t_list						*extra_lights;
 	int							shape_count;
 }								t_scene_data;
 
@@ -123,7 +124,9 @@ int								add_capital_element(t_identifier_type type,
 									t_scene_data *scene_data, char *line);
 
 // todo              ~~~  cap elem init ~~~                  *//
-void							initialize_scene_light(t_scene_data *scene);
+t_light							*initialize_scene_light(void);
+int								add_extra_light(t_scene_data *scene_data,
+									char *line);
 
 // todo              ~~~     frees      ~~~                  *//
 void							free_scene_data(t_scene_data *scene);
@@ -412,7 +415,8 @@ typedef struct s_environnement
 }								t_environnement;
 
 // todo               ~~~     Shadows
-int								is_shadowed(t_world world, t_tuple point);
+int								is_shadowed(t_world world, t_tuple point,
+									t_tuple light_pos);
 
 //*------------------------ 🌍 World 🌍 -----------------------*//
 typedef struct s_object
@@ -426,6 +430,7 @@ typedef struct s_world
 	t_list						*objects;
 	int							object_count;
 	t_light						light;
+	t_list						*extra_lights;
 }								t_world;
 
 typedef struct s_comps

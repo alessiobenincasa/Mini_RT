@@ -4,7 +4,8 @@
     "criterion.h": "c",
     "keysym.h": "c",
     "errno.h": "c",
-    "type_traits": "c"
+    "type_traits": "c",
+    "compare": "c"
   },
   "C_Cpp.errorSquiggles": "disabled",
   "C_Cpp_Runner.msvcBatchPath": ""

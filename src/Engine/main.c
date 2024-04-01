@@ -35,6 +35,7 @@ void transfer_scene_data_to_world(t_scene_data *scene, t_world *world)
 {
     world->objects = scene->shapes;
     world->object_count = scene->shape_count;
+    world->extra_lights = scene->extra_lights;
 
     printf("\nWorlds objects:\n");
     print_shapes(world->objects);
@@ -48,6 +49,15 @@ void transfer_scene_data_to_world(t_scene_data *scene, t_world *world)
         world->light = *(scene->light);
         printf("\nWorlds Light:\n");
         print_light(&world->light);
+    }
+    if (world->extra_lights)
+    {
+        t_list	*current = world->extra_lights;
+        while (current)
+        {
+            print_light((t_light *)current->content);
+            current = current->next;
+        }
     }
 }
 

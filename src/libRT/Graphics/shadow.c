@@ -6,17 +6,17 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 13:11:49 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/30 18:10:20 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 14:51:16 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_rt.h"
 
-int is_shadowed(t_world world, t_tuple point);
+int is_shadowed(t_world world, t_tuple point, t_tuple light_pos);
 
-int is_shadowed(t_world world, t_tuple point)
+int is_shadowed(t_world world, t_tuple point, t_tuple light_pos)
 {
-    t_tuple v = subtract_tuples(world.light.position, point);
+    t_tuple v = subtract_tuples(light_pos, point);
     double distance = magnitude(v);
     t_tuple direction = normalize(v);
 

@@ -6,21 +6,21 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 11:46:25 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/26 11:50:00 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 14:32:59 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_rt.h"
 
-void	initialize_scene_light(t_scene_data *scene)
+t_light	*initialize_scene_light(void)
 {
-	if (scene == NULL)
-		return ;
-	scene->light = (t_light *)malloc(sizeof(t_light));
-	if (scene->light != NULL)
-	{
-		scene->light->position = point(0.0, 0.0, 0.0);
-		scene->light->intensity = color(0.0, 0.0, 0.0);
-		scene->light->energy = 1.0;                            
-	}
+	t_light	*light;
+
+	light = (t_light *)malloc(sizeof(t_light));
+	if (!light)
+		return (NULL);
+	light->position = point(0.0, 0.0, 0.0);
+	light->intensity = color(0.0, 0.0, 0.0);
+	light->energy = 1.0;
+	return (light);
 }
