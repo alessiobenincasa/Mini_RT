@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 09:18:39 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/30 17:58:05 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/31 18:30:27 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,4 +120,41 @@ t_cylinder	*get_cylinder_data(char *line, double amb)
 	cyl->transform = multiply_matrices(translation(cyl->center.x, cyl->center.y, cyl->center.z), cyl->transform);
 	
 	return (cyl);
+}
+
+t_cone	*get_cone_data(char *line, double amb)
+{
+	t_cone		*co;
+	char		*value;
+
+	co = malloc(sizeof(t_cone));
+	if (!co)
+		return (NULL);
+	*co = cone();
+	get_next_value(&value, &line);
+	parse_coordinates(value, &(co->center));
+	free(value);
+	get_next_value(&value, &line);
+	parse_coordinates(value, &(co->direction));
+	free(value);
+	if (check_coordinates(co->direction) != 0)
+		return (free(co), error("Cone vector value incorrect"), NULL);
+	get_next_value(&value, &line);
+	co->maximum = ft_atof(value);
+	free(value);
+	get_next_value(&value, &line);
+	if (parse_colors(value, &(co->material.color)) != 0)
+	{
+		free(value);
+		free(co);
+		return (error("RGB Colors for Plane are incorrect"), NULL);
+	}
+	free(value);
+	co->material.ambient = amb;
+
+	t_matrix rotation = multiply_matrices(rotation_x(co->direction.x), multiply_matrices(rotation_y(co->direction.y), rotation_z(co->direction.z)));
+	co->transform = multiply_matrices(rotation, co->transform);
+	co->transform = multiply_matrices(translation(co->center.x, co->center.y, co->center.z), co->transform);
+
+	return (co);
 }

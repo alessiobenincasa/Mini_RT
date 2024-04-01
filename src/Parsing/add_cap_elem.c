@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:16:03 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/29 15:30:58 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 14:32:10 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static int	add_light_to_list(t_scene_data *scene_data, char *line)
 {
 	char	*value;
 
-	initialize_scene_light(scene_data);
+	scene_data->light = initialize_scene_light();
 	get_next_value(&value, &line);
 	parse_coordinates(value, &(scene_data->light->position));
 	free(value);
@@ -115,6 +115,11 @@ int	add_capital_element(t_identifier_type type, t_scene_data *scene_data,
 			return (error("Multiple Light elements detected"), 1);
 		if (add_light_to_list(scene_data, line) != 0)
 			return (error("Failed to add light to list"), 1);
+	}
+	else if (type == EXTRA_LIGHT)
+	{
+		if (add_extra_light(scene_data, line) != 0)
+			return (error("Failed to add extra light to list"), 1);
 	}
 	return (0);
 }

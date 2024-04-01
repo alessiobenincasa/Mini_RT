@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:27:10 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/29 15:32:29 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 14:08:26 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	is_shape(t_identifier_type type)
 {
-	return (type == SPHERE || type == CYLINDER || type == PLANE);
+	return (type == SPHERE || type == CYLINDER || type == PLANE || type == CONE);
 }
 
 static int	add_to_struct(t_scene_data *scene_data, char *line)
@@ -52,6 +52,7 @@ static void	set_data_to_zero(t_scene_data *scene_data)
 	// scene_data->camera->position = point(0, 0, 0);
 	// scene_data->camera->orientation = vector(0, 1, 0);
 	scene_data->light = NULL;
+	scene_data->extra_lights = NULL;
 }
 
 static int	load_scene_data(t_scene_data *scene_data, int fd)

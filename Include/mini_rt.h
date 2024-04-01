@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/30 18:14:58 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 14:39:11 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct s_ambient		t_ambient;
 typedef struct s_camera			t_camera;
 typedef struct s_canvas			t_canvas;
 typedef struct s_color			t_color;
+typedef struct s_cone			t_cone;
 typedef struct s_comps			t_comps;
 typedef struct s_cylinder		t_cylinder;
 typedef struct s_environnement	t_environnement;
@@ -85,6 +86,7 @@ typedef struct s_scene_data
 	t_light						*light;
 	t_init						initialised;
 	t_list						*shapes;
+	t_list						*extra_lights;
 	int							shape_count;
 }								t_scene_data;
 
@@ -113,6 +115,7 @@ void							get_next_value(char **value, char **line);
 t_sphere						*get_sphere_data(char *line, double amb);
 t_plane							*get_plane_data(char *line, double amb);
 t_cylinder						*get_cylinder_data(char *line, double amb);
+t_cone							*get_cone_data(char *line, double amb);
 
 // todo              ~~~  add elements  ~~~                  *//
 int								add_shape_data(t_identifier_type type,
@@ -121,7 +124,9 @@ int								add_capital_element(t_identifier_type type,
 									t_scene_data *scene_data, char *line);
 
 // todo              ~~~  cap elem init ~~~                  *//
-void							initialize_scene_light(t_scene_data *scene);
+t_light							*initialize_scene_light(void);
+int								add_extra_light(t_scene_data *scene_data,
+									char *line);
 
 // todo              ~~~     frees      ~~~                  *//
 void							free_scene_data(t_scene_data *scene);
@@ -134,6 +139,7 @@ void							print_ambient(const t_ambient *ambient);
 void							print_light(const t_light *light);
 void							print_plane(const t_plane *plane);
 void							print_cylinder(const t_cylinder *cylinder);
+void							print_cone(const t_cone *cone);
 void							print_color(const t_color *color);
 void							print_tuple(t_tuple tuple);
 void							print_camera_direction(t_tuple from, t_tuple to,
@@ -256,12 +262,18 @@ t_ray							ray(t_tuple origin, t_tuple direction);
 t_tuple							position(t_ray r, double t);
 
 // todo               ~~~  Intersections
+
+typedef union s_object_union
+{
+	t_sphere					*sphere;
+	t_plane						*plane;
+	t_cylinder					*cylinder;
+	t_cone						*cone;
+}								t_object_union;
 typedef struct s_intersection
 {
 	double						t;
-	t_sphere					*sphere;
-	t_plane						*plane;
-	t_cylinder					*cyl;
+	t_object_union				object;
 	t_identifier_type			type;
 }								t_intersection;
 
@@ -324,6 +336,8 @@ typedef struct s_ambient
 }								t_ambient;
 
 //*----------------------- 🌀 Shapes 🌀 -----------------------*//
+
+int								is_shape(t_identifier_type type);
 
 // todo               ~~~    Spheres
 typedef struct s_sphere
@@ -401,7 +415,8 @@ typedef struct s_environnement
 }								t_environnement;
 
 // todo               ~~~     Shadows
-int								is_shadowed(t_world world, t_tuple point);
+int								is_shadowed(t_world world, t_tuple point,
+									t_tuple light_pos);
 
 //*------------------------ 🌍 World 🌍 -----------------------*//
 typedef struct s_object
@@ -415,14 +430,8 @@ typedef struct s_world
 	t_list						*objects;
 	int							object_count;
 	t_light						light;
+	t_list						*extra_lights;
 }								t_world;
-
-typedef union s_object_union
-{
-	t_sphere					*sphere;
-	t_plane						*plane;
-	t_cylinder					*cylinder;
-}								t_object_union;
 
 typedef struct s_comps
 {
@@ -478,7 +487,6 @@ typedef struct s_cylinder
 	t_tuple						center;
 	t_tuple						direction;
 	double						diameter;
-	double						height;
 
 	t_matrix					transform;
 	double						minimum;
@@ -487,8 +495,25 @@ typedef struct s_cylinder
 	t_material					material;
 }								t_cylinder;
 
+t_cylinder						cylinder(void);
+t_intersections					local_intersect_cylinder(t_cylinder *cyl,
+									t_ray r);
+t_tuple							local_normal_at_cylinder(t_cylinder cylinder,
+									t_tuple point);
+t_tuple							normal_at_cylinder(t_cylinder cylinder,
+									t_tuple p);
+void							add_intersection_cylinder(t_intersections *xs,
+									double t, t_cylinder *cyl);
+int								check_cap(t_ray ray, double t, double radius);
+
+//*-------------------------  Cone  -------------------------*//
+
 typedef struct s_cone
 {
+	t_tuple						center;
+	t_tuple						direction;
+	int							inverted;
+
 	t_matrix					transform;
 	double						minimum;
 	double						maximum;
@@ -496,20 +521,14 @@ typedef struct s_cone
 	t_material					material;
 }								t_cone;
 
-t_cylinder						cylinder(void);
-t_intersections					local_intersect_cylinder(t_cylinder *cyl,
-									t_ray r);
-t_tuple							local_normal_at_cylinder(t_cylinder cylinder,
-									t_tuple point);
-void							add_intersection_cylinder(t_intersections *xs,
-									double t, t_cylinder *cyl);
-int								check_cap(t_ray ray, double t, double radius);
+t_cone							cone(void);
 t_tuple							local_normal_at_cone(t_cone cylinder,
 									t_tuple point);
+int								check_cap_cone(t_ray ray, double t,
+									t_cone *cone, int is_lower);
+void							add_intersection_cone(t_intersections *xs,
+									double t, t_cone *cone);
 t_intersections					local_intersect_cone(t_cone *cyl, t_ray ray);
-t_cone							cone(void);
-int								check_cap_cylinder(t_ray ray, double t,
-									double y, int is_lower);
-t_tuple 						normal_at_cylinder(t_cylinder cylinder, t_tuple p);
+t_tuple							normal_at_cone(t_cone cone, t_tuple p);
 
 #endif

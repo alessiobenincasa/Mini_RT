@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   data_identifiers.c                                 :+:      :+:    :+:   */
+/*   identifiers.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:28:21 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/14 14:30:38 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 14:07:42 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,19 @@ int	get_identifier(char **line, t_identifier_type *type, t_scene_data *scene_dat
 		*type = CAMERA;
 	else if (ft_strcmp(identifier, "L") == 0)
 		*type = LIGHT;
+	else if (ft_strcmp(identifier, "L2") == 0)
+		*type = EXTRA_LIGHT;
 	else if (ft_strcmp(identifier, "sp") == 0)
 		*type = SPHERE;
 	else if (ft_strcmp(identifier, "cy") == 0)
 		*type = CYLINDER;
 	else if (ft_strcmp(identifier, "pl") == 0)
 		*type = PLANE;
+	else if (ft_strcmp(identifier, "co") == 0)
+		*type = CONE;
 	else
 		return (free(identifier), 1);
-	if (*type == SPHERE || *type == CYLINDER || *type == PLANE)
+	if (is_shape(*type))
 		(scene_data->shape_count)++;
 	*line += ft_strlen(identifier);
 	*line += skip_spaces(*line);

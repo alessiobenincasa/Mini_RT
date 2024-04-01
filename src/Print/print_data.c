@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:29:59 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/29 14:43:13 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 14:11:41 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,16 @@ void	print_identifier_type(t_identifier_type type)
 		printf("CAMERA\n");
 	else if (type == LIGHT)
 		printf("LIGHT\n");
+	else if (type == EXTRA_LIGHT)
+		printf("EXTRA_LIGHT\n");
 	else if (type == SPHERE)
 		printf("SPHERE\n");
 	else if (type == PLANE)
 		printf("PLANE\n");
 	else if (type == CYLINDER)
 		printf("CYLINDER\n");
+	else if (type == CONE)
+		printf("CONE\n");
 	else
 		printf("Unknown type\n");
 }
@@ -121,9 +125,25 @@ void	print_cylinder(const t_cylinder *cylinder)
 	printf("Direction: (%.2f, %.2f, %.2f)\n", cylinder->direction.x,
 		cylinder->direction.y, cylinder->direction.z);
 	printf("Diameter: %.2f\n", cylinder->diameter);
-	printf("Height: %.2f\n", cylinder->height);
+	printf("Height: %.2f\n", cylinder->maximum);
 	printf("Color: (%f, %f, %f)\n", cylinder->material.color.red, cylinder->material.color.green,
 		cylinder->material.color.blue);
+	printf("---------------\n");
+	printf("\033[0m");
+}
+
+void	print_cone(const t_cone *cone)
+{
+	printf("\033[36m");
+	printf("---------------\n");
+	printf("Cone Properties:\n");
+	printf("Center: (%.2f, %.2f, %.2f)\n", cone->center.x, cone->center.y,
+		cone->center.z);
+	printf("Direction: (%.2f, %.2f, %.2f)\n", cone->direction.x,
+		cone->direction.y, cone->direction.z);
+	printf("Maximum: %.2f\n", cone->maximum);
+	printf("Color: (%f, %f, %f)\n", cone->material.color.red, cone->material.color.green,
+		cone->material.color.blue);
 	printf("---------------\n");
 	printf("\033[0m");
 }

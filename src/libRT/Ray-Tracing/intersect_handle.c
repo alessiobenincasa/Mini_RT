@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/29 16:38:48 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/03/31 18:57:36 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,22 @@ void	add_intersection(t_intersections *xs, t_intersection inter)
 	if (inter.type == SPHERE)
 	{
 		xs->intersections[xs->count].type = SPHERE;
-		xs->intersections[xs->count].sphere = inter.sphere;
+		xs->intersections[xs->count].object.sphere = inter.object.sphere;
 	}
 	else if (inter.type == PLANE)
 	{
 		xs->intersections[xs->count].type = PLANE;
-		xs->intersections[xs->count].plane = inter.plane;
+		xs->intersections[xs->count].object.plane = inter.object.plane;
 	}
 	else if (inter.type == CYLINDER)
 	{
 		xs->intersections[xs->count].type = CYLINDER;
-		xs->intersections[xs->count].cyl = inter.cyl;
+		xs->intersections[xs->count].object.cylinder = inter.object.cylinder;
+	}
+	else if (inter.type == CONE)
+	{
+		xs->intersections[xs->count].type = CONE;
+		xs->intersections[xs->count].object.cone = inter.object.cone;
 	}
 	xs->count = new_count;
 }
