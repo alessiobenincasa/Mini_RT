@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/01 16:52:15 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/04/01 17:31:46 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ typedef struct s_tuple			t_tuple;
 typedef struct s_vector			t_vector;
 typedef struct s_vars			t_vars;
 typedef struct s_world			t_world;
+typedef struct s_texture		t_texture;
+typedef struct s_pattern		t_pattern;
 
 //*----------------------- 👁️ 𝙋𝘼𝙍𝙎𝙀 👁️ -----------------------*//
 typedef struct s_init
@@ -298,12 +300,6 @@ void							sort_intersections(t_intersections *intersections);
 
 // todo             ~~~     Material
 
-typedef struct s_pattern
-{
-	t_color						a;
-	t_color						b;
-}								t_pattern;
-
 typedef struct s_material
 {
 	t_color						color;
@@ -312,6 +308,7 @@ typedef struct s_material
 	double						specular;
 	double						shininess;
 	t_pattern					*pattern;
+	t_texture					*texture;
 }								t_material;
 
 t_material						material(void);
@@ -323,7 +320,6 @@ typedef struct s_light
 	t_color						intensity;
 	double						energy;
 }								t_light;
-
 t_light							point_light(t_tuple position,
 									t_color intensity);
 t_color							lighting(t_material m, t_light light,
@@ -539,9 +535,34 @@ void							add_intersection_cone(t_intersections *xs,
 t_intersections					local_intersect_cone(t_cone *cyl, t_ray ray);
 t_tuple							normal_at_cone(t_cone cone, t_tuple p);
 
-//*-------------------------  Cone  -------------------------*//
+//*-------------------------  Pattern  -------------------------*//
+
+typedef struct s_pattern
+{
+	t_color						a;
+	t_color						b;
+}								t_pattern;
+
 t_pattern						*stripe_pattern(t_color color_a,
 									t_color color_b);
 t_color							stripe_at(t_pattern *pattern, t_tuple point);
+
+//*-------------------------  Bump mapping -------------------------*//
+typedef struct s_texture
+{
+	void						*img;
+	char						*addr;
+	int							width;
+	int							height;
+	int							bits_per_pixel;
+	int							line_length;
+	int							endian;
+}								t_texture;
+
+t_texture						*load_texture(void *mlx_ptr, char *filepath);
+void							point_on_sphere_to_uv(t_tuple point, double *u,
+									double *v);
+t_color							texture_img_get_pxl(t_texture *texture, int x,
+									int y);
 
 #endif

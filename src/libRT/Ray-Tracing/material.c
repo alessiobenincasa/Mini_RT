@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/01 16:56:51 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/04/01 17:29:36 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,6 @@ t_material	material(void)
 	m.specular = 0.9;
 	m.shininess = 200.0;
 	m.pattern = NULL;
+	m.texture = NULL;
 	return (m);
 }
