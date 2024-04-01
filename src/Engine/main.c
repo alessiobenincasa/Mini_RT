@@ -123,6 +123,9 @@ int	main(int ac, char **av)
 
     mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
     mlx_loop(vars.mlx);
+    mlx_destroy_image(vars.mlx, &vars.img);
+	mlx_destroy_window(vars.mlx, vars.win);
+	mlx_destroy_display(vars.mlx);
     free_scene_data(&scene_data);
     return (0);
 }

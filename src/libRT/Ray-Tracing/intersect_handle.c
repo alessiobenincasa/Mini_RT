@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/31 18:57:36 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 16:46:09 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,38 +16,24 @@ void	add_intersection(t_intersections *xs, t_intersection inter);
 int		compare_intersections(const void *a, const void *b);
 void	sort_intersections(t_intersections *intersections);
 
-void	add_intersection(t_intersections *xs, t_intersection inter)
-{
-	int	new_count;
-
-	new_count = xs->count + 1;
-	xs->intersections = realloc(xs->intersections, new_count
-			* sizeof(t_intersection));
-	if (xs->intersections == NULL)
-		exit(EXIT_FAILURE);
-	xs->intersections[xs->count].t = inter.t;
-	if (inter.type == SPHERE)
+void add_intersection(t_intersections *xs, t_intersection inter) {
+    if (xs->count == 0) 
 	{
-		xs->intersections[xs->count].type = SPHERE;
-		xs->intersections[xs->count].object.sphere = inter.object.sphere;
-	}
-	else if (inter.type == PLANE)
-	{
-		xs->intersections[xs->count].type = PLANE;
-		xs->intersections[xs->count].object.plane = inter.object.plane;
-	}
-	else if (inter.type == CYLINDER)
-	{
-		xs->intersections[xs->count].type = CYLINDER;
-		xs->intersections[xs->count].object.cylinder = inter.object.cylinder;
-	}
-	else if (inter.type == CONE)
-	{
-		xs->intersections[xs->count].type = CONE;
-		xs->intersections[xs->count].object.cone = inter.object.cone;
-	}
-	xs->count = new_count;
+        xs->intersections = malloc(4 * sizeof(t_intersection));
+        if (xs->intersections == NULL)
+            exit(EXIT_FAILURE);
+        xs->capacity = 4;
+    } else if (xs->count >= xs->capacity) {
+        int new_capacity = xs->capacity * 2;
+        xs->intersections = realloc(xs->intersections, new_capacity * sizeof(t_intersection));
+        if (xs->intersections == NULL)
+            exit(EXIT_FAILURE);
+        xs->capacity = new_capacity;
+    }
+    xs->intersections[xs->count] = inter;
+    xs->count++;
 }
+
 
 int	compare_intersections(const void *a, const void *b)
 {

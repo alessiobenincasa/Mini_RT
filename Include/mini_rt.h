@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/01 14:39:11 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 16:45:46 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,12 +281,13 @@ typedef struct s_intersections
 {
 	t_intersection				*intersections;
 	int							count;
+	int							capacity;
 }								t_intersections;
 
 t_intersection					intersection(double t, t_sphere *object);
 t_intersections					intersections(int count,
 									t_intersection *inter_arr);
-t_intersections					intersect(t_sphere *s, t_ray r);
+t_intersections					intersect_sphere(t_sphere *s, t_ray r);
 t_intersection					*hit(t_intersections *xs);
 
 // todo               ~~~  Intersect handle
@@ -496,7 +497,7 @@ typedef struct s_cylinder
 }								t_cylinder;
 
 t_cylinder						cylinder(void);
-t_intersections					local_intersect_cylinder(t_cylinder *cyl,
+t_intersections					intersect_cylinder(t_cylinder *cyl,
 									t_ray r);
 t_tuple							local_normal_at_cylinder(t_cylinder cylinder,
 									t_tuple point);
@@ -528,7 +529,7 @@ int								check_cap_cone(t_ray ray, double t,
 									t_cone *cone, int is_lower);
 void							add_intersection_cone(t_intersections *xs,
 									double t, t_cone *cone);
-t_intersections					local_intersect_cone(t_cone *cyl, t_ray ray);
+t_intersections					intersect_cone(t_cone *cyl, t_ray ray);
 t_tuple							normal_at_cone(t_cone cone, t_tuple p);
 
 #endif

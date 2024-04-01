@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/01 14:55:24 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 16:39:20 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,66 +18,63 @@ t_color			shade_hit(t_world world, t_comps comps);
 t_color			color_at(t_world w, t_ray r);
 t_matrix		view_transform(t_tuple from, t_tuple to, t_tuple up);
 
-t_intersections	intersect_world(t_world *world, t_ray r)
+static t_intersections	intersect_object(void *object, t_ray r, t_identifier_type type)
 {
-	t_intersections	sphere_xs;
-	t_sphere		*s;
+    t_intersections xs;
 
-	t_intersections	planes_xs;
-	t_plane			*p;
+	if (type == SPHERE)
+		xs = intersect_sphere((t_sphere *)object, r);
+	else if (type == PLANE)
+		xs = intersect_plane((t_plane *)object, r);
+	else if (type == CYLINDER)
+		xs = intersect_cylinder((t_cylinder *)object, r);
+	else if (type == CONE)
+		xs = intersect_cone((t_cone *)object, r);
+	else
+		xs.count = 0;
 
-	t_intersections	cyl_xs;
-	t_cylinder		*cyl;
+    return (xs);
+}
 
-	t_intersections	cone_xs;
-	t_cone			*cone;
-
-	t_list			*current;
-
-	t_intersections	xs = {0, 0};
+t_intersections intersect_world(t_world *world, t_ray r)
+{
+    t_intersections xs;
+	t_intersections temp_xs;
+    t_list *current;
+	int i;
+	int j;
+	
+	xs.count = 0;
+	xs.intersections = NULL;
 	current = world->objects;
-	for (int i = 0; i < world->object_count; i++)
-	{
-		if (current->type == SPHERE)
-		{
-			s = (t_sphere *)current->content;
-			sphere_xs = intersect(s, r);
-			for (int j = 0; j < sphere_xs.count; j++)
-			{
-				add_intersection(&xs, sphere_xs.intersections[j]);
-			}
-		}
-		else if (current->type == PLANE)
-		{
-			p = (t_plane *)current->content;
-			planes_xs = intersect_plane(p, r);
-			for (int j = 0; j < planes_xs.count; j++)
-			{
-				add_intersection(&xs, planes_xs.intersections[j]);
-			}
-		}
-		else if (current->type == CYLINDER)
-		{
-			cyl = (t_cylinder *)current->content;
-			cyl_xs = local_intersect_cylinder(cyl, r);
-			for (int j = 0; j < cyl_xs.count; j++)
-			{
-				add_intersection(&xs, cyl_xs.intersections[j]);
-			}
-		}
-		else if (current->type == CONE)
-		{
-			cone = (t_cone *)current->content;
-			cone_xs = local_intersect_cone(cone, r);
-			for (int j = 0; j < cone_xs.count; j++)
-			{
-				add_intersection(&xs, cone_xs.intersections[j]);
-			}
-		}
-		current = current->next;
-	}
-	sort_intersections(&xs);
-	return (xs);
+	i = -1;
+	while (++i < world->object_count)
+    {
+        temp_xs = intersect_object(current->content, r, current->type);
+		j = -1;
+		while (++j < temp_xs.count)
+            add_intersection(&xs, temp_xs.intersections[j]);
+        current = current->next;
+    }
+
+    sort_intersections(&xs);
+    return xs;
+}
+
+t_tuple	get_normalv(t_identifier_type type, t_object_union *obj, t_tuple point)
+{
+	t_tuple	normalv;
+
+	normalv = vector(0, 0, 0);
+	if (type == SPHERE)
+		normalv = normal_at(*obj->sphere, point);
+	else if (type == PLANE)
+		normalv = obj->plane->normal;
+	else if (type == CYLINDER)
+		normalv = normal_at_cylinder(*obj->cylinder, point);
+	else if (type == CONE)
+		normalv = normal_at_cone(*obj->cone, point);
+	return (normalv);
 }
 
 t_comps	prepare_computations(t_intersection i, t_ray r)
@@ -88,33 +85,15 @@ t_comps	prepare_computations(t_intersection i, t_ray r)
 	comps.point = position(r, comps.t);
 	comps.eyev = negate_tuple(r.direction);
 	comps.type = i.type;
-	if (comps.type == SPHERE)
-	{
-		comps.object.sphere = i.object.sphere;
-		comps.normalv = normal_at(*comps.object.sphere, comps.point);
-	}
-	else if (comps.type == PLANE)
-	{
-		comps.object.plane = i.object.plane;
-		comps.normalv = comps.object.plane->normal;
-	}
-	else if (comps.type == CYLINDER)
-	{
-		comps.object.cylinder = i.object.cylinder;
-		comps.normalv = normal_at_cylinder(*comps.object.cylinder, comps.point);
-	}
-	// else if (comps.type == CONE)
-	// {
-	// 	comps.object.cone = i.object.cone;
-	// 	comps.normalv = normal_at_cone(*comps.object.cone, comps.point);
-	// }
+	comps.object = i.object;
+	comps.inside = 0;
+	comps.normalv = get_normalv(comps.type, &comps.object, comps.point);
+
 	if (dot(comps.normalv, comps.eyev) < -EPSILON)
 	{
 		comps.inside = 1;
 		comps.normalv = negate_tuple(comps.normalv);
 	}
-	else
-		comps.inside = 0;
 	comps.over_point = add_tuples(comps.point, multiply_tuple_scalar(comps.normalv, EPSILON));
 	return (comps);
 }
@@ -129,8 +108,8 @@ t_material	extract_material_comps(t_comps comps)
 		m = comps.object.plane->material;
 	else if (comps.type == CYLINDER)
 		m = comps.object.cylinder->material;
-	// else if (comps.type == CONE)
-	// 	m = comps.object.cone->material;
+	else if (comps.type == CONE)
+		m = comps.object.cone->material;
 	else
 		m = material();
 	return (m);

@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/31 18:58:33 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/01 15:16:51 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_intersection	intersection(double t, t_sphere *object);
 t_intersections	intersections(int count, t_intersection *inter_arr);
-t_intersections	intersect(t_sphere *s, t_ray r);
+t_intersections	intersect_sphere(t_sphere *s, t_ray r);
 t_intersection	*hit(t_intersections *xs);
 
 t_intersection intersection(double t, t_sphere *object)
@@ -39,7 +39,7 @@ t_intersections intersections(int count, t_intersection *intersectionsArray)
     return xs;
 }
 
-t_intersections intersect(t_sphere *s, t_ray r)
+t_intersections intersect_sphere(t_sphere *s, t_ray r)
 {
     t_matrix inverse_transform = inverse(s->transform);
     t_ray transformed_ray = transform(r, inverse_transform);
