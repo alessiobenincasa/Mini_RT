@@ -10,13 +10,14 @@
 
 ## Please use configure script
 
+MAKEFLAGS 			+= --no-print-directory
 
 all	: do_configure
 
 do_configure	:
-	./configure
+	@./configure
 
 clean	:
-	./configure clean
+	@./configure clean
 
 re	: clean all

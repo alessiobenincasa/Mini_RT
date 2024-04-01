@@ -59,15 +59,7 @@ BLUE := \033[0;34m
 MAGENTA := \033[0;35m
 CYAN := \033[0;36m
 WHITE := \033[0;37m
-RESET := \033[0m# include "libft/libft.h"
-# include "mlx.h"
-# include <errno.h>
-# include <fcntl.h>
-# include <math.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-# include <unistd.h>
+RESET := \033[0m
 BOLD := \033[1m
 UNDERLINE := \033[4m
 REVERSED := \033[7m

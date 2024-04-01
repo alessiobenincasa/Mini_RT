@@ -28,7 +28,7 @@ endif
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) -o $(NAME) $(OBJ) $(LFLAGS)
+	@$(CC) -o $(NAME) $(OBJ) $(LFLAGS)  > /dev/null 2>&1
 
 show:
 	@printf "UNAME		: $(UNAME)\n"
@@ -40,6 +40,6 @@ show:
 	@printf "OBJ		:\n	$(OBJ)\n"
 
 clean:
-	rm -f $(NAME) $(OBJ) *~ core *.core
+	@rm -f $(NAME) $(OBJ) *~ core *.core  > /dev/null 2>&1
 
 re: clean all
