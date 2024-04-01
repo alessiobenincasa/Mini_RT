@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/31 22:13:56 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/04/01 11:34:06 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -783,7 +783,7 @@ void render_sphere(t_vars *vars)
     floor->center = point(0, -125, 0);
 	floor->material = material();
 	floor->material.color = color(1, 0.9, 0.9);
-    floor->material.pattern = stripe_pattern(color(1, 0, 0), color(0, 0, 0));
+    // floor->material.pattern = stripe_pattern(color(1, 0, 0), color(0, 0, 0));
 	floor->material.specular = 0;
 
 	t_sphere* right = malloc(sizeof(t_sphere));
@@ -801,7 +801,6 @@ void render_sphere(t_vars *vars)
     middle->center = point(0, -0.5, 0);
 	middle->material = material();
 	middle->material.color = color(0.1, 1, 0.5);
-    middle->material.pattern = stripe_pattern(color(1, 1, 1), color(0, 0, 0));
 	middle->material.diffuse = 0.7;
 	middle->material.specular = 0.3;
 
@@ -810,6 +809,7 @@ void render_sphere(t_vars *vars)
     left->center = point(-4, -1, -3);
 	left->transform = scaling(0.33, 0.33, 0.33);
 	left->material = material();
+    left->material.pattern = stripe_pattern(color(1, 1, 1), color(0, 0, 0));
 	left->material.color = color(1, 0.8, 0.1);
 	left->material.diffuse = 0.7;
 	left->material.specular = 0.3;
@@ -875,24 +875,24 @@ void render_sphere(t_vars *vars)
 //     return (0);
 // }
 
-int main()
-{
-    t_vars  vars;
+// int main()
+// {
+//     t_vars  vars;
 
-    vars.mlx = mlx_init();
-    vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniLibX - Sphere Rendering");
-    vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
-    vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
-                                     &vars.img.endian);
+//     vars.mlx = mlx_init();
+//     vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniLibX - Sphere Rendering");
+//     vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
+//     vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
+//                                      &vars.img.endian);
     
-    // mlx_hook(vars.win, DestroyNotify, StructureNotifyMask, close_program, &vars);
-    // mlx_key_hook(vars.win, key_hook, &vars);
-    render_sphere(&vars);
+//     // mlx_hook(vars.win, DestroyNotify, StructureNotifyMask, close_program, &vars);
+//     // mlx_key_hook(vars.win, key_hook, &vars);
+//     render_sphere(&vars);
 
-    mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
-    mlx_loop(vars.mlx);
-    return (0);
-}
+//     mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
+//     mlx_loop(vars.mlx);
+//     return (0);
+// }
 
 // int main()
 // {
