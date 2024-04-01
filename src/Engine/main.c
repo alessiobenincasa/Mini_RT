@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/01 11:34:06 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/04/01 15:45:55 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -690,6 +690,7 @@ t_material material()
     m.specular = 0.9;
     m.shininess = 200.0;
     m.pattern = NULL;
+    m.texture = NULL;
     return m;
 }
 
@@ -711,17 +712,24 @@ void set_color(t_color *color, float red, float green, float blue)
     color->blue = blue;
 }
 
-t_color lighting(t_material m, t_light light, t_tuple position, t_tuple eyev, t_tuple normalv, int in_shadow) {
+t_color lighting(t_material m, t_light light, t_tuple position, t_tuple eyev, t_tuple normalv, int in_shadow)
+{
     t_color color_at_point;
-    if (m.pattern != NULL) {
-        // If a pattern is applied, use the color from the pattern
-        color_at_point = stripe_at(m.pattern, position);
-    } else {
-        // Otherwise, use the material's base color
-        color_at_point = m.color;
-    }
+    if (m.texture != NULL)
+    {
+        double u, v;
+        point_on_sphere_to_uv(position, &u, &v);
 
-    // Combine the color at the point with the light's intensity
+        int tex_x = (int)(u * (m.texture->width - 1));
+        int tex_y = (int)(v * (m.texture->height - 1));
+
+        color_at_point = texture_img_get_pxl(m.texture, tex_x, tex_y);
+    }
+    else if (m.pattern != NULL)
+        color_at_point = stripe_at(m.pattern, position);
+    else
+        color_at_point = m.color;
+
     t_color effective_color = multiply_colors(color_at_point, light.intensity);
     t_color ambient = multiply_color_scalar(effective_color, m.ambient);
     t_color diffuse = {0, 0, 0};
@@ -776,6 +784,7 @@ void render_sphere(t_vars *vars)
 	t_world		world;
 	world.object_count = 4;
     world.objects = malloc(sizeof(t_object) * world.object_count);
+    t_texture   *earth_texture = load_texture(vars->mlx, "molle.xpm");
 
     t_sphere* floor = malloc(sizeof(t_sphere));
 	*floor = sphere();
@@ -801,8 +810,9 @@ void render_sphere(t_vars *vars)
     middle->center = point(0, -0.5, 0);
 	middle->material = material();
 	middle->material.color = color(0.1, 1, 0.5);
-	middle->material.diffuse = 0.7;
-	middle->material.specular = 0.3;
+	middle->material.diffuse = 0.6;
+	middle->material.specular = 0;
+    middle->material.texture = earth_texture;
 
     t_sphere* left = malloc(sizeof(t_sphere));
 	*left = sphere();
@@ -875,24 +885,24 @@ void render_sphere(t_vars *vars)
 //     return (0);
 // }
 
-// int main()
-// {
-//     t_vars  vars;
+int main()
+{
+    t_vars  vars;
 
-//     vars.mlx = mlx_init();
-//     vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniLibX - Sphere Rendering");
-//     vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
-//     vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
-//                                      &vars.img.endian);
+    vars.mlx = mlx_init();
+    vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniLibX - Sphere Rendering");
+    vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
+    vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
+                                     &vars.img.endian);
     
-//     // mlx_hook(vars.win, DestroyNotify, StructureNotifyMask, close_program, &vars);
-//     // mlx_key_hook(vars.win, key_hook, &vars);
-//     render_sphere(&vars);
+    // mlx_hook(vars.win, DestroyNotify, StructureNotifyMask, close_program, &vars);
+    // mlx_key_hook(vars.win, key_hook, &vars);
+    render_sphere(&vars);
 
-//     mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
-//     mlx_loop(vars.mlx);
-//     return (0);
-// }
+    mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
+    mlx_loop(vars.mlx);
+    return (0);
+}
 
 // int main()
 // {

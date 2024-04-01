@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:29:01 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/31 19:40:06 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/04/01 15:15:43 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,17 @@ typedef struct s_pattern
 	t_color			b;
 }					t_pattern;
 
+typedef struct s_texture
+{
+	void			*img;
+	char			*addr;
+	int				width;
+	int				height;
+	int				bits_per_pixel;
+	int				line_length;
+	int				endian;
+}					t_texture;
+
 typedef struct s_material
 {
 	t_color			color;
@@ -126,6 +137,7 @@ typedef struct s_material
 	double			specular;
 	double			shininess;
 	t_pattern		*pattern;
+	t_texture		*texture;
 }					t_material;
 
 typedef struct s_sphere
@@ -356,5 +368,12 @@ int					check_cap_cylinder(t_ray ray, double t, double y,
 
 t_pattern			*stripe_pattern(t_color color_a, t_color color_b);
 t_color				stripe_at(t_pattern *pattern, t_tuple point);
+
+//! Bump maping
+
+
+t_texture			*load_texture(void *mlx_ptr, char *filepath);
+void				point_on_sphere_to_uv(t_tuple point, double *u, double *v);
+t_color				texture_img_get_pxl(t_texture *texture, int x, int y);
 
 #endif
