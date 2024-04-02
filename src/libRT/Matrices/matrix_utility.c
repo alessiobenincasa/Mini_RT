@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/28 08:22:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/02 11:23:35 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_matrix	submatrix(t_matrix matrix, int remove_row, int remove_col)
 
 	sub.rows = matrix.rows - 1;
 	sub.cols = matrix.cols - 1;
-	sub.elements = malloc(sub.rows * sub.cols * sizeof(float));
+	sub.elements = ft_calloc(sub.rows * sub.cols, sizeof(float));
 	if (!sub.elements)
 		exit(EXIT_FAILURE);
 	i = 0, sub_i = 0;

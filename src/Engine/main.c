@@ -102,7 +102,22 @@ void    render_scene(t_vars *vars, t_scene_data *scene)
     printf("Finished\n");
 }
 
+int key_hook(int keycode, t_vars *vars)
+{
+    if (keycode == XK_Escape)
+    {
+        mlx_destroy_window(vars->mlx, vars->win);
+        exit(0);
+    }
+    return (0);
+}
 
+int close_program(void *param)
+{
+    (void)param;
+    exit(0);
+    return (0);
+}
 
 int	main(int ac, char **av)
 {
@@ -111,19 +126,27 @@ int	main(int ac, char **av)
 
     vars.mlx = mlx_init();
 	if (init_data(&scene_data, ac, av, vars.mlx) == NULL)
-		return (error("Problem with Parsing"), 1);
+    {
+	    mlx_destroy_display(vars.mlx);
+		error("Problem with Parsing");
+        exit(EXIT_FAILURE);
+    }
 	printf("shape count : %d\n", scene_data.shape_count);
     scene_data.mlx = vars.mlx;
 
-    vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "MiniLibX - Sphere Rendering");
+    vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "miniRT");
     vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
     vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
                                      &vars.img.endian);
-
+    mlx_hook(vars.win, DestroyNotify, StructureNotifyMask, close_program, &vars);
+    mlx_key_hook(vars.win, key_hook, &vars);
     render_scene(&vars, &scene_data);
 
     mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
     mlx_loop(vars.mlx);
+    mlx_destroy_image(vars.mlx, &vars.img);
+	mlx_destroy_window(vars.mlx, vars.win);
+	mlx_destroy_display(vars.mlx);
     free_scene_data(&scene_data);
     return (0);
 }

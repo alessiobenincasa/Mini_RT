@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:28:21 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/01 14:07:42 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/02 12:52:01 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static char	*extract_identifier(const char *line)
 	i = 0;
 	while (line[i] != '\t' && line[i] != ' ')
 		i++;
-	id = malloc(sizeof(char) * i + 1);
+	id = ft_calloc(i + 1, sizeof(char));
 	if (!id)
 		return (NULL);
 	i = 0;
@@ -33,7 +33,7 @@ static char	*extract_identifier(const char *line)
 	return (id);
 }
 
-int	get_identifier(char **line, t_identifier_type *type, t_scene_data *scene_data)
+int	get_identifier(char **line, t_id_type *type, t_scene_data *scene_data)
 {
 	char	*identifier;
 

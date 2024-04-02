@@ -6,41 +6,80 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 13:24:22 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/26 13:40:20 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/02 16:46:48 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_rt.h"
 
-static void free_sphere(t_sphere *s)
+void free_s(t_sphere *s)
 {
 	free(s->transform.elements);
+	if (s->motif)
+		free(s->motif);
+	if (s->material.pattern)
+		free(s->material.pattern);
+	if (s->material.texture)
+		free(s->material.texture);
+	free(s);
+}
+
+void free_p(t_plane *p)
+{
+	free(p->transform.elements);
+	free(p);
+}
+void free_cyl(t_cylinder *c)
+{
+	free(c->transform.elements);
+	free(c);
+}
+void free_c(t_cone *c)
+{
+	free(c->transform.elements);
+	free(c);
+}
+
+void	free_shapes(t_list *list)
+{
+	t_list	*temp;
+
+	while (list)
+	{
+		temp = list;
+		list = list->next;
+		if (temp->type == SPHERE)
+			free_s((t_sphere *)temp->content);
+		else if (temp->type == PLANE)
+			free_p((t_plane *)temp->content);
+		else if (temp->type == CYLINDER)
+			free_cyl((t_cylinder *)temp->content);
+		else if (temp->type == CONE)
+			free_c((t_cone *)temp->content);
+		free(temp);
+	}
+}
+
+void	free_extra_lights(t_list *list)
+{
+	t_list	*temp;
+
+	while (list)
+	{
+		temp = list;
+		list = list->next;
+		if (temp->type == EXTRA_LIGHT)
+			free(list->content);
+		free(temp);
+	}
 }
 
 void	free_scene_data(t_scene_data *scene)
 {
-	t_list	*current;
-	t_list	*temp;
-
 	if (!scene)
 		return ;
-	current = scene->shapes;
-	while (current)
-	{
-		temp = current;
-		current = current->next;
-		if (temp->type == SPHERE)
-		{
-			printf("[🧹]Freeing sphere\n");
-			free_sphere((t_sphere *)temp->content);
-		}
-		else if (temp->type == PLANE)
-			printf("[🧹]Freeing plane\n");
-		else if (temp->type == CYLINDER)
-			printf("[🧹]Freeing cylinder\n");
-		free(temp->content);
-		free(temp);
-	}
+	free_shapes(scene->shapes);
+	free_extra_lights(scene->extra_lights);
 	if (scene->ambient_light)
 		free(scene->ambient_light);
 	if (scene->camera)

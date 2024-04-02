@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/25 11:58:09 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/02 11:35:43 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,10 @@ t_matrix inverse(t_matrix A)
     if (det == 0)
         exit(EXIT_FAILURE);
 
-    t_matrix B = { .rows = A.rows, .cols = A.cols, .elements = malloc(A.rows * A.cols * sizeof(float)) };
+    t_matrix B;
+    B.rows = A.rows;
+    B.cols = A.cols;
+    B.elements = ft_calloc(A.rows * A.cols, sizeof(float));
     int i = 0;
     while (i < A.rows)
     {

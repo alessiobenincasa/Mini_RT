@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 14:27:48 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/31 19:04:55 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/02 11:15:25 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void add_intersection_cone(t_intersections *xs, double t, t_cone *cone)
     xs->intersections[xs->count - 1].type = CONE;
 }
 
-t_intersections local_intersect_cone(t_cone *cone, t_ray r)
+t_intersections intersect_cone(t_cone *cone, t_ray r)
 {
     t_intersections xs;
     xs.count = 0;

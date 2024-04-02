@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/01 18:11:16 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/02 16:51:39 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@
 
 //*-------------------- 📖 𝘿𝙀𝙁𝙄𝙉𝙄𝙏𝙄𝙊𝙉𝙎 📖 ---------------------*//
 
-# define WIDTH 800
-# define HEIGHT 800
+# define WIDTH 100
+# define HEIGHT 100
 # define MLX_ERROR 1
 # define EPSILON 0.00001
 # define PI 3.14159265358979323846
@@ -59,6 +59,7 @@ typedef struct s_intersection	t_intersection;
 typedef struct s_intersections	t_intersections;
 typedef struct s_light			t_light;
 typedef struct s_material		t_material;
+typedef struct s_matrix		t_matrix;
 typedef struct s_object			t_object;
 typedef struct s_plane			t_plane;
 typedef struct s_projectile		t_projectile;
@@ -96,35 +97,49 @@ typedef struct s_scene_data
 // todo              ~~~  parse errors  ~~~                  *//
 int								invalid_input(int ac, char **av);
 void							error(char *str);
+int								check_oneone(t_tuple tup);
 
 // todo              ~~~   data init    ~~~                  *//
 void							*init_data(t_scene_data *scene_data, int ac,
 									char **av, void *mlx);
-int								get_identifier(char **line,
-									t_identifier_type *type,
+int								get_identifier(char **line, t_id_type *type,
 									t_scene_data *scene_data);
 
 // todo              ~~~ value extract  ~~~                  *//
 void							parse_coordinates(char *input, t_tuple *vec);
-int								parse_colors(char *input, t_color *colors);
+int								parse_colors(char *input, char **line,
+									t_color *colors);
+int								get_coordinates(char *value, char **line,
+									t_tuple *coordinates);
+int								get_float_val(char *value, char **line,
+									double *save);
+int								get_char_val(char *value, char **line,
+									char **save);
 
 // todo              ~~~     utils      ~~~                  *//
 double							ft_atof(const char *str);
 int								skip_spaces(char *str);
 char							*strdup_upto_whitespace(const char *s);
 void							get_next_value(char **value, char **line);
+t_matrix						ro_tr(t_tuple dir, t_tuple cent,
+									t_matrix trans);
 
 // todo              ~~~   get shapes   ~~~                  *//
-t_sphere						*get_sphere_data(char *line, double amb, void *mlx);
+t_sphere						*get_sphere_data(char *line, double amb,
+									void *mlx);
 t_plane							*get_plane_data(char *line, double amb);
 t_cylinder						*get_cylinder_data(char *line, double amb);
 t_cone							*get_cone_data(char *line, double amb);
 
 // todo              ~~~  add elements  ~~~                  *//
-int								add_shape_data(t_identifier_type type,
+int								add_shape_data(t_id_type type,
 									t_scene_data *scene_data, char *line);
-int								add_capital_element(t_identifier_type type,
+int								add_capital_element(t_id_type type,
 									t_scene_data *scene_data, char *line);
+int								add_amblight_to_list(t_scene_data *s,
+									char *line);
+int								add_camera_to_list(t_scene_data *s, char *line);
+int								add_light_to_list(t_scene_data *s, char *line);
 
 // todo              ~~~  cap elem init ~~~                  *//
 t_light							*initialize_scene_light(void);
@@ -133,10 +148,14 @@ int								add_extra_light(t_scene_data *scene_data,
 
 // todo              ~~~     frees      ~~~                  *//
 void							free_scene_data(t_scene_data *scene);
+void							free_s(t_sphere *s);
+void							free_p(t_plane *p);
+void							free_cyl(t_cylinder *c);
+void							free_c(t_cone *c);
 
 // todo              ~~~     print      ~~~                  *//
 void							print_camera(const t_camera *camera);
-void							print_identifier_type(t_identifier_type type);
+void							print_identifier_type(t_id_type type);
 void							print_sphere(const t_sphere *sphere);
 void							print_ambient(const t_ambient *ambient);
 void							print_light(const t_light *light);
@@ -277,19 +296,18 @@ typedef struct s_intersection
 {
 	double						t;
 	t_object_union				object;
-	t_identifier_type			type;
+	t_id_type					type;
 }								t_intersection;
 
 typedef struct s_intersections
 {
 	t_intersection				*intersections;
 	int							count;
+	int							capacity;
 }								t_intersections;
 
 t_intersection					intersection(double t, t_sphere *object);
-t_intersections					intersections(int count,
-									t_intersection *inter_arr);
-t_intersections					intersect(t_sphere *s, t_ray r);
+t_intersections					intersect_sphere(t_sphere *s, t_ray r);
 t_intersection					*hit(t_intersections *xs);
 
 // todo               ~~~  Intersect handle
@@ -342,7 +360,7 @@ typedef struct s_ambient
 
 //*----------------------- 🌀 Shapes 🌀 -----------------------*//
 
-int								is_shape(t_identifier_type type);
+int								is_shape(t_id_type type);
 
 // todo               ~~~    Spheres
 typedef struct s_sphere
@@ -444,7 +462,7 @@ typedef struct s_comps
 {
 	double						t;
 	t_object_union				object;
-	t_identifier_type			type;
+	t_id_type					type;
 	t_tuple						point;
 	t_tuple						eyev;
 	t_tuple						normalv;
@@ -503,8 +521,7 @@ typedef struct s_cylinder
 }								t_cylinder;
 
 t_cylinder						cylinder(void);
-t_intersections					local_intersect_cylinder(t_cylinder *cyl,
-									t_ray r);
+t_intersections					intersect_cylinder(t_cylinder *cyl, t_ray r);
 t_tuple							local_normal_at_cylinder(t_cylinder cylinder,
 									t_tuple point);
 t_tuple							normal_at_cylinder(t_cylinder cylinder,
@@ -535,7 +552,7 @@ int								check_cap_cone(t_ray ray, double t,
 									t_cone *cone, int is_lower);
 void							add_intersection_cone(t_intersections *xs,
 									double t, t_cone *cone);
-t_intersections					local_intersect_cone(t_cone *cyl, t_ray ray);
+t_intersections					intersect_cone(t_cone *cyl, t_ray ray);
 t_tuple							normal_at_cone(t_cone cone, t_tuple p);
 
 //*-------------------------  Pattern  -------------------------*//

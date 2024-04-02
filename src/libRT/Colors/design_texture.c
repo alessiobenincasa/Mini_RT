@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 16:55:21 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/01 18:17:46 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/02 14:33:41 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_pattern *stripe_pattern(t_color a, t_color b)
 {
-    t_pattern *pattern = malloc(sizeof(t_pattern));
+    t_pattern *pattern = ft_calloc(1, sizeof(t_pattern));
     if (!pattern)
         exit(EXIT_FAILURE);
     pattern->a = a;
@@ -24,7 +24,7 @@ t_pattern *stripe_pattern(t_color a, t_color b)
 
 t_color stripe_at(t_pattern *pattern, t_tuple point)
 {
-    if (((int)floor(fabs(point.x * 10.0)) + (int)floor(fabs(point.y * 10.0))) % 2 == 0) {
+    if (((int)floor(fabs(point.x * 5.0)) + (int)floor(fabs(point.y * 5.0))) % 2 == 0) {
         return pattern->a;
     } else {
         return pattern->b;
@@ -61,7 +61,7 @@ t_texture    *load_texture(void *mlx_ptr, char *filepath)
     t_texture    *texture;
 
     printf("\n\ndetected filepath = %s\n\n", filepath);
-    texture = malloc(sizeof(t_texture));
+    texture = ft_calloc(1, sizeof(t_texture));
     if (!texture)
         return (NULL);
 

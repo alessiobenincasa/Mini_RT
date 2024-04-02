@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 11:46:25 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/01 14:32:59 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/02 11:23:56 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_light	*initialize_scene_light(void)
 {
 	t_light	*light;
 
-	light = (t_light *)malloc(sizeof(t_light));
+	light = (t_light *)ft_calloc(1, sizeof(t_light));
 	if (!light)
 		return (NULL);
 	light->position = point(0.0, 0.0, 0.0);

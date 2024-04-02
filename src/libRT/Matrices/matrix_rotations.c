@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/25 11:59:01 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/02 11:23:19 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_matrix	rotation_z(float radians);
 
 t_matrix rotation_x(float radians)
 {
-    t_matrix result = {4, 4, malloc(16 * sizeof(float))};
+    t_matrix result = {4, 4, ft_calloc(16, sizeof(float))};
     if (!result.elements)
         exit(EXIT_FAILURE);
         
@@ -38,7 +38,7 @@ t_matrix rotation_x(float radians)
 t_matrix rotation_y(float radians)
 {
     int i = 0;
-    t_matrix result = {4, 4, malloc(16 * sizeof(float))};
+    t_matrix result = {4, 4, ft_calloc(16, sizeof(float))};
     if (!result.elements)
         exit(EXIT_FAILURE);
 

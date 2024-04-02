@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 11:37:26 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/31 18:58:55 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/02 15:55:00 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@ t_plane	plane(void)
 	p.point = point(0, 0, 0);
 	p.normal = vector(0, 1, 0);
 	p.material = material();
+	p.material.diffuse = 0.6;
+	p.material.specular = 0;
+	p.material.shininess = 50;
 	p.transform = identity_matrix();
 	return (p);
 }
@@ -44,7 +47,7 @@ t_intersections	intersect_plane(t_plane *p, t_ray r)
 		return (xs);
 
 	xs.count = 1;
-	xs.intersections = malloc(xs.count * sizeof(t_intersection));
+	xs.intersections = ft_calloc(xs.count, sizeof(t_intersection));
 	if (xs.intersections == NULL)
 		exit(EXIT_FAILURE);
 	xs.intersections[0].t = t;

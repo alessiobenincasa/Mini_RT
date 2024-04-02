@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/03/25 12:00:45 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/02 11:22:35 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_canvas	canvas(int width, int height)
 	i = 0;
 	c.width = width;
 	c.height = height;
-	c.pixels = (t_color *)malloc(width * height * sizeof(t_color));
+	c.pixels = (t_color *)ft_calloc(width * height, sizeof(t_color));
 	while (i < width * height)
 	{
 		c.pixels[i] = (t_color){0, 0, 0};
