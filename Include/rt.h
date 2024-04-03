@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 13:32:25 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/03 16:25:22 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,8 @@ typedef struct s_light
 	double			energy;
 }					t_light;
 t_light				point_light(t_tuple position, t_color intensity);
-t_color				lighting(t_material m, t_light light, t_tuple position,
-						t_tuple eyev, t_tuple normalv, int in_shadow);
+t_color				lighting(t_material m, t_light light, t_comps comps,
+						int in_shadow);
 
 // todo               ~~~     	Scene			~~~       			*//
 typedef struct s_scene_state

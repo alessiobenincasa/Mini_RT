@@ -135,20 +135,17 @@ int	main(int ac, char **av)
 	t_scene_data	scene_data;
 
     vars.mlx = mlx_init();
-	if (init_data(&scene_data, ac, av, vars.mlx) == NULL)
-    {
-		error("Problem with Parsing");
-        handle_close(&vars);
-        exit(EXIT_FAILURE);
-    }
-    vars.scene = &scene_data;
-	printf("shape count : %d\n", scene_data.shape_count);
-    scene_data.mlx = vars.mlx;
-
     vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "miniRT");
     vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
     vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
                                      &vars.img.endian);
+    vars.scene = NULL;
+	if (init_data(&scene_data, ac, av, vars.mlx) == NULL)
+        handle_close(&vars);
+    vars.scene = &scene_data;
+	printf("shape count : %d\n", scene_data.shape_count);
+    scene_data.mlx = vars.mlx;
+
     mlx_hook(vars.win, DestroyNotify, StructureNotifyMask, handle_close, &vars);
     mlx_key_hook(vars.win, key_hook, &vars);
     render_scene(&vars, &scene_data);

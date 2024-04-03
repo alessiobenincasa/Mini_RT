@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 16:55:21 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/03 15:56:30 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ t_texture    *load_texture(void *mlx_ptr, char *filepath)
 {
     t_texture    *texture;
 
-    printf("\n\ndetected filepath = %s\n\n", filepath);
     texture = ft_calloc(1, sizeof(t_texture));
     if (!texture)
         return (NULL);
