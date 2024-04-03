@@ -6,20 +6,20 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:27:10 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/01 18:01:17 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_rt.h"
+#include "all.h"
 
-int	is_shape(t_identifier_type type)
+int	is_shape(t_id_type type)
 {
 	return (type == SPHERE || type == CYLINDER || type == PLANE || type == CONE);
 }
 
 static int	add_to_struct(t_scene_data *scene_data, char *line)
 {
-	t_identifier_type	type;
+	t_id_type	type;
 
 	if (get_identifier(&line, &type, scene_data) != 0)
 	{
@@ -45,10 +45,10 @@ static void	set_data_to_zero(t_scene_data *scene_data)
 	scene_data->initialised.ambient_light = 0;
 	scene_data->initialised.camera = 0;
 	scene_data->initialised.light = 0;
-	scene_data->ambient_light = malloc(sizeof(t_ambient));
+	scene_data->ambient_light = ft_calloc(1, sizeof(t_ambient));
 	scene_data->ambient_light->color = color(1, 1, 1);
 	scene_data->ambient_light->ratio = 0.1;
-	scene_data->camera = malloc(sizeof(t_camera));
+	scene_data->camera = ft_calloc(1, sizeof(t_camera));
 	// scene_data->camera->position = point(0, 0, 0);
 	// scene_data->camera->orientation = vector(0, 1, 0);
 	scene_data->light = NULL;

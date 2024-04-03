@@ -6,11 +6,11 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/25 11:58:09 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_rt.h"
+#include "all.h"
 
 t_matrix	multiply_matrices(t_matrix a, t_matrix b);
 t_tuple		multiply_matrix_tuple(t_matrix m, t_tuple t);
@@ -57,7 +57,10 @@ t_matrix inverse(t_matrix A)
     if (det == 0)
         exit(EXIT_FAILURE);
 
-    t_matrix B = { .rows = A.rows, .cols = A.cols, .elements = malloc(A.rows * A.cols * sizeof(float)) };
+    t_matrix B;
+    B.rows = A.rows;
+    B.cols = A.cols;
+    B.elements = ft_calloc(A.rows * A.cols, sizeof(float));
     int i = 0;
     while (i < A.rows)
     {

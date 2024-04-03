@@ -1,11 +1,13 @@
 {
   "files.associations": {
-    "mini_rt.h": "c",
+    "all.h": "c",
     "criterion.h": "c",
     "keysym.h": "c",
     "errno.h": "c",
     "type_traits": "c",
-    "compare": "c"
+    "compare": "c",
+    "colors.h": "c",
+    "camera.h": "c"
   },
   "C_Cpp.errorSquiggles": "disabled",
   "C_Cpp_Runner.msvcBatchPath": ""

@@ -6,11 +6,11 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:11:43 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/01 17:58:30 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_rt.h"
+#include "all.h"
 
 static void	add_shape_to_list(t_scene_data *scene_data, t_list *new_node)
 {
@@ -20,7 +20,7 @@ static void	add_shape_to_list(t_scene_data *scene_data, t_list *new_node)
 		ft_lstadd_back(&(scene_data->shapes), new_node);
 }
 
-static int	add_sphere_to_list(t_identifier_type type, t_scene_data *scene_data, char *line)
+static int	add_sphere_to_list(t_id_type type, t_scene_data *scene_data, char *line)
 {
 	t_sphere 	*sphere;
 	t_list		*new_node;
@@ -36,7 +36,7 @@ static int	add_sphere_to_list(t_identifier_type type, t_scene_data *scene_data, 
 	return (0);
 }
 
-static int	add_plane_to_list(t_identifier_type type, t_scene_data *scene_data, char *line)
+static int	add_plane_to_list(t_id_type type, t_scene_data *scene_data, char *line)
 {
 	t_plane 	*plane;
 	t_list		*new_node;
@@ -52,7 +52,7 @@ static int	add_plane_to_list(t_identifier_type type, t_scene_data *scene_data, c
 	return (0);
 }
 
-static int	add_cylinder_to_list(t_identifier_type type, t_scene_data *scene_data, char *line)
+static int	add_cylinder_to_list(t_id_type type, t_scene_data *scene_data, char *line)
 {
 	t_cylinder 	*cylinder;
 	t_list		*new_node;
@@ -68,7 +68,7 @@ static int	add_cylinder_to_list(t_identifier_type type, t_scene_data *scene_data
 	return (0);
 }
 
-static int	add_cone_to_list(t_identifier_type type, t_scene_data *scene_data, char *line)
+static int	add_cone_to_list(t_id_type type, t_scene_data *scene_data, char *line)
 {
 	t_cone 		*cone;
 	t_list		*new_node;
@@ -84,7 +84,7 @@ static int	add_cone_to_list(t_identifier_type type, t_scene_data *scene_data, ch
 	return (0);
 }
 
-int	add_shape_data(t_identifier_type type, t_scene_data *scene_data, char *line)
+int	add_shape_data(t_id_type type, t_scene_data *scene_data, char *line)
 {
 	if (type == SPHERE)
 	{

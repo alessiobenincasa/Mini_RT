@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 11:56:27 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/01 12:27:47 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/02 12:52:01 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,11 @@ typedef enum s_identifier_type
 	CYLINDER,
 	CONE,
 	EXTRA_LIGHT
-}						t_identifier_type;
+}						t_id_type;
 typedef struct s_list
 {
 	void				*content;
-	t_identifier_type	type;
+	t_id_type	type;
 	struct s_list		*next;
 }						t_list;
 

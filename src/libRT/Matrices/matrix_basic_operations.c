@@ -6,11 +6,11 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/25 11:58:45 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_rt.h"
+#include "all.h"
 
 t_matrix	create_matrix(int rows, int cols, float elements[]);
 void		free_matrix(t_matrix *m);
@@ -23,7 +23,7 @@ t_matrix create_matrix(int rows, int cols, float elements[])
     t_matrix m;
     m.rows = rows;
     m.cols = cols;
-    m.elements = (float*)malloc(rows * cols * sizeof(float));
+    m.elements = (float*)ft_calloc(rows * cols, sizeof(float));
     if (elements != NULL)
         ft_memcpy(m.elements, elements, rows * cols * sizeof(float));
     else
@@ -63,7 +63,7 @@ t_matrix transpose_matrix(t_matrix matrix)
     t_matrix transposed;
     transposed.rows = matrix.cols;
     transposed.cols = matrix.rows;
-    transposed.elements = (float *)malloc(sizeof(float) * transposed.rows * transposed.cols);
+    transposed.elements = (float *)ft_calloc(transposed.rows * transposed.cols, sizeof(float));
     if (transposed.elements == NULL)
     {
         perror("Memory allocation error for transposed matrix");

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   lightning.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/01 17:33:23 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_rt.h"
+#include "all.h"
 
 t_color	lighting(t_material m, t_light light, t_tuple position, t_tuple eyev,
 			t_tuple normalv, int in_shadow);
@@ -47,7 +47,8 @@ t_color lighting(t_material m, t_light light, t_tuple position, t_tuple eyev, t_
             t_tuple reflectv = reflect(negate_tuple(lightv), normalv);
             float reflect_dot_eye = dot(reflectv, eyev);
 
-            if (reflect_dot_eye > 0) {
+            if (reflect_dot_eye > 0)
+            {
                 float factor = powf(reflect_dot_eye, m.shininess);
                 specular = multiply_color_scalar(light.intensity, m.specular * factor);
             }

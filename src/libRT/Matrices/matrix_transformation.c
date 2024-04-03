@@ -6,11 +6,11 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/03/25 11:59:28 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_rt.h"
+#include "all.h"
 
 t_matrix	translation(float x, float y, float z);
 t_matrix	scaling(float x, float y, float z);
@@ -22,7 +22,7 @@ t_matrix translation(float x, float y, float z)
     t_matrix transform = {
         .rows = 4,
         .cols = 4,
-        .elements = malloc(16 * sizeof(float))
+        .elements = ft_calloc(16, sizeof(float))
     };
     if (!transform.elements)
         exit(EXIT_FAILURE);
@@ -45,7 +45,7 @@ t_matrix translation(float x, float y, float z)
 t_matrix scaling(float x, float y, float z)
 {
     int i = 0;
-    t_matrix scale = {4, 4, malloc(16 * sizeof(float))};
+    t_matrix scale = {4, 4, ft_calloc(16, sizeof(float))};
     if (!scale.elements)
         exit(EXIT_FAILURE);
     while (i < 16)
@@ -63,7 +63,7 @@ t_matrix scaling(float x, float y, float z)
 
 t_matrix shearing(float xy, float xz, float yx, float yz, float zx, float zy)
 {
-    t_matrix result = {4, 4, malloc(16 * sizeof(float))};
+    t_matrix result = {4, 4, ft_calloc(16, sizeof(float))};
     int i = 0;
     if (!result.elements)
         exit(EXIT_FAILURE);

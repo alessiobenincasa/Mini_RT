@@ -6,13 +6,13 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:29:59 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/01 17:32:56 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_rt.h"
+#include "all.h"
 
-void	print_identifier_type(t_identifier_type type)
+void	print_identifier_type(t_id_type type)
 {
 	printf("--> Identifier is : ");
 	if (type == AMBIENT_LIGHT)

@@ -6,11 +6,11 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 13:11:49 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/01 14:51:16 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_rt.h"
+#include "all.h"
 
 int is_shadowed(t_world world, t_tuple point, t_tuple light_pos);
 

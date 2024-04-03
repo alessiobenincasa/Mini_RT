@@ -1,26 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cap_elem_init.c                                    :+:      :+:    :+:   */
+/*   utils_shapes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/26 11:46:25 by svolodin          #+#    #+#             */
+/*   Created: 2024/04/03 13:14:06 by svolodin          #+#    #+#             */
 /*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.h"
 
-t_light	*initialize_scene_light(void)
+t_ray	transform_ray(t_ray r, t_matrix id_matrix)
 {
-	t_light	*light;
+	t_matrix	inverse_transform;
 
-	light = (t_light *)ft_calloc(1, sizeof(t_light));
-	if (!light)
-		return (NULL);
-	light->position = point(0.0, 0.0, 0.0);
-	light->intensity = color(0.0, 0.0, 0.0);
-	light->energy = 1.0;
-	return (light);
+	inverse_transform = inverse(id_matrix);
+	return (transform(r, inverse_transform));
 }

@@ -6,11 +6,11 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 14:13:13 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/01 14:35:11 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_rt.h"
+#include "all.h"
 
 static t_light	*get_extra_light(char *line)
 {
@@ -20,21 +20,15 @@ static t_light	*get_extra_light(char *line)
 	l = initialize_scene_light();
 	if (!l)
 		return (NULL);
-	get_next_value(&value, &line);
-	parse_coordinates(value, &(l->position));
-	free(value);
-	get_next_value(&value, &line);
-	l->energy = ft_atof(value);
-	free(value);
+	value = NULL;
+	if (get_coordinates(value, &line, &(l->position)))
+		return (free(l), error("Problem getting coordinates"), NULL);
+	if (get_float_val(value, &line, &(l->energy)))
+		return (free(l), error("Problem getting energy"), NULL);
 	if (l->energy < 0 || l->energy > 1)
 		return (free(l), error("Light intensity value incorrect"), NULL);
-	get_next_value(&value, &line);
-	if (parse_colors(value, &(l->intensity)) != 0)
-	{
-		free(value);
+	if (parse_colors(value, &line, &(l->intensity)) != 0)
 		return (free(l), error("Incorrect RGB values for light"), NULL);
-	}
-	free(value);
 	return (l);
 }
 

@@ -6,11 +6,11 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:44:50 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/01 17:37:22 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_rt.h"
+#include "all.h"
 
 double	ft_atof(const char *str)
 {
@@ -60,7 +60,7 @@ char	*strdup_upto_whitespace(const char *s)
 		len++;
 	if (len == 0)
 		return (NULL);
-	result = malloc((len + 1) * sizeof(char));
+	result = ft_calloc(len + 1, sizeof(char));
 	if (!result)
 		return (NULL);
 	i = -1;
@@ -79,12 +79,18 @@ int	skip_spaces(char *str)
 		i++;
 	return (i);
 }
-void	get_next_value(char **value, char **line)
+void get_next_value(char **value, char **line)
 {
-	*value = strdup_upto_whitespace(*line);
-	if (*value)
-	{
-		*line += ft_strlen(*value);
-		*line += skip_spaces(*line);
-	}
+    *value = strdup_upto_whitespace(*line);
+    if (*value && **value)
+    {
+        *line += ft_strlen(*value);
+        *line += skip_spaces(*line);
+    }
+    if (!*value && **line == '\0')
+    {
+        if (*value)
+            free(*value);
+        *value = NULL;
+    }
 }
