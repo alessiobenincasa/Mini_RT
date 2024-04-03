@@ -102,20 +102,30 @@ void    render_scene(t_vars *vars, t_scene_data *scene)
     printf("Finished\n");
 }
 
+
+int	handle_close(t_vars *vars)
+{
+	if (vars->img.img_ptr)
+		mlx_destroy_image(vars->mlx, vars->img.img_ptr);
+	vars->img.img_ptr = NULL;
+	if (vars->win)
+		mlx_destroy_window(vars->mlx, vars->win);
+	vars->win = NULL;
+	if (vars->mlx)
+	{
+		mlx_loop_end(vars->mlx);
+		mlx_destroy_display(vars->mlx);
+		free(vars->mlx);
+	}
+	vars->mlx = NULL;
+    free_scene_data(vars->scene);
+	exit(EXIT_SUCCESS);
+}
+
 int key_hook(int keycode, t_vars *vars)
 {
     if (keycode == XK_Escape)
-    {
-        mlx_destroy_window(vars->mlx, vars->win);
-        exit(0);
-    }
-    return (0);
-}
-
-int close_program(void *param)
-{
-    (void)param;
-    exit(0);
+        handle_close(vars);
     return (0);
 }
 
@@ -127,10 +137,11 @@ int	main(int ac, char **av)
     vars.mlx = mlx_init();
 	if (init_data(&scene_data, ac, av, vars.mlx) == NULL)
     {
-	    mlx_destroy_display(vars.mlx);
 		error("Problem with Parsing");
+        handle_close(&vars);
         exit(EXIT_FAILURE);
     }
+    vars.scene = &scene_data;
 	printf("shape count : %d\n", scene_data.shape_count);
     scene_data.mlx = vars.mlx;
 
@@ -138,15 +149,12 @@ int	main(int ac, char **av)
     vars.img.img_ptr = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
     vars.img.addr = mlx_get_data_addr(vars.img.img_ptr, &vars.img.bits_per_pixel, &vars.img.line_length,
                                      &vars.img.endian);
-    mlx_hook(vars.win, DestroyNotify, StructureNotifyMask, close_program, &vars);
+    mlx_hook(vars.win, DestroyNotify, StructureNotifyMask, handle_close, &vars);
     mlx_key_hook(vars.win, key_hook, &vars);
     render_scene(&vars, &scene_data);
 
     mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
     mlx_loop(vars.mlx);
-    mlx_destroy_image(vars.mlx, &vars.img);
-	mlx_destroy_window(vars.mlx, vars.win);
-	mlx_destroy_display(vars.mlx);
-    free_scene_data(&scene_data);
+    handle_close(&vars);
     return (0);
 }
