@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/02 12:52:01 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/03 13:11:17 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@ static t_intersections	intersect_object(void *object, t_ray r, t_id_type type)
 {
     t_intersections xs;
 
+	xs.capacity = 0;
+	xs.count = 0;
+	xs.intersections = NULL;
 	if (type == SPHERE)
 		xs = intersect_sphere((t_sphere *)object, r);
 	else if (type == PLANE)
@@ -30,8 +33,6 @@ static t_intersections	intersect_object(void *object, t_ray r, t_id_type type)
 		xs = intersect_cylinder((t_cylinder *)object, r);
 	else if (type == CONE)
 		xs = intersect_cone((t_cone *)object, r);
-	else
-		xs.count = 0;
 
     return (xs);
 }
@@ -86,7 +87,6 @@ t_comps	prepare_computations(t_intersection i, t_ray r)
 	comps.eyev = negate_tuple(r.direction);
 	comps.type = i.type;
 	comps.object = i.object;
-	comps.inside = 0;
 	comps.normalv = get_normalv(comps.type, &comps.object, comps.point);
 
 	if (dot(comps.normalv, comps.eyev) < -EPSILON)
@@ -141,6 +141,19 @@ t_color shade_hit(t_world world, t_comps comps)
 	return (total_light);
 }
 
+t_comps	comps_init(void)
+{
+	t_comps	c;
+
+	c.t = 0.0;
+	c.point = point(0,0,0);
+	c.eyev = vector(0,0,0);
+	c.normalv = vector(0,0,0);
+	c.over_point = point(0,0,0);
+	c.inside = 0;
+	return (c);
+}
+
 
 t_color	color_at(t_world w, t_ray r)
 {
@@ -149,14 +162,12 @@ t_color	color_at(t_world w, t_ray r)
 	t_comps			comps;
 	t_color			result;
 
+	comps = comps_init();
 	xs = intersect_world(&w, r);
 	i = hit(&xs);
 	if (!i)
 		return (color(0, 0, 0));
 	comps = prepare_computations(*i, r);
-	// for (int i = 0; i < xs.capacity; i++)
-	// 	free(xs.intersections[i]);
-	// free(xs.intersections);
 	result = shade_hit(w, comps);
 	return (result);
 }

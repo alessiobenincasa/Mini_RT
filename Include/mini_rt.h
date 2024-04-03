@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/02 16:51:39 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/03 13:15:36 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@
 
 //*-------------------- 📖 𝘿𝙀𝙁𝙄𝙉𝙄𝙏𝙄𝙊𝙉𝙎 📖 ---------------------*//
 
-# define WIDTH 100
-# define HEIGHT 100
+# define WIDTH 400
+# define HEIGHT 400
 # define MLX_ERROR 1
 # define EPSILON 0.00001
 # define PI 3.14159265358979323846
@@ -59,7 +59,7 @@ typedef struct s_intersection	t_intersection;
 typedef struct s_intersections	t_intersections;
 typedef struct s_light			t_light;
 typedef struct s_material		t_material;
-typedef struct s_matrix		t_matrix;
+typedef struct s_matrix			t_matrix;
 typedef struct s_object			t_object;
 typedef struct s_plane			t_plane;
 typedef struct s_projectile		t_projectile;
@@ -374,7 +374,6 @@ typedef struct s_sphere
 }								t_sphere;
 
 t_sphere						sphere(void);
-void							set_transform(t_sphere *s, t_matrix t);
 t_tuple							normal_at(t_sphere sphere, t_tuple p);
 
 // todo               ~~~    Cylinder
@@ -390,6 +389,9 @@ typedef struct s_plane
 
 t_intersections					intersect_plane(t_plane *p, t_ray r);
 t_plane							plane(void);
+
+// todo               ~~~     Utils
+t_ray							transform_ray(t_ray r, t_matrix id_matrix);
 
 //*---------------------- 🖥️ Graphics 🖥️ ----------------------*//
 

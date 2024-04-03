@@ -1,31 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   material.c                                         :+:      :+:    :+:   */
+/*   utils_shapes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/03 11:04:10 by svolodin         ###   ########.fr       */
+/*   Created: 2024/04/03 13:14:06 by svolodin          #+#    #+#             */
+/*   Updated: 2024/04/03 13:14:17 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_rt.h"
 
-t_material	material(void);
-
-t_material	material(void)
+t_ray	transform_ray(t_ray r, t_matrix id_matrix)
 {
-	t_material m;
+	t_matrix	inverse_transform;
 
-	m.color.red = 1;
-	m.color.green = 1;
-	m.color.blue = 1;
-	m.ambient = 0.1;
-	m.diffuse = 0.9;
-	m.specular = 0.9;
-	m.shininess = 200.0;
-	m.pattern = NULL;
-	m.texture = NULL;
-	return (m);
+	inverse_transform = inverse(id_matrix);
+	return (transform(r, inverse_transform));
 }

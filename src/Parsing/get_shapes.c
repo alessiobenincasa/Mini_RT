@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 09:18:39 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/02 16:50:47 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/03 13:14:32 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ t_sphere	*get_sphere_data(char *line, double amb, void *mlx)
 		return (NULL);
 	*s = sphere();
 	s->material.ambient = amb;
+	s->material.shininess = 100;
 	value = NULL;
 	if (get_coordinates(value, &line, &(s->center)))
 		return (free_s(s), error("Problem getting coordinates"), NULL);
