@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/04 20:17:38 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/04/04 20:20:10 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,13 @@ t_matrix	inverse(t_matrix A);
 int			is_invertible(t_matrix A);
 t_matrix	identity_matrix(void);
 
-void register_matrix(t_matrix m) {
-    if (g_matrix_registry.count >= g_matrix_registry.capacity) {
+void register_matrix(t_matrix m)
+{
+    if (g_matrix_registry.count >= g_matrix_registry.capacity)
+    {
         size_t new_capacity = g_matrix_registry.capacity == 0 ? 1 : g_matrix_registry.capacity * 2;
         t_matrix* new_matrices = realloc(g_matrix_registry.matrices, new_capacity * sizeof(t_matrix));
         if (!new_matrices) {
-            // Handle allocation failure
             exit(EXIT_FAILURE);
         }
         g_matrix_registry.matrices = new_matrices;
