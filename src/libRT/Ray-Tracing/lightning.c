@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/03 16:35:21 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/04 11:24:34 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static t_color	tex_pix(t_texture *t, double u, double v)
 	return (color);
 }
 
-t_color	get_color_at_point(t_material m, t_tuple position)
+static t_color	get_color_at_point(t_material m, t_tuple position)
 {
 	t_color	color;
 	double	u;
@@ -63,7 +63,7 @@ t_lustre	lustre_init(t_material m, t_tuple point, t_color intensity)
 
 	color_at_point = get_color_at_point(m, point);
 	l.eff = multiply_colors(color_at_point, intensity);
-	l.amb = multiply_color_scalar(l.eff, m.ambient);
+	l.amb = mult_clr_sclr(l.eff, m.ambient);
 	l.diff = color(0, 0, 0);
 	l.spec = color(0, 0, 0);
 	l.lightv = vector(0, 0, 0);
@@ -76,27 +76,25 @@ t_lustre	lustre_init(t_material m, t_tuple point, t_color intensity)
 t_color	lighting(t_material m, t_light light, t_comps comps, int in_shadow)
 {
 	t_lustre	l;
-	t_color		result;
+	t_color		total_light;
 
 	l = lustre_init(m, comps.point, light.intensity);
+	total_light = add_three_colors(l.amb, l.diff, l.spec);
 	if (in_shadow)
-	{
-		result = add_colors(add_colors(l.amb, l.diff), l.spec);
-		return (result);
-	}
+		return (total_light);
 	l.lightv = normalize(subtract_tuples(light.position, comps.point));
 	l.norm_light = dot(l.lightv, comps.normalv);
 	if (l.norm_light > 0)
 	{
-		l.diff = multiply_color_scalar(l.eff, m.diffuse * l.norm_light);
+		l.diff = mult_clr_sclr(l.eff, m.diffuse * l.norm_light);
 		l.reflectv = reflect(negate_tuple(l.lightv), comps.normalv);
 		l.refl_eyev = dot(l.reflectv, comps.eyev);
 		if (l.refl_eyev > 0)
 		{
-			l.spec = multiply_color_scalar(light.intensity, m.specular
+			l.spec = mult_clr_sclr(light.intensity, m.specular
 					* powf(l.refl_eyev, m.shininess));
 		}
 	}
-	result = add_colors(add_colors(l.amb, l.diff), l.spec);
-	return (result);
+	total_light = add_three_colors(l.amb, l.diff, l.spec);
+	return (total_light);
 }

@@ -68,7 +68,8 @@ t_camera    prepare_camera(t_camera *cam)
 	t_tuple from = point(cam->position.x, cam->position.y, cam->position.z);
     t_tuple to = point(0, 0, fabs(cam->position.z - 1));
     t_tuple up = vector(cam->orientation.x, cam->orientation.y, cam->orientation.z);
-	print_camera_direction(from, to, up);
+	printf("\nWorlds Camera:\n");
+    print_camera_direction(from, to, up);
 
     new_cam = camera(WIDTH, HEIGHT, cam->fov * (M_PI / 180.0));
 	new_cam.transform = view_transform(from, to, up);
@@ -78,14 +79,13 @@ t_camera    prepare_camera(t_camera *cam)
 
 void    render_scene(t_vars *vars, t_scene_data *scene)
 {
-    int x = 0; 
-    int y = 0;
-
 	t_world		world;
+    t_camera    cam;
+    int			x = 0; 
+    int			y = 0;
+
     transfer_scene_data_to_world(scene, &world);
-    
-    t_camera cam = prepare_camera(scene->camera);
-    
+    cam = prepare_camera(scene->camera);
     while (y < HEIGHT)
     {
         x = 0;
