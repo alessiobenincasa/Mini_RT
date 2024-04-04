@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   all.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 16:29:49 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/04 20:06:18 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@
 
 //*-------------------- 📖 𝘿𝙀𝙁𝙄𝙉𝙄𝙏𝙄𝙊𝙉𝙎 📖 ---------------------*//
 
-# define WIDTH 400
-# define HEIGHT 400
+# define WIDTH 50
+# define HEIGHT 50
 # define MLX_ERROR 1
 # define EPSILON 0.00001
 # define PI 3.14159265358979323846
@@ -71,20 +71,20 @@ typedef struct s_world			t_world;
 typedef struct s_texture		t_texture;
 typedef struct s_pattern		t_pattern;
 
-// todo               ~~~     Tuples 	 ~~~				 	*//
+// todo               ~~~     Tuples 		~~~						*//
 typedef struct s_tuple
 {
 	double x, y, z, w;
-}			t_tuple;
+}								t_tuple;
 
-// todo               ~~~     Matrix 	 ~~~				 	*//
+// todo               ~~~     Matrix 		~~~						*//
 typedef struct s_matrix
 {
-	int		rows;
-	int		cols;
-	float	*elements;
+	int							rows;
+	int							cols;
+	float						*elements;
 
-}			t_matrix;
+}								t_matrix;
 //*---------------------- 📚 Headers 📚 -------------------------*//
 
 # include "../minilibx/mlx.h"
@@ -103,5 +103,14 @@ typedef struct s_matrix
 //*----------------------- ❔ Utils ❔ ----------------------*//
 
 int								equal(double a, double b);
+void							register_matrix(t_matrix m);
+typedef struct s_matrix_registry
+{
+	t_matrix					*matrices;
+	size_t						count;
+	size_t						capacity;
+}								t_matrix_registry;
+
+extern t_matrix_registry		g_matrix_registry;
 
 #endif
