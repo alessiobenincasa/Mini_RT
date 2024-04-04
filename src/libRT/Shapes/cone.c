@@ -6,11 +6,19 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 14:27:48 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/04 17:16:52 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/04/04 18:08:12 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.h"
+
+typedef struct s_coef
+{
+	double		a;
+	double		b;
+	double		c;
+	double		disc;
+}				t_coef;
 
 t_cone	cone(void)
 {
@@ -30,29 +38,25 @@ t_cone	cone(void)
 
 t_tuple	local_normal_at_cone(t_cone cone, t_tuple point)
 {
-	double	radius;
 	double	dist;
 	double	slant_height;
 	double	height;
-	double	slope;
 	double	y;
 
-	radius = cone.maximum / 2;
 	dist = pow(point.x, 2) + pow(point.z, 2);
-	if (dist < pow(cone.maximum, 2) && point.y >= cone.maximum - EPSILON)
-		return (vector(0, 1, 0));
-	else if (dist < pow(cone.maximum, 2) && point.y <= cone.minimum + EPSILON)
-		return (vector(0, -1, 0));
-	else
+	if (dist < pow(cone.maximum / 2, 2))
 	{
-		slant_height = sqrt(pow(point.x, 2) + pow(point.z, 2));
-		height = fabs(cone.maximum - cone.minimum);
-		slope = radius / height;
-		y = slope * slant_height;
-		if (cone.inverted)
-			y = -y;
-		return (vector(point.x, y, point.z));
+		if (point.y >= cone.maximum - EPSILON)
+			return (vector(0, 1, 0));
+		else if (point.y <= cone.minimum + EPSILON)
+			return (vector(0, -1, 0));
 	}
+	slant_height = sqrt(dist);
+	height = fabs(cone.maximum - cone.minimum);
+	y = (cone.maximum / 2) / height * slant_height;
+	if (cone.inverted)
+		y = -y;
+	return (vector(point.x, y, point.z));
 }
 
 t_tuple normal_at_cone(t_cone cone, t_tuple p)
@@ -95,49 +99,71 @@ void	add_intersection_cone(t_intersections *xs, double t, t_cone *cone)
 	xs->intersections[xs->count - 1].type = CONE;
 }
 
-static t_intersections	intersect_cone_sides(t_cone *cone,
-		t_ray transformed_ray)
+t_coef	calculate_cone_coefficients(t_ray transformed_ray)
+{
+	t_coef	coeff;
+
+	coeff.a = pow(transformed_ray.direction.x, 2)
+		- pow(transformed_ray.direction.y, 2) + pow(transformed_ray.direction.z,
+			2);
+	coeff.b = 2 * transformed_ray.origin.x * transformed_ray.direction.x - 2
+		* transformed_ray.origin.y * transformed_ray.direction.y + 2
+		* transformed_ray.origin.z * transformed_ray.direction.z;
+	coeff.c = pow(transformed_ray.origin.x, 2) - pow(transformed_ray.origin.y,
+			2) + pow(transformed_ray.origin.z, 2);
+	coeff.disc = coeff.b * coeff.b - 4 * coeff.a * coeff.c;
+	return (coeff);
+}
+
+double	*solve_quadratic(t_coef coeff)
+{
+	double			sqrt_disc;
+	double			temp;
+	static double	roots[2];
+
+	if (coeff.disc < 0)
+		return (NULL);
+	sqrt_disc = sqrt(coeff.disc);
+	roots[0] = (-coeff.b - sqrt_disc) / (2 * coeff.a);
+	roots[1] = (-coeff.b + sqrt_disc) / (2 * coeff.a);
+	if (roots[0] > roots[1])
+	{
+		temp = roots[0];
+		roots[0] = roots[1];
+		roots[1] = temp;
+	}
+	return (roots);
+}
+
+void	process_cone_intersections(t_intersections *xs, double *roots,
+		t_cone *cone, t_ray transformed_ray)
+{
+	double	y;
+	int		i;
+
+	i = 0;
+	if (!roots)
+		return ;
+	while (i < 2)
+	{
+		y = transformed_ray.origin.y + roots[i] * transformed_ray.direction.y;
+		if (y > cone->minimum && y < cone->maximum)
+			add_intersection_cone(xs, roots[i], cone);
+		i++;
+	}
+}
+
+t_intersections	intersect_cone_sides(t_cone *cone, t_ray transformed_ray)
 {
 	t_intersections	xs;
-	double			sqrt_disc;
-	double			a;
-	double			b;
-	double			c;
-	double			disc;
-	double			t0;
-	double			t1;
-	double			temp;
-	double			y0;
-	double			y1;
+	t_coef			coeff;
+	double			*roots;
 
 	xs.count = 0;
 	xs.intersections = NULL;
-	a = pow(transformed_ray.direction.x, 2) - pow(transformed_ray.direction.y,
-			2) + pow(transformed_ray.direction.z, 2);
-	b = 2 * transformed_ray.origin.x * transformed_ray.direction.x - 2
-		* transformed_ray.origin.y * transformed_ray.direction.y + 2
-		* transformed_ray.origin.z * transformed_ray.direction.z;
-	c = pow(transformed_ray.origin.x, 2) - pow(transformed_ray.origin.y, 2)
-		+ pow(transformed_ray.origin.z, 2);
-	disc = b * b - 4 * a * c;
-	if (fabs(a) >= EPSILON && disc >= 0)
-	{
-		sqrt_disc = sqrt(disc);
-		t0 = (-b - sqrt_disc) / (2 * a);
-		t1 = (-b + sqrt_disc) / (2 * a);
-		if (t0 > t1)
-		{
-			temp = t0;
-			t0 = t1;
-			t1 = temp;
-		}
-		y0 = transformed_ray.origin.y + t0 * transformed_ray.direction.y;
-		y1 = transformed_ray.origin.y + t1 * transformed_ray.direction.y;
-		if (y0 > cone->minimum && y0 < cone->maximum)
-			add_intersection_cone(&xs, t0, cone);
-		if (y1 > cone->minimum && y1 < cone->maximum)
-			add_intersection_cone(&xs, t1, cone);
-	}
+	coeff = calculate_cone_coefficients(transformed_ray);
+	roots = solve_quadratic(coeff);
+	process_cone_intersections(&xs, roots, cone, transformed_ray);
 	return (xs);
 }
 
