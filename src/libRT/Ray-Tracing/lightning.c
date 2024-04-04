@@ -6,55 +6,95 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/04 11:24:34 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.h"
 
-t_color	lighting(t_material m, t_light light, t_tuple position, t_tuple eyev,
-			t_tuple normalv, int in_shadow);
-t_color lighting(t_material m, t_light light, t_tuple position, t_tuple eyev, t_tuple normalv, int in_shadow)
+static t_color	tex_pix(t_texture *t, double u, double v)
 {
-    t_color color_at_point;
-    if (m.texture != NULL)
-    {
-        double u, v;
-        point_on_sphere_to_uv(position, &u, &v);
+	t_color	color;
+	int		tex_x;
+	int		tex_y;
 
-        int tex_x = (int)(u * (m.texture->width - 1));
-        int tex_y = (int)(v * (m.texture->height - 1));
+	tex_x = (int)(u * (t->width - 1));
+	tex_y = (int)(v * (t->height - 1));
+	color = texture_img_get_pxl(t, tex_x, tex_y);
+	return (color);
+}
 
-        color_at_point = texture_img_get_pxl(m.texture, tex_x, tex_y);
-    }
-    else if (m.pattern != NULL)
-        color_at_point = stripe_at(m.pattern, position);
-    else
-        color_at_point = m.color;
+static t_color	get_color_at_point(t_material m, t_tuple position)
+{
+	t_color	color;
+	double	u;
+	double	v;
 
-    t_color effective_color = multiply_colors(color_at_point, light.intensity);
-    t_color ambient = multiply_color_scalar(effective_color, m.ambient);
-    t_color diffuse = {0, 0, 0};
-    t_color specular = {0, 0, 0};
+	u = 0;
+	v = 0;
+	if (m.texture != NULL)
+	{
+		point_on_sphere_to_uv(position, &u, &v);
+		color = tex_pix(m.texture, u, v);
+	}
+	else if (m.pattern != NULL)
+		color = stripe_at(m.pattern, position);
+	else
+		color = m.color;
+	return (color);
+}
 
-    if (!in_shadow) {
-        t_tuple lightv = normalize(subtract_tuples(light.position, position));
-        float light_dot_normal = dot(lightv, normalv);
+typedef struct s_lustre
+{
+	t_color		eff;
+	t_color		amb;
+	t_color		diff;
+	t_color		spec;
+	t_tuple		lightv;
+	t_tuple		reflectv;
+	float		norm_light;
+	float		refl_eyev;
+}				t_lustre;
 
-        if (light_dot_normal > 0) {
-            diffuse = multiply_color_scalar(effective_color, m.diffuse * light_dot_normal);
+t_lustre	lustre_init(t_material m, t_tuple point, t_color intensity)
+{
+	t_lustre	l;
+	t_color		color_at_point;
 
-            t_tuple reflectv = reflect(negate_tuple(lightv), normalv);
-            float reflect_dot_eye = dot(reflectv, eyev);
+	color_at_point = get_color_at_point(m, point);
+	l.eff = multiply_colors(color_at_point, intensity);
+	l.amb = mult_clr_sclr(l.eff, m.ambient);
+	l.diff = color(0, 0, 0);
+	l.spec = color(0, 0, 0);
+	l.lightv = vector(0, 0, 0);
+	l.reflectv = vector(0, 0, 0);
+	l.norm_light = 0;
+	l.refl_eyev = 0;
+	return (l);
+}
 
-            if (reflect_dot_eye > 0)
-            {
-                float factor = powf(reflect_dot_eye, m.shininess);
-                specular = multiply_color_scalar(light.intensity, m.specular * factor);
-            }
-        }
-    }
+t_color	lighting(t_material m, t_light light, t_comps comps, int in_shadow)
+{
+	t_lustre	l;
+	t_color		total_light;
 
-    t_color result = add_colors(add_colors(ambient, diffuse), specular);
-    return result;
+	l = lustre_init(m, comps.point, light.intensity);
+	total_light = add_three_colors(l.amb, l.diff, l.spec);
+	if (in_shadow)
+		return (total_light);
+	l.lightv = normalize(subtract_tuples(light.position, comps.point));
+	l.norm_light = dot(l.lightv, comps.normalv);
+	if (l.norm_light > 0)
+	{
+		l.diff = mult_clr_sclr(l.eff, m.diffuse * l.norm_light);
+		l.reflectv = reflect(negate_tuple(l.lightv), comps.normalv);
+		l.refl_eyev = dot(l.reflectv, comps.eyev);
+		if (l.refl_eyev > 0)
+		{
+			l.spec = mult_clr_sclr(light.intensity, m.specular
+					* powf(l.refl_eyev, m.shininess));
+		}
+	}
+	total_light = add_three_colors(l.amb, l.diff, l.spec);
+	return (total_light);
 }

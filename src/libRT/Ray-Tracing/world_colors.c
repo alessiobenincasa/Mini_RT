@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/04 10:20:39 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,20 +124,16 @@ t_color shade_hit(t_world world, t_comps comps)
 	t_list		*current_light;
 
 	material = extract_material_comps(comps);
-
 	in_shadow = is_shadowed(world, comps.over_point, world.light.position);
-	total_light = lighting(material, world.light, comps.point, comps.eyev, comps.normalv, in_shadow);
-
+	total_light = lighting(material, world.light, comps, in_shadow);
 	current_light = world.extra_lights;
 	while (current_light != NULL)
 	{
 		t_light *light = (t_light *)(current_light->content);
 		in_shadow = is_shadowed(world, comps.over_point, light->position);
-		total_light = add_colors(total_light, lighting(material, *light, comps.point, comps.eyev, comps.normalv, in_shadow));
-
+		total_light = add_colors(total_light, lighting(material, *light, comps, in_shadow));
 		current_light = current_light->next;
 	}
-
 	return (total_light);
 }
 
@@ -146,6 +142,7 @@ t_comps	comps_init(void)
 	t_comps	c;
 
 	c.t = 0.0;
+	c.type = NONE;
 	c.point = point(0,0,0);
 	c.eyev = vector(0,0,0);
 	c.normalv = vector(0,0,0);
