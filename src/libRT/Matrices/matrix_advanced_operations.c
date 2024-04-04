@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   matrix_advanced_operations.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/04 20:17:38 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,20 @@ t_tuple		multiply_matrix_tuple(t_matrix m, t_tuple t);
 t_matrix	inverse(t_matrix A);
 int			is_invertible(t_matrix A);
 t_matrix	identity_matrix(void);
+
+void register_matrix(t_matrix m) {
+    if (g_matrix_registry.count >= g_matrix_registry.capacity) {
+        size_t new_capacity = g_matrix_registry.capacity == 0 ? 1 : g_matrix_registry.capacity * 2;
+        t_matrix* new_matrices = realloc(g_matrix_registry.matrices, new_capacity * sizeof(t_matrix));
+        if (!new_matrices) {
+            // Handle allocation failure
+            exit(EXIT_FAILURE);
+        }
+        g_matrix_registry.matrices = new_matrices;
+        g_matrix_registry.capacity = new_capacity;
+    }
+    g_matrix_registry.matrices[g_matrix_registry.count++] = m;
+}
 
 t_matrix multiply_matrices(t_matrix a, t_matrix b)
 {
@@ -40,7 +54,7 @@ t_matrix multiply_matrices(t_matrix a, t_matrix b)
         }
         i++;
     }
-    
+    register_matrix(c);
     return c;
 }
 
@@ -48,6 +62,7 @@ t_tuple multiply_matrix_tuple(t_matrix m, t_tuple t)
 {
     float elements[4] = {t.x, t.y, t.z, t.w};
     t_matrix result = multiply_matrices(m, create_matrix(4, 1, elements));
+    register_matrix(result);
     return tuple(result.elements[0], result.elements[1], result.elements[2], result.elements[3]);
 }
 
@@ -73,6 +88,7 @@ t_matrix inverse(t_matrix A)
         }
         i++;
     }
+    register_matrix(B);
     return B;
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   matrix_basic_operations.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/04 19:58:56 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ t_matrix create_matrix(int rows, int cols, float elements[])
         ft_memcpy(m.elements, elements, rows * cols * sizeof(float));
     else
         ft_memset(m.elements, 0, rows * cols * sizeof(float));
+    register_matrix(m);
     return (m);
 }
 
@@ -83,6 +84,6 @@ t_matrix transpose_matrix(t_matrix matrix)
         }
         i++;
     }
-    
+    register_matrix(transposed);
     return (transposed);
 }

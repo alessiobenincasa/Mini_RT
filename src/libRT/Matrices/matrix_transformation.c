@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   matrix_transformation.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/04 20:02:03 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ t_matrix translation(float x, float y, float z)
         transform.elements[index] = elements[index];
         index++;
     }
+    register_matrix(transform);
     return transform;
 }
 
@@ -57,6 +58,7 @@ t_matrix scaling(float x, float y, float z)
     scale.elements[5] = y;
     scale.elements[10] = z;
     scale.elements[15] = 1.0;
+    register_matrix(scale);
     return scale;
 }
 
@@ -85,6 +87,6 @@ t_matrix shearing(float xy, float xz, float yx, float yz, float zx, float zy)
     result.elements[6] = yz;
     result.elements[8] = zx;
     result.elements[9] = zy;
-
+    register_matrix(result);
     return result;
 }
