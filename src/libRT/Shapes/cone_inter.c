@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 19:09:47 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/05 20:38:20 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/04/05 21:48:36 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,14 @@ typedef struct s_cone_context
 	double		min;
 	double		max;
 }				t_cone_context;
+
+typedef struct s_cone_intersect_info
+{
+	double		min;
+	double		max;
+	t_cone		*c;
+	t_ray		r;
+}				t_cone_intersect_info;
 
 void	calculate_and_sort_roots(t_coef coeffs, double *t0, double *t1)
 {
@@ -49,31 +57,34 @@ void	calculate_and_sort_roots(t_coef coeffs, double *t0, double *t1)
 	}
 }
 
-void	validate_and_add_intersection(double t, double min, double max,
-		t_ray ray, t_cone *cone, t_intersections *xs)
+void	validate_and_add_intersection(double t, t_cone_intersect_info info,
+		t_intersections *xs)
 {
 	double	y;
 
-	y = ray.origin.y + t * ray.direction.y;
-	if (y > min && y < max)
-		add_intersection_cone(xs, t, cone);
+	y = info.r.origin.y + t * info.r.direction.y;
+	if (y > info.min && y < info.max)
+		add_intersection_cone(xs, t, info.c);
 }
 
 void	intersect_cone_sides(t_cone *cone, t_ray transformed_ray,
 		t_intersections *xs)
 {
-	t_coef	coeffs;
-	double	t0;
-	double	t1;
+	t_coef					coeffs;
+	double					t0;
+	double					t1;
+	t_cone_intersect_info	info;
 
+	info.min = cone->minimum;
+	info.max = cone->maximum;
+	info.c = cone;
+	info.r = transformed_ray;
 	calculate_coefficients(transformed_ray, &coeffs.a, &coeffs.b, &coeffs.c);
 	calculate_and_sort_roots(coeffs, &t0, &t1);
 	if (t0 != -1 && t1 != -1)
 	{
-		validate_and_add_intersection(t0, cone->minimum, cone->maximum,
-			transformed_ray, cone, xs);
-		validate_and_add_intersection(t1, cone->minimum, cone->maximum,
-			transformed_ray, cone, xs);
+		validate_and_add_intersection(t0, info, xs);
+		validate_and_add_intersection(t1, info, xs);
 	}
 }
 
