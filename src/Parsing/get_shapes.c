@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 09:18:39 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 14:47:45 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ static int	handle_motif(t_sphere *s, char *motif, void *mlx)
 	if (ft_strncmp(motif, "Stripe", 6) == 0)
 		s->material.pattern = stripe_pattern(color(1, 1, 1), color(0, 0, 0));
 	else if (ft_strncmp(motif, "Earth", 5) == 0)
-		s->material.texture = load_texture(mlx, "textures/earth.xpm");
+		s->material.texture = load_texture(mlx, "textures/earth2.xpm");
+	else if (ft_strncmp(motif, "Galaxy", 6) == 0)
+		s->material.texture = load_texture(mlx, "textures/galaxy.xpm");
 	else
 		return (1);
 	return (0);
