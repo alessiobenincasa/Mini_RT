@@ -6,79 +6,11 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 13:32:48 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/05 18:25:25 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/04/05 19:38:13 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.h"
-
-t_intersections	intersect_cylinder(t_cylinder *cyl, t_ray ray)
-{
-	t_intersections	xs;
-	double			radius;
-	t_ray			tr_ray;
-	double			a;
-	double			b;
-	double			c;
-	double			disc;
-	double			sqrt_disc;
-	double			t0;
-	double			t1;
-	double			temp;
-	double			y0;
-	double			y1;
-	double			t_lower;
-	double			t_upper;
-
-	xs.count = 0;
-	xs.intersections = NULL;
-	radius = cyl->diameter / 2;
-	tr_ray = transform(ray, inverse(cyl->transform));
-	a = pow(tr_ray.direction.x, 2) + pow(tr_ray.direction.z, 2);
-	if (fabs(a) > EPSILON)
-	{
-		b = 2 * tr_ray.origin.x * tr_ray.direction.x + 2 * tr_ray.origin.z
-			* tr_ray.direction.z;
-		c = pow(tr_ray.origin.x, 2) + pow(tr_ray.origin.z, 2) - pow(radius, 2);
-		disc = b * b - 4 * a * c;
-		if (disc >= 0)
-		{
-			sqrt_disc = sqrt(disc);
-			t0 = (-b - sqrt_disc) / (2 * a);
-			t1 = (-b + sqrt_disc) / (2 * a);
-			if (t0 > t1)
-			{
-				temp = t0;
-				t0 = t1;
-				t1 = temp;
-			}
-			y0 = tr_ray.origin.y + t0 * tr_ray.direction.y;
-			if (y0 > cyl->minimum && y0 < cyl->maximum)
-			{
-				add_intersection_cylinder(&xs, t0, cyl);
-			}
-			y1 = tr_ray.origin.y + t1 * tr_ray.direction.y;
-			if (y1 > cyl->minimum && y1 < cyl->maximum)
-			{
-				add_intersection_cylinder(&xs, t1, cyl);
-			}
-		}
-	}
-	if (cyl->closed && fabs(tr_ray.direction.y) > EPSILON)
-	{
-		t_lower = (cyl->minimum - tr_ray.origin.y) / tr_ray.direction.y;
-		if (check_cap(tr_ray, t_lower, radius))
-		{
-			add_intersection_cylinder(&xs, t_lower, cyl);
-		}
-		t_upper = (cyl->maximum - tr_ray.origin.y) / tr_ray.direction.y;
-		if (check_cap(tr_ray, t_upper, radius))
-		{
-			add_intersection_cylinder(&xs, t_upper, cyl);
-		}
-	}
-	return (xs);
-}
 
 int	check_cap(t_ray ray, double t, double radius)
 {
@@ -87,7 +19,7 @@ int	check_cap(t_ray ray, double t, double radius)
 
 	x = ray.origin.x + t * ray.direction.x;
 	z = ray.origin.z + t * ray.direction.z;
-	return (x * x + z * z) <= (radius * radius);
+	return ((x * x + z * z) <= (radius * radius));
 }
 
 t_cylinder	cylinder(void)
