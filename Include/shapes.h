@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 13:53:07 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 08:47:53 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 int				is_shape(t_id_type type);
 
-// todo               ~~~    Spheres 	  ~~~                  *//
+// todo               ~~~    Spheres 		~~~                  *//
 typedef struct s_sphere
 {
 	t_tuple		center;
@@ -30,7 +30,7 @@ typedef struct s_sphere
 t_sphere		sphere(void);
 t_tuple			normal_at(t_sphere sphere, t_tuple p);
 
-// todo               ~~~     Planes 	  ~~~                  *//
+// todo               ~~~     Planes 		~~~                  *//
 typedef struct s_plane
 {
 	t_tuple		point;
@@ -42,7 +42,7 @@ typedef struct s_plane
 t_intersections	intersect_plane(t_plane *p, t_ray r);
 t_plane			plane(void);
 
-// todo               ~~~    Cylinder 	  ~~~                  *//
+// todo               ~~~    Cylinder 		~~~                  *//
 
 typedef struct s_cylinder
 {
@@ -65,7 +65,7 @@ void			add_intersection_cylinder(t_intersections *xs, double t,
 					t_cylinder *cyl);
 int				check_cap(t_ray ray, double t, double radius);
 
-// todo               ~~~    	Cone 	  ~~~                  *//
+// todo               ~~~    	Cone 		~~~                  *//
 
 typedef struct s_cone
 {
@@ -87,6 +87,8 @@ void			add_intersection_cone(t_intersections *xs, double t,
 					t_cone *cone);
 t_intersections	intersect_cone(t_cone *cyl, t_ray ray);
 t_tuple			normal_at_cone(t_cone cone, t_tuple p);
+void			process_cone_intersections(t_intersections *xs, double *roots,
+					t_cone *cone, t_ray r);
 
-// todo               ~~~     Utils 	  ~~~                  *//
+// todo               ~~~     Utils 		~~~                  *//
 t_ray			transform_ray(t_ray r, t_matrix id_matrix);

@@ -3,38 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cone.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 14:27:48 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/04 18:08:12 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/04/05 08:51:02 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.h"
-
-typedef struct s_coef
-{
-	double		a;
-	double		b;
-	double		c;
-	double		disc;
-}				t_coef;
-
-t_cone	cone(void)
-{
-	t_cone	cone;
-
-	cone.transform = identity_matrix();
-	cone.minimum = 0;
-	cone.maximum = 3;
-	cone.closed = 1;
-	cone.inverted = 1;
-	cone.material = material();
-	cone.material.specular = 0;
-	cone.material.diffuse = 0.6;
-	cone.material.shininess = 50;
-	return (cone);
-}
 
 t_tuple	local_normal_at_cone(t_cone cone, t_tuple point)
 {
@@ -77,16 +53,16 @@ int	check_cap_cone(t_ray ray, double t, t_cone *cone, int is_lower)
 	double	z;
 	double	cap;
 
+	cap = 0;
 	x = ray.origin.x + t * ray.direction.x;
 	z = ray.origin.z + t * ray.direction.z;
 	if (is_lower)
 		cap = cone->minimum;
 	else
 		cap = cone->maximum;
-	if ((x * x + z * z) <= (cap * cap))
+	if ((pow(x, 2) + pow(z, 2)) <= pow(cap, 2))
 		return (1);
-	else
-		return (0);
+	return (0);
 }
 
 void	add_intersection_cone(t_intersections *xs, double t, t_cone *cone)
@@ -99,93 +75,21 @@ void	add_intersection_cone(t_intersections *xs, double t, t_cone *cone)
 	xs->intersections[xs->count - 1].type = CONE;
 }
 
-t_coef	calculate_cone_coefficients(t_ray transformed_ray)
-{
-	t_coef	coeff;
-
-	coeff.a = pow(transformed_ray.direction.x, 2)
-		- pow(transformed_ray.direction.y, 2) + pow(transformed_ray.direction.z,
-			2);
-	coeff.b = 2 * transformed_ray.origin.x * transformed_ray.direction.x - 2
-		* transformed_ray.origin.y * transformed_ray.direction.y + 2
-		* transformed_ray.origin.z * transformed_ray.direction.z;
-	coeff.c = pow(transformed_ray.origin.x, 2) - pow(transformed_ray.origin.y,
-			2) + pow(transformed_ray.origin.z, 2);
-	coeff.disc = coeff.b * coeff.b - 4 * coeff.a * coeff.c;
-	return (coeff);
-}
-
-double	*solve_quadratic(t_coef coeff)
-{
-	double			sqrt_disc;
-	double			temp;
-	static double	roots[2];
-
-	if (coeff.disc < 0)
-		return (NULL);
-	sqrt_disc = sqrt(coeff.disc);
-	roots[0] = (-coeff.b - sqrt_disc) / (2 * coeff.a);
-	roots[1] = (-coeff.b + sqrt_disc) / (2 * coeff.a);
-	if (roots[0] > roots[1])
-	{
-		temp = roots[0];
-		roots[0] = roots[1];
-		roots[1] = temp;
-	}
-	return (roots);
-}
-
 void	process_cone_intersections(t_intersections *xs, double *roots,
-		t_cone *cone, t_ray transformed_ray)
+		t_cone *cone, t_ray r)
 {
 	double	y;
 	int		i;
 
 	i = 0;
+	y = 0;
 	if (!roots)
 		return ;
 	while (i < 2)
 	{
-		y = transformed_ray.origin.y + roots[i] * transformed_ray.direction.y;
+		y = r.origin.y + roots[i] * r.direction.y;
 		if (y > cone->minimum && y < cone->maximum)
 			add_intersection_cone(xs, roots[i], cone);
 		i++;
 	}
-}
-
-t_intersections	intersect_cone_sides(t_cone *cone, t_ray transformed_ray)
-{
-	t_intersections	xs;
-	t_coef			coeff;
-	double			*roots;
-
-	xs.count = 0;
-	xs.intersections = NULL;
-	coeff = calculate_cone_coefficients(transformed_ray);
-	roots = solve_quadratic(coeff);
-	process_cone_intersections(&xs, roots, cone, transformed_ray);
-	return (xs);
-}
-
-t_intersections	intersect_cone(t_cone *cone, t_ray r)
-{
-	t_intersections	xs;
-	t_ray			transformed_ray;
-	double			t_lower;
-	double			t_upper;
-
-	transformed_ray = transform(r, inverse(cone->transform));
-	xs = intersect_cone_sides(cone, transformed_ray);
-	if (cone->closed && fabs(transformed_ray.direction.y) > EPSILON)
-	{
-		t_lower = (cone->minimum - transformed_ray.origin.y)
-			/ transformed_ray.direction.y;
-		if (check_cap_cone(transformed_ray, t_lower, cone, 1))
-			add_intersection_cone(&xs, t_lower, cone);
-		t_upper = (cone->maximum - transformed_ray.origin.y)
-			/ transformed_ray.direction.y;
-		if (check_cap_cone(transformed_ray, t_upper, cone, 0))
-			add_intersection_cone(&xs, t_upper, cone);
-	}
-	return (xs);
 }
