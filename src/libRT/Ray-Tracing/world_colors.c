@@ -6,17 +6,11 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/05 09:36:57 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 10:22:28 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.h"
-
-t_intersections	intersect_world(t_world *world, t_ray r);
-t_comps			prepare_computations(t_intersection i, t_ray r);
-t_color			shade_hit(t_world world, t_comps comps);
-t_color			color_at(t_world w, t_ray r);
-t_matrix		view_transform(t_tuple from, t_tuple to, t_tuple up);
 
 static t_intersections	intersect_object(void *object, t_ray r, t_id_type type)
 {
@@ -61,102 +55,6 @@ t_intersections intersect_world(t_world *world, t_ray r)
     sort_intersections(&xs);
     return xs;
 }
-
-t_tuple	get_normalv(t_id_type type, t_object_union *obj, t_tuple point)
-{
-	t_tuple	normalv;
-
-	normalv = vector(0, 0, 0);
-	if (type == SPHERE)
-		normalv = normal_at(*obj->sphere, point);
-	else if (type == PLANE)
-		normalv = obj->plane->normal;
-	else if (type == CYLINDER)
-		normalv = normal_at_cylinder(*obj->cylinder, point);
-	else if (type == CONE)
-		normalv = normal_at_cone(*obj->cone, point);
-	return (normalv);
-}
-
-t_comps	prepare_computations(t_intersection i, t_ray r)
-{
-	t_comps	comps;
-
-	comps.t = i.t;
-	comps.point = position(r, comps.t);
-	comps.eyev = negate_tuple(r.direction);
-	comps.type = i.type;
-	comps.object = i.object;
-	comps.normalv = get_normalv(comps.type, &comps.object, comps.point);
-
-	if (dot(comps.normalv, comps.eyev) < -EPSILON)
-	{
-		comps.inside = 1;
-		comps.normalv = negate_tuple(comps.normalv);
-	}
-	comps.over_point = add_tuples(comps.point, multiply_tuple_scalar(comps.normalv, EPSILON));
-	return (comps);
-}
-
-t_material	extract_material_comps(t_comps comps)
-{
-	t_material	m;
-
-	if (comps.type == SPHERE)
-		m = comps.object.sphere->material;
-	else if (comps.type == PLANE)
-		m = comps.object.plane->material;
-	else if (comps.type == CYLINDER)
-		m = comps.object.cylinder->material;
-	else if (comps.type == CONE)
-		m = comps.object.cone->material;
-	else
-		m = material();
-	return (m);
-}
-
-
-t_color shade_hit(t_world world, t_comps comps)
-{
-	t_color		total_light;
-	t_material	material;
-	int			in_shadow;
-	t_list		*current_light;
-
-	total_light = color(0,0,0);
-	material = extract_material_comps(comps);
-	if (no_world_light(world.light))
-	{
-		total_light = lighting(material, world.light, comps, 0);
-		return (total_light);
-	}
-	in_shadow = is_shadowed(world, comps.over_point, world.light.position);
-	total_light = lighting(material, world.light, comps, in_shadow);
-	current_light = world.extra_lights;
-	while (current_light != NULL)
-	{
-		t_light *light = (t_light *)(current_light->content);
-		in_shadow = is_shadowed(world, comps.over_point, light->position);
-		total_light = add_colors(total_light, lighting(material, *light, comps, in_shadow));
-		current_light = current_light->next;
-	}
-	return (total_light);
-}
-
-t_comps	comps_init(void)
-{
-	t_comps	c;
-
-	c.t = 0.0;
-	c.type = NONE;
-	c.point = point(0,0,0);
-	c.eyev = vector(0,0,0);
-	c.normalv = vector(0,0,0);
-	c.over_point = point(0,0,0);
-	c.inside = 0;
-	return (c);
-}
-
 
 t_color	color_at(t_world w, t_ray r)
 {

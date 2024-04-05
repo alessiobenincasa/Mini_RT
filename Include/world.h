@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 13:58:32 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/05 09:37:15 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 10:23:38 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,3 +49,5 @@ t_comps				prepare_computations(t_intersection i, t_ray r);
 t_color				shade_hit(t_world world, t_comps comps);
 t_color				color_at(t_world w, t_ray r);
 t_matrix			view_transform(t_tuple from, t_tuple to, t_tuple up);
+
+t_comps				comps_init(void);

@@ -62,7 +62,7 @@ void    render_scene(t_vars *vars, t_scene_data *scene)
 			my_mlx_pixel_put(vars, x, y, final_color);
         }
     }
-    printf("Finished\n");
+    printf("Compilation Finished.\nEnjoy The View\n");
 }
 
 
