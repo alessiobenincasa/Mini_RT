@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/04 11:25:22 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 12:38:42 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,20 @@ t_color	color(float red, float green, float blue)
 	return (c);
 }
 
+static int	clamp_single_color(int color)
+{
+	int	res;
+
+	res = 0;
+	if (color < 0)
+		res = 0;
+	else if (color > 255)
+		res = 255;
+	else
+		res = color;
+	return (res);
+}
+
 int	convert_color_to_int(t_color color)
 {
 	int	red;
@@ -33,12 +47,16 @@ int	convert_color_to_int(t_color color)
 	int	blue;
 	int	combined_color;
 
+	red = 0;
+	green = 0;
+	blue = 0;
+	combined_color = 0;
 	red = (int)(color.red * 255);
 	green = (int)(color.green * 255);
 	blue = (int)(color.blue * 255);
-	red = red < 0 ? 0 : (red > 255 ? 255 : red);
-	green = green < 0 ? 0 : (green > 255 ? 255 : green);
-	blue = blue < 0 ? 0 : (blue > 255 ? 255 : blue);
+	red = clamp_single_color(red);
+	green = clamp_single_color(green);
+	blue = clamp_single_color(blue);
 	combined_color = (red << 16) | (green << 8) | blue;
 	return (combined_color);
 }

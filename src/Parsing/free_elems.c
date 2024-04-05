@@ -6,44 +6,17 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 13:24:22 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 14:06:55 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.h"
 
-void free_s(t_sphere *s)
-{
-	free(s->transform.elements);
-	if (s->motif)
-		free(s->motif);
-	if (s->material.pattern)
-		free(s->material.pattern);
-	if (s->material.texture)
-		free(s->material.texture);
-	free(s);
-}
-
-void free_p(t_plane *p)
-{
-	free(p->transform.elements);
-	free(p);
-}
-void free_cyl(t_cylinder *c)
-{
-	free(c->transform.elements);
-	free(c);
-}
-void free_c(t_cone *c)
-{
-	free(c->transform.elements);
-	free(c);
-}
-
 void	free_shapes(t_list *list)
 {
 	t_list	*temp;
 
+	temp = NULL;
 	while (list)
 	{
 		temp = list;
@@ -64,12 +37,13 @@ void	free_extra_lights(t_list *list)
 {
 	t_list	*temp;
 
+	temp = NULL;
 	while (list)
 	{
 		temp = list;
 		list = list->next;
 		if (temp->type == EXTRA_LIGHT)
-			free(list->content);
+			free(temp->content);
 		free(temp);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:28:21 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 13:56:44 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,8 @@ static char	*extract_identifier(const char *line)
 	return (id);
 }
 
-int	get_identifier(char **line, t_id_type *type, t_scene_data *scene_data)
+int	assign_type_from_identifier(char *identifier, t_id_type *type)
 {
-	char	*identifier;
-
-	identifier = extract_identifier(*line);
-	if (!identifier)
-		return (error("Unknown type identifier"), 1);
 	if (ft_strcmp(identifier, "A") == 0)
 		*type = AMBIENT_LIGHT;
 	else if (ft_strcmp(identifier, "C") == 0)
@@ -57,6 +52,18 @@ int	get_identifier(char **line, t_id_type *type, t_scene_data *scene_data)
 	else if (ft_strcmp(identifier, "co") == 0)
 		*type = CONE;
 	else
+		return (1);
+	return (0);
+}
+
+int	get_identifier(char **line, t_id_type *type, t_scene_data *scene_data)
+{
+	char	*identifier;
+
+	identifier = extract_identifier(*line);
+	if (!identifier)
+		return (error("Unknown type identifier"), 1);
+	if (assign_type_from_identifier(identifier, type))
 		return (free(identifier), 1);
 	if (is_shape(*type))
 		(scene_data->shape_count)++;

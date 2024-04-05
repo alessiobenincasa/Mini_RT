@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 13:58:32 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/05 10:23:38 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 13:29:24 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,3 +51,7 @@ t_color				color_at(t_world w, t_ray r);
 t_matrix			view_transform(t_tuple from, t_tuple to, t_tuple up);
 
 t_comps				comps_init(void);
+
+// todo               ~~~    Captain Hook 	~~~                  *//
+int					handle_close(t_vars *vars);
+int					key_hook(int keycode, t_vars *vars);

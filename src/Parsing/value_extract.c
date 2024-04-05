@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 09:13:29 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 13:59:55 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,17 @@ static void	convert_rgb_to_one(t_color *color)
 	}
 }
 
+int	invalid_color(t_color *colors)
+{
+	if (colors->red < 0.0 || colors->red > 255.0)
+		return (1);
+	else if (colors->green < 0.0 || colors->green > 255.0)
+		return (2);
+	else if (colors->blue < 0.0 || colors->blue > 255.0)
+		return (3);
+	return (0);
+}
+
 int	parse_colors(char *input, char **line, t_color *colors)
 {
 	char	*token;
@@ -76,12 +87,8 @@ int	parse_colors(char *input, char **line, t_color *colors)
 		token = strtok(NULL, ",");
 		i++;
 	}
-	if (colors->red < 0.0 || colors->red > 255.0)
-		return (1);
-	else if (colors->green < 0.0 || colors->green > 255.0)
-		return (2);
-	else if (colors->blue < 0.0 || colors->blue > 255.0)
-		return (3);
+	if (invalid_color(colors))
+		return (error("RGB value not in 0-255 range"), 1);
 	convert_rgb_to_one(colors);
 	free(input);
 	return (0);

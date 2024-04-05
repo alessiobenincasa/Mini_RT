@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:44:50 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 13:57:19 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,18 +79,18 @@ int	skip_spaces(char *str)
 		i++;
 	return (i);
 }
-void get_next_value(char **value, char **line)
+void	get_next_value(char **value, char **line)
 {
-    *value = strdup_upto_whitespace(*line);
-    if (*value && **value)
-    {
-        *line += ft_strlen(*value);
-        *line += skip_spaces(*line);
-    }
-    if (!*value && **line == '\0')
-    {
-        if (*value)
-            free(*value);
-        *value = NULL;
-    }
+	*value = strdup_upto_whitespace(*line);
+	if (*value && **value)
+	{
+		*line += ft_strlen(*value);
+		*line += skip_spaces(*line);
+	}
+	if (!*value && **line == '\0')
+	{
+		if (*value)
+			free(*value);
+		*value = NULL;
+	}
 }

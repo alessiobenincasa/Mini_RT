@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:32:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 13:51:52 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,12 @@ int	invalid_input(int ac, char **av)
 	}
 	close(fd);
 	return (0);
+}
+
+void	add_shape_to_list(t_scene_data *scene_data, t_list *new_node)
+{
+	if (scene_data->shapes == NULL)
+		scene_data->shapes = new_node;
+	else
+		ft_lstadd_back(&(scene_data->shapes), new_node);
 }

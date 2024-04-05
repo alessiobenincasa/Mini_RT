@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:27:10 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 13:57:01 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 int	is_shape(t_id_type type)
 {
-	return (type == SPHERE || type == CYLINDER || type == PLANE || type == CONE);
+	return (type == SPHERE || type == CYLINDER || type == PLANE
+		|| type == CONE);
 }
 
 static int	add_to_struct(t_scene_data *scene_data, char *line)
@@ -26,7 +27,6 @@ static int	add_to_struct(t_scene_data *scene_data, char *line)
 		error("Unknown identifier encountered");
 		return (1);
 	}
-	print_identifier_type(type);
 	if (is_shape(type))
 	{
 		if (add_shape_data(type, scene_data, line) != 0)
@@ -49,8 +49,6 @@ static void	set_data_to_zero(t_scene_data *scene_data)
 	scene_data->ambient_light->color = color(1, 1, 1);
 	scene_data->ambient_light->ratio = 0.1;
 	scene_data->camera = ft_calloc(1, sizeof(t_camera));
-	// scene_data->camera->position = point(0, 0, 0);
-	// scene_data->camera->orientation = vector(0, 1, 0);
 	scene_data->light = NULL;
 	scene_data->extra_lights = NULL;
 }
@@ -63,7 +61,6 @@ static int	load_scene_data(t_scene_data *scene_data, int fd)
 	line = get_next_line(fd);
 	while (line)
 	{
-		printf("%s", line);
 		if (line[0] == '\n')
 		{
 			free(line);
@@ -78,16 +75,21 @@ static int	load_scene_data(t_scene_data *scene_data, int fd)
 	return (0);
 }
 
-void	*init_data(t_scene_data *scene_data, int ac, char **av, void *mlx)
+void	*init_data(t_scene_data *s, int ac, char **av, void *mlx)
 {
 	int	fd;
 
 	if (invalid_input(ac, av))
 		return (NULL);
-	scene_data->mlx = mlx;
+	s->mlx = mlx;
 	fd = open(av[1], O_RDONLY);
-	if (load_scene_data(scene_data, fd))
-		return (NULL);
+	if (load_scene_data(s, fd))
+		return (close(fd), NULL);
 	close(fd);
+	if (s->shape_count < 1)
+	{
+		free_scene_data(s);
+		return (error("Please initialise an object"), NULL);
+	}
 	return ((int *)1);
 }

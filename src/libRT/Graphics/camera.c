@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 12:05:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/05 09:08:50 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 13:01:20 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,13 @@ t_camera	camera(int hsize, int vsize, double fov)
 
 typedef struct s_xy
 {
-	double	world_x;
-	double	world_y;
-	t_tuple	pixel;
-	t_tuple	origin;
-	t_tuple	direction;
-}			t_xy;
+	double		world_x;
+	double		world_y;
+	t_tuple		pixel;
+	t_tuple		origin;
+	t_tuple		direction;
+	t_matrix	inversed;
+}				t_xy;
 
 t_xy	xy_init(t_camera camera, int px, int py)
 {
@@ -57,6 +58,7 @@ t_xy	xy_init(t_camera camera, int px, int py)
 	yoffset = ((double)(py) + 0.5) * camera.pixel_size;
 	data.world_x = camera.half_width - xoffset;
 	data.world_y = camera.half_width - yoffset;
+	data.inversed = inverse(camera.transform);
 	return (data);
 }
 
@@ -64,12 +66,14 @@ t_ray	ray_for_pixel(t_camera camera, int px, int py)
 {
 	t_xy	data;
 	t_ray	r;
+	t_tuple	sub;
 
 	data = xy_init(camera, px, py);
-	data.pixel = mult_mat_tup(inverse(camera.transform), point(data.world_x,
-				data.world_y, -1));
-	data.origin = mult_mat_tup(inverse(camera.transform), point(0, 0, 0));
-	data.direction = normalize(subtract_tuples(data.pixel, data.origin));
+	data.pixel = mult_mat_tup(data.inversed, point(data.world_x, data.world_y,
+				-1));
+	data.origin = mult_mat_tup(data.inversed, point(0, 0, 0));
+	sub = subtract_tuples(data.pixel, data.origin);
+	data.direction = normalize(sub);
 	r = ray(data.origin, data.direction);
 	return (r);
 }
@@ -84,6 +88,7 @@ t_camera	prepare_camera(t_camera *cam)
 	from = point(cam->position.x, cam->position.y, cam->position.z);
 	to = point(0, 0, fabs(cam->position.z - 1));
 	up = vector(cam->orientation.x, cam->orientation.y, cam->orientation.z);
+	printf("\nWorlds Camera :\n");
 	print_camera_direction(from, to, up);
 	new_cam = camera(WIDTH, HEIGHT, cam->fov * (M_PI / 180.0));
 	new_cam.transform = view_transform(from, to, up);

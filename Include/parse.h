@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 13:20:54 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/05 08:56:42 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 13:52:12 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ int				add_capital_element(t_id_type type, t_scene_data *scene_data,
 int				add_amblight_to_list(t_scene_data *s, char *line);
 int				add_camera_to_list(t_scene_data *s, char *line);
 int				add_light_to_list(t_scene_data *s, char *line);
+void			add_shape_to_list(t_scene_data *scene_data, t_list *new_node);
 
 // todo              ~~~  cap elem init ~~~                  *//
 t_light			*initialize_scene_light(void);
@@ -93,6 +94,8 @@ void			print_light(const t_light *light);
 void			print_color(const t_color *color);
 void			print_tuple(t_tuple tuple);
 void			print_identifier_type(t_id_type type);
+void			print_data(t_world w, t_scene_data *s);
+void			print_header(void);
 
 void			print_sphere(const t_sphere *sphere);
 void			print_plane(const t_plane *plane);

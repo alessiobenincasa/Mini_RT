@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 08:57:55 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/05 08:58:26 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 13:00:59 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	print_camera_direction(t_tuple from, t_tuple to, t_tuple up)
 	printf("FROM: x = %f, y = %f, z = %f\n", from.x, from.y, from.z);
 	printf("TO: x = %f, y = %f, z = %f\n", to.x, to.y, to.z);
 	printf("UP: x = %f, y = %f, z = %f\n", up.x, up.y, up.z);
-	printf("---------------\n");
+	printf("---------------\n\n");
 	printf("\033[0m");
 }
 
