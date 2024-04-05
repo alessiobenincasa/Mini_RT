@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 19:09:47 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/05 19:34:22 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/04/05 20:38:20 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,21 +19,28 @@ typedef struct s_coef
 	double		c;
 }				t_coef;
 
-void	calculate_and_sort_roots(double a, double b, double c, double *t0,
-		double *t1)
+typedef struct s_cone_context
+{
+	t_cone		*cone;
+	t_ray		transformed_ray;
+	double		min;
+	double		max;
+}				t_cone_context;
+
+void	calculate_and_sort_roots(t_coef coeffs, double *t0, double *t1)
 {
 	double	disc;
 	double	temp;
 
-	disc = b * b - 4 * a * c;
+	disc = coeffs.b * coeffs.b - 4 * coeffs.a * coeffs.c;
 	if (disc < 0)
 	{
 		*t0 = -1;
 		*t1 = -1;
 		return ;
 	}
-	*t0 = (-b - sqrt(disc)) / (2 * a);
-	*t1 = (-b + sqrt(disc)) / (2 * a);
+	*t0 = (-coeffs.b - sqrt(disc)) / (2 * coeffs.a);
+	*t1 = (-coeffs.b + sqrt(disc)) / (2 * coeffs.a);
 	if (*t0 > *t1)
 	{
 		temp = *t0;
@@ -55,14 +62,12 @@ void	validate_and_add_intersection(double t, double min, double max,
 void	intersect_cone_sides(t_cone *cone, t_ray transformed_ray,
 		t_intersections *xs)
 {
-	double	a;
-	double	b;
-	double	c;
+	t_coef	coeffs;
 	double	t0;
 	double	t1;
 
-	calculate_coefficients(transformed_ray, &a, &b, &c);
-	calculate_and_sort_roots(a, b, c, &t0, &t1);
+	calculate_coefficients(transformed_ray, &coeffs.a, &coeffs.b, &coeffs.c);
+	calculate_and_sort_roots(coeffs, &t0, &t1);
 	if (t0 != -1 && t1 != -1)
 	{
 		validate_and_add_intersection(t0, cone->minimum, cone->maximum,
