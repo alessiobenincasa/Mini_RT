@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   world_colors.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/04 10:20:39 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 15:05:39 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,16 @@ t_comps			prepare_computations(t_intersection i, t_ray r);
 t_color			shade_hit(t_world world, t_comps comps);
 t_color			color_at(t_world w, t_ray r);
 t_matrix		view_transform(t_tuple from, t_tuple to, t_tuple up);
+
+void free_intersections(t_intersections *xs)
+{
+    if (xs && xs->intersections) {
+        free(xs->intersections);
+        xs->intersections = NULL;
+        xs->count = 0;
+        xs->capacity = 0;
+    }
+}
 
 static t_intersections	intersect_object(void *object, t_ray r, t_id_type type)
 {
@@ -33,7 +43,6 @@ static t_intersections	intersect_object(void *object, t_ray r, t_id_type type)
 		xs = intersect_cylinder((t_cylinder *)object, r);
 	else if (type == CONE)
 		xs = intersect_cone((t_cone *)object, r);
-
     return (xs);
 }
 
@@ -55,9 +64,14 @@ t_intersections intersect_world(t_world *world, t_ray r)
 		j = -1;
 		while (++j < temp_xs.count)
             add_intersection(&xs, temp_xs.intersections[j]);
+		if (temp_xs.intersections != NULL)
+		{
+            free(temp_xs.intersections);
+            temp_xs.intersections = NULL;
+		}
+
         current = current->next;
     }
-
     sort_intersections(&xs);
     return xs;
 }
@@ -166,6 +180,7 @@ t_color	color_at(t_world w, t_ray r)
 		return (color(0, 0, 0));
 	comps = prepare_computations(*i, r);
 	result = shade_hit(w, comps);
+	free(xs.intersections);
 	return (result);
 }
 
