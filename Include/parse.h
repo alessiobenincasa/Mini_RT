@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 13:20:54 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 08:56:42 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,13 +86,16 @@ void			free_c(t_cone *c);
 
 // todo              ~~~     print      ~~~                  *//
 void			print_camera(const t_camera *camera);
-void			print_identifier_type(t_id_type type);
-void			print_sphere(const t_sphere *sphere);
+void			print_camera_direction(t_tuple from, t_tuple to, t_tuple up);
 void			print_ambient(const t_ambient *ambient);
 void			print_light(const t_light *light);
+
+void			print_color(const t_color *color);
+void			print_tuple(t_tuple tuple);
+void			print_identifier_type(t_id_type type);
+
+void			print_sphere(const t_sphere *sphere);
 void			print_plane(const t_plane *plane);
 void			print_cylinder(const t_cylinder *cylinder);
 void			print_cone(const t_cone *cone);
-void			print_color(const t_color *color);
-void			print_tuple(t_tuple tuple);
-void			print_camera_direction(t_tuple from, t_tuple to, t_tuple up);
+void			print_shapes(t_list *list);

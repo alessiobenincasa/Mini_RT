@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 13:29:41 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:06:39 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 09:08:44 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ float		determinant(t_matrix M);
 
 // todo          ~~~ Matrix advanced operations  ~~~			*//
 t_matrix	multiply_matrices(t_matrix a, t_matrix b);
-t_tuple		multiply_matrix_tuple(t_matrix m, t_tuple t);
+t_tuple		mult_mat_tup(t_matrix m, t_tuple t);
 t_matrix	inverse(t_matrix A);
 int			is_invertible(t_matrix A);
 t_matrix	identity_matrix(void);

@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 14:27:48 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 09:08:44 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ t_tuple local_normal_at_cone(t_cone cone, t_tuple point)
 
 t_tuple normal_at_cone(t_cone cone, t_tuple p)
 {
-    t_tuple object_point = multiply_matrix_tuple(inverse(cone.transform), p);
+    t_tuple object_point = mult_mat_tup(inverse(cone.transform), p);
     t_tuple object_normal = local_normal_at_cone(cone, object_point);
-    t_tuple world_normal = multiply_matrix_tuple(transpose_matrix(inverse(cone.transform)), object_normal);
+    t_tuple world_normal = mult_mat_tup(transpose_matrix(inverse(cone.transform)), object_normal);
     world_normal.w = 0;
 
     return (normalize(world_normal));

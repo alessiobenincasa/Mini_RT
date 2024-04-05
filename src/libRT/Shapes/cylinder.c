@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 13:32:48 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 09:08:44 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,9 +99,9 @@ t_tuple local_normal_at_cylinder(t_cylinder cyl, t_tuple point)
 
 t_tuple normal_at_cylinder(t_cylinder cylinder, t_tuple p)
 {
-    t_tuple object_point = multiply_matrix_tuple(inverse(cylinder.transform), p);
+    t_tuple object_point = mult_mat_tup(inverse(cylinder.transform), p);
     t_tuple object_normal = local_normal_at_cylinder(cylinder, object_point);
-    t_tuple world_normal = multiply_matrix_tuple(transpose_matrix(inverse(cylinder.transform)), object_normal);
+    t_tuple world_normal = mult_mat_tup(transpose_matrix(inverse(cylinder.transform)), object_normal);
     world_normal.w = 0;
 
     return (normalize(world_normal));

@@ -6,14 +6,14 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 09:08:44 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.h"
 
 t_matrix	multiply_matrices(t_matrix a, t_matrix b);
-t_tuple		multiply_matrix_tuple(t_matrix m, t_tuple t);
+t_tuple		mult_mat_tup(t_matrix m, t_tuple t);
 t_matrix	inverse(t_matrix A);
 int			is_invertible(t_matrix A);
 t_matrix	identity_matrix(void);
@@ -44,7 +44,7 @@ t_matrix multiply_matrices(t_matrix a, t_matrix b)
     return c;
 }
 
-t_tuple multiply_matrix_tuple(t_matrix m, t_tuple t)
+t_tuple mult_mat_tup(t_matrix m, t_tuple t)
 {
     float elements[4] = {t.x, t.y, t.z, t.w};
     t_matrix result = multiply_matrices(m, create_matrix(4, 1, elements));

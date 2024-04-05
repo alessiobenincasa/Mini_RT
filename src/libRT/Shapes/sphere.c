@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 09:08:44 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ t_tuple	normal_at(t_sphere s, t_tuple p)
 	t_tuple	obj_norm;
 	t_tuple	wrld_norm;
 
-	obj_point = multiply_matrix_tuple(inverse(s.transform), p);
+	obj_point = mult_mat_tup(inverse(s.transform), p);
 	obj_norm = subtract_tuples(obj_point, point(s.center.x, s.center.y,
 				s.center.z));
-	wrld_norm = multiply_matrix_tuple(transpose_matrix(inverse(s.transform)),
+	wrld_norm = mult_mat_tup(transpose_matrix(inverse(s.transform)),
 			obj_norm);
 	wrld_norm.w = 0;
 	wrld_norm = normalize(wrld_norm);

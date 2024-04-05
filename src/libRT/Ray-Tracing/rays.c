@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 09:08:44 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ t_tuple	position(t_ray r, double t);
 t_ray transform(t_ray ray, t_matrix m)
 {
     t_ray transformed_ray;
-    transformed_ray.origin = multiply_matrix_tuple(m, ray.origin);
-    transformed_ray.direction = multiply_matrix_tuple(m, ray.direction);
+    transformed_ray.origin = mult_mat_tup(m, ray.origin);
+    transformed_ray.direction = mult_mat_tup(m, ray.direction);
     return transformed_ray;
 }
 
