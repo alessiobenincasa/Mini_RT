@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 19:37:33 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/05 19:54:09 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/04/05 20:20:19 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,14 @@ typedef struct s_coef
 	double		b;
 	double		c;
 }				t_coef;
+
+typedef struct s_cylinder_hit
+{
+	double		min;
+	double		max;
+	t_ray		tr_ray;
+	t_cylinder	*cyl;
+}				t_cylinder_hit;
 
 t_coef	calculate_cylinder_coeffs(t_ray tr_ray, double radius)
 {
@@ -54,30 +62,33 @@ void	find_cylinder_roots(t_coef coeffs, double *t0, double *t1)
 }
 
 void	check_and_add_cylinder_intersection(t_intersections *xs, double t,
-		double min, double max, t_ray tr_ray, t_cylinder *cyl)
+		t_cylinder_hit hit_info)
 {
 	double	y;
 
-	y = tr_ray.origin.y + t * tr_ray.direction.y;
-	if (y > min && y < max)
-		add_intersection_cylinder(xs, t, cyl);
+	y = hit_info.tr_ray.origin.y + t * hit_info.tr_ray.direction.y;
+	if (y > hit_info.min && y < hit_info.max)
+		add_intersection_cylinder(xs, t, hit_info.cyl);
 }
 
 void	intersect_cylinder_sides(t_cylinder *cyl, t_ray tr_ray,
 		t_intersections *xs, double radius)
 {
-	t_coef	coeffs;
-	double	t0;
-	double	t1;
+	t_coef			coeffs;
+	t_cylinder_hit	hit_info;
+	double			t0;
+	double			t1;
 
 	coeffs = calculate_cylinder_coeffs(tr_ray, radius);
 	find_cylinder_roots(coeffs, &t0, &t1);
+	hit_info.min = cyl->minimum;
+	hit_info.max = cyl->maximum;
+	hit_info.tr_ray = tr_ray;
+	hit_info.cyl = cyl;
 	if (t0 != -1)
-		check_and_add_cylinder_intersection(xs, t0, cyl->minimum, cyl->maximum,
-			tr_ray, cyl);
+		check_and_add_cylinder_intersection(xs, t0, hit_info);
 	if (t1 != -1)
-		check_and_add_cylinder_intersection(xs, t1, cyl->minimum, cyl->maximum,
-			tr_ray, cyl);
+		check_and_add_cylinder_intersection(xs, t1, hit_info);
 }
 
 void	intersect_cylinder_caps(t_cylinder *cyl, t_ray tr_ray,
