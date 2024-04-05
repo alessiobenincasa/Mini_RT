@@ -43,26 +43,24 @@ void transfer_scene_data_to_world(t_scene_data *scene, t_world *world)
 
 void    render_scene(t_vars *vars, t_scene_data *scene)
 {
-    int x = 0; 
-    int y = 0;
-
 	t_world		world;
+    t_camera	cam;
+    int 		x = 0; 
+    int 		y = -1;
+
+	world = world_init();
     transfer_scene_data_to_world(scene, &world);
-    
-    t_camera cam = prepare_camera(scene->camera);
-    
-    while (y < HEIGHT)
+	cam = prepare_camera(scene->camera);
+    while (++y < HEIGHT)
     {
-        x = 0;
-        while (x < WIDTH)
+        x = -1;
+        while (++x < WIDTH)
         {
             t_ray r = ray_for_pixel(cam, x, y);
 			t_color color = color_at(world, r);
 			int final_color = convert_color_to_int(color);
 			my_mlx_pixel_put(vars, x, y, final_color);
-            x++;
         }
-        y++;
     }
     printf("Finished\n");
 }
@@ -113,6 +111,7 @@ int	main(int ac, char **av)
 
     mlx_hook(vars.win, DestroyNotify, StructureNotifyMask, handle_close, &vars);
     mlx_key_hook(vars.win, key_hook, &vars);
+
     render_scene(&vars, &scene_data);
 
     mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);

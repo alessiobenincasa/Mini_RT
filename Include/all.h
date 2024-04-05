@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 16:29:49 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 09:30:57 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,17 +59,17 @@ typedef struct s_material		t_material;
 typedef struct s_matrix			t_matrix;
 typedef struct s_object			t_object;
 typedef union s_object_union	t_object_union;
+typedef struct s_pattern		t_pattern;
 typedef struct s_plane			t_plane;
 typedef struct s_ray			t_ray;
 typedef struct s_scene_data		t_scene_data;
 typedef struct s_scene_state	t_scene_state;
 typedef struct s_sphere			t_sphere;
+typedef struct s_texture		t_texture;
 typedef struct s_tuple			t_tuple;
 typedef struct s_vector			t_vector;
 typedef struct s_vars			t_vars;
 typedef struct s_world			t_world;
-typedef struct s_texture		t_texture;
-typedef struct s_pattern		t_pattern;
 
 // todo               ~~~     Tuples 	 ~~~				 	*//
 typedef struct s_tuple

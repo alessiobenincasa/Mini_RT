@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 13:58:32 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/04 10:26:06 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 09:37:15 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ typedef struct s_comps
 }					t_comps;
 
 // todo               ~~~    World Init 	~~~                  *//
-t_world				world(void);
+t_world				world_init(void);
+int					no_world_light(t_light l);
 
 // todo               ~~~    World colors 	~~~                  *//
 t_intersections		intersect_world(t_world *world, t_ray r);

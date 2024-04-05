@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/04 11:24:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 09:40:59 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,16 @@ typedef struct s_lustre
 	float		refl_eyev;
 }				t_lustre;
 
-t_lustre	lustre_init(t_material m, t_tuple point, t_color intensity)
+t_lustre	lustre_init(t_material m, t_tuple point, t_light light)
 {
 	t_lustre	l;
 	t_color		color_at_point;
 
 	color_at_point = get_color_at_point(m, point);
-	l.eff = multiply_colors(color_at_point, intensity);
+	if (no_world_light(light))
+		l.eff = color_at_point;
+	else
+		l.eff = multiply_colors(color_at_point, light.intensity);
 	l.amb = mult_clr_sclr(l.eff, m.ambient);
 	l.diff = color(0, 0, 0);
 	l.spec = color(0, 0, 0);
@@ -77,10 +80,10 @@ t_color	lighting(t_material m, t_light light, t_comps comps, int in_shadow)
 {
 	t_lustre	l;
 	t_color		total_light;
-
-	l = lustre_init(m, comps.point, light.intensity);
+	
+	l = lustre_init(m, comps.point, light);
 	total_light = add_three_colors(l.amb, l.diff, l.spec);
-	if (in_shadow)
+	if (in_shadow || no_world_light(light))
 		return (total_light);
 	l.lightv = normalize(subtract_tuples(light.position, comps.point));
 	l.norm_light = dot(l.lightv, comps.normalv);

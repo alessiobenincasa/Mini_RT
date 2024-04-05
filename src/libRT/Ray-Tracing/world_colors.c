@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/04 10:20:39 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/05 09:36:57 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,13 @@ t_color shade_hit(t_world world, t_comps comps)
 	int			in_shadow;
 	t_list		*current_light;
 
+	total_light = color(0,0,0);
 	material = extract_material_comps(comps);
+	if (no_world_light(world.light))
+	{
+		total_light = lighting(material, world.light, comps, 0);
+		return (total_light);
+	}
 	in_shadow = is_shadowed(world, comps.over_point, world.light.position);
 	total_light = lighting(material, world.light, comps, in_shadow);
 	current_light = world.extra_lights;
