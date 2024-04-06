@@ -3,52 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   matrix_utility.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/06 10:03:41 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 11:47:51 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.h"
 
-t_matrix	submatrix(t_matrix matrix, int remove_row, int remove_col);
-float		minor_matrix(t_matrix matrix, int row, int col);
-float		cofactor(t_matrix matrix, int row, int col);
-float		determinant(t_matrix M);
+t_matrix			submatrix(t_matrix matrix, int remove_row, int remove_col);
+float				minor_matrix(t_matrix matrix, int row, int col);
+float				cofactor(t_matrix matrix, int row, int col);
+float				determinant(t_matrix M);
 
 t_matrix	submatrix(t_matrix matrix, int remove_row, int remove_col)
 {
 	t_matrix	sub;
-	int			i = 0, sub_i;
-	int			j = 0, sub_j;
 
 	sub.rows = matrix.rows - 1;
 	sub.cols = matrix.cols - 1;
 	sub.elements = ft_calloc(sub.rows * sub.cols, sizeof(float));
 	if (!sub.elements)
 		exit(EXIT_FAILURE);
-	i = 0, sub_i = 0;
-	while (i < matrix.rows)
-	{
-		if (i != remove_row)
-		{
-			j = 0, sub_j = 0;
-			while (j < matrix.cols)
-			{
-				if (j != remove_col)
-				{
-					sub.elements[sub_i * sub.cols + sub_j] = matrix.elements[i
-						* matrix.cols + j];
-					sub_j++;
-				}
-				j++;
-			}
-			sub_i++;
-		}
-		i++;
-	}
-	// register_matrix(sub);
+	copy_to_submatrix(&sub, matrix, remove_row, remove_col);
 	return (sub);
 }
 
@@ -62,6 +40,7 @@ float	minor_matrix(t_matrix matrix, int row, int col)
 	free(sub.elements);
 	return (det);
 }
+
 float	cofactor(t_matrix matrix, int row, int col)
 {
 	float	min;

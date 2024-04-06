@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   matrices.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 13:29:41 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/06 11:35:49 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 11:33:24 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,16 @@
 # define MATRICES_H
 
 # include "all.h"
+
+typedef struct s_shear_params
+{
+	float	xy;
+	float	xz;
+	float	yx;
+	float	yz;
+	float	zx;
+	float	zy;
+}			t_shear_params;
 
 //*---------------------- 🧮 Matrices 🧮 ----------------------*//
 
@@ -27,8 +37,7 @@ t_matrix	transpose_matrix(t_matrix matrix);
 // todo             ~~~ Matrix transformation ~~~				*//
 t_matrix	translation(float x, float y, float z);
 t_matrix	scaling(float x, float y, float z);
-t_matrix	shearing(float xy, float xz, float yx, float yz, float zx,
-				float zy);
+t_matrix	shearing(t_shear_params params);
 
 // todo              ~~~ Matrix rotations		~~~				*//
 t_matrix	rotation_x(float radians);

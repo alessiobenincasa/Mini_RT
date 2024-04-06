@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   all.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
 /*   Updated: 2024/04/06 11:53:04 by svolodin         ###   ########.fr       */
@@ -42,13 +42,15 @@
 # include "shapes.h"
 # include "world.h"
 
+
 //*-------------------- 📖 𝘿𝙀𝙁𝙄𝙉𝙄𝙏𝙄𝙊𝙉𝙎 📖 ---------------------*//
 
-# define WIDTH 25
-# define HEIGHT 25
+# define WIDTH 250
+# define HEIGHT 250
 # define MLX_ERROR 1
 # define EPSILON 0.00001
 # define PI 3.14159265358979323846
+# define HALF (WIDTH / 2)
 # define PIXEL_SIZE 1
 # define WALL_Z 10
 
@@ -56,6 +58,31 @@
 # define GREEN "\x1B[32m"
 # define RED "\x1B[31m"
 # define RESET "\x1B[0m"
+
+// todo               ~~~     Tuples 		~~~						*//
+typedef struct s_tuple
+{
+	double x, y, z, w;
+}								t_tuple;
+
+// todo               ~~~     Matrix 		~~~						*//
+typedef struct s_matrix
+{
+	int							rows;
+	int							cols;
+	float						*elements;
+
+}								t_matrix;
+
+typedef struct s_submatrix_info
+{
+	t_matrix					*sub;
+	const t_matrix				*original;
+	int							remove_row;
+	int							remove_col;
+	int							sub_i;
+	int							sub_j;
+}								t_submatrix_info;
 
 //*----------------------- ❔ Utils ❔ ----------------------*//
 
@@ -69,6 +96,18 @@ void							intersect_cylinder_caps(t_cylinder *cyl,
 									t_ray tr_ray, t_intersections *xs,
 									double radius);
 void							register_matrix(t_matrix m);
+void							copy_to_submatrix(t_matrix *sub,
+									t_matrix matrix, int remove_row,
+									int remove_col);
+void							process_submatrix_row(t_submatrix_info *info,
+									int i);
+t_submatrix_info				init_submatrix_info(t_matrix *sub,
+									const t_matrix *original, int remove_row,
+									int remove_col);
+void							transpose_elements(t_matrix *transposed,
+									const t_matrix *matrix);
+void							set_shear_params(t_matrix *result,
+									t_shear_params params);
 
 typedef struct s_matrix_registry
 {
@@ -78,5 +117,14 @@ typedef struct s_matrix_registry
 }								t_matrix_registry;
 
 extern t_matrix_registry		g_matrix_registry;
+
+typedef struct s_mult_matrices_info
+{
+	t_matrix					*a;
+	t_matrix					*b;
+	t_matrix					*c;
+	int							i;
+	int							j;
+}								t_mult_matrices_info;
 
 #endif

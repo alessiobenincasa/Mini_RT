@@ -1,6 +1,6 @@
 NAME 				= miniRT
 CC 					= cc
-CFLAGS 				= -Wall -Wextra -Werror -g3
+CFLAGS 				= -Wall -Wextra -Werror
 
 INCLUDES 			= -IInclude -IInclude/libft/srcs/includes -Iminilibx
 

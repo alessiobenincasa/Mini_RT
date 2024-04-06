@@ -6,7 +6,7 @@
 /*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/06 07:33:41 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/04/06 12:05:01 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ float	get_element(t_matrix m, int row, int col)
 		return (m.elements[row * m.cols + col]);
 	return (0.0f);
 }
+
 int	matrices_equal(t_matrix a, t_matrix b)
 {
 	int	i;
@@ -64,33 +65,17 @@ void	free_matrix(t_matrix *m)
 t_matrix	transpose_matrix(t_matrix matrix)
 {
 	t_matrix	transposed;
-	int			i;
-	int			j;
-	int			originalIndex;
-	int			transposedIndex;
 
 	transposed.rows = matrix.cols;
 	transposed.cols = matrix.rows;
-	transposed.elements = (float *)ft_calloc(transposed.rows * transposed.cols,
+	transposed.elements = (float *)ft_calloc(matrix.cols * matrix.rows,
 			sizeof(float));
 	if (transposed.elements == NULL)
 	{
 		perror("Memory allocation error for transposed matrix");
 		exit(EXIT_FAILURE);
 	}
-	i = 0;
-	while (i < matrix.rows)
-	{
-		j = 0;
-		while (j < matrix.cols)
-		{
-			originalIndex = i * matrix.cols + j;
-			transposedIndex = j * transposed.cols + i;
-			transposed.elements[transposedIndex] = matrix.elements[originalIndex];
-			j++;
-		}
-		i++;
-	}
+	transpose_elements(&transposed, &matrix);
 	register_matrix(transposed);
 	return (transposed);
 }
