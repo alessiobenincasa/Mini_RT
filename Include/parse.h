@@ -6,11 +6,14 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 13:20:54 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/06 10:55:23 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 11:35:55 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "all.h"
+#ifndef PARSE_H
+# define PARSE_H
+
+# include "all.h"
 
 //*----------------------- 👁️ 𝙋𝘼𝙍𝙎𝙀 👁️ -----------------------*//
 
@@ -56,6 +59,8 @@ int				skip_spaces(char *str);
 char			*strdup_upto_whitespace(const char *s);
 void			get_next_value(char **value, char **line);
 t_matrix		ro_tr(t_tuple dir, t_tuple cent, t_matrix trans);
+void			transfer_scene_data_to_world(t_scene_data *scene,
+					t_world *world);
 
 // todo              ~~~   get shapes   ~~~                  *//
 t_sphere		*get_sphere_data(char *line, double amb, void *mlx);
@@ -102,3 +107,5 @@ void			print_plane(const t_plane *plane);
 void			print_cylinder(const t_cylinder *cylinder);
 void			print_cone(const t_cone *cone);
 void			print_shapes(t_list *list);
+
+#endif

@@ -10,7 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "all.h"
+#ifndef MATRICES_H
+# define MATRICES_H
+
+# include "all.h"
 
 typedef struct s_shear_params
 {
@@ -53,3 +56,5 @@ t_tuple		mult_mat_tup(t_matrix m, t_tuple t);
 t_matrix	inverse(t_matrix A);
 int			is_invertible(t_matrix A);
 t_matrix	identity_matrix(void);
+
+#endif

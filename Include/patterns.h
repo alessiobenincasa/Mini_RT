@@ -6,11 +6,14 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 14:00:31 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 11:35:58 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "all.h"
+#ifndef PATTERNS_H
+# define PATTERNS_H
+
+# include "all.h"
 
 //*--------------------------  Pattern  --------------------------*//
 
@@ -38,3 +41,5 @@ typedef struct s_texture
 t_texture	*load_texture(void *mlx_ptr, char *filepath);
 void		point_on_sphere_to_uv(t_tuple point, double *u, double *v);
 t_color		texture_img_get_pxl(t_texture *texture, int x, int y);
+
+#endif

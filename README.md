@@ -1,21 +1,38 @@
-MiniRT (Mini RayTracer) est un projet de programmation graphique qui vise à créer un moteur de rendu 3D simplifié en utilisant le ray tracing. Ce projet est écrit en C et utilise la bibliothèque MiniLibX pour l'affichage, offrant une introduction pratique aux principes de base de la synthèse d'images par lancer de rayons et à la programmation graphique. Le but est de générer des images photoréalistes en traçant le parcours de la lumière et en simulant ses interactions avec des objets virtuels dans une scène 3D.
-Caractéristiques principales :
+# Project Summary: miniRT (Our First RayTracer)
 
-    Rendu 3D basé sur le ray tracing : utilise l'algorithme de lancer de rayons pour calculer les couleurs des pixels en fonction de la lumière et des matériaux dans la scène.
-    Gestion de différentes formes géométriques : supporte le rendu de sphères, plans et cylindres comme objets primitifs de la scène.
-    Illumination et ombres : intègre un modèle d'illumination simple pour simuler les effets de lumière diffuse, spéculaire et ambiante, ainsi que les ombres portées par les objets.
-    Gestion de la caméra : permet de positionner et d'orienter la caméra dans la scène pour contrôler la perspective de vue.
-    Chargement de scène depuis un fichier : lit une description textuelle de la scène à partir d'un fichier .rt, qui spécifie les objets, leurs propriétés et la configuration de la caméra et de l'éclairage.
+## Overview
 
-Technologies utilisées :
+The miniRT project introduced Ray Tracing for rendering Computer-Generated Images (CGIs). Such a practical project will force us to implement mathematical and physical formulas, thus simplifying the complexity that goes into computer graphics.
 
-    Langage C : choix du C pour sa proximité avec le système, ses performances et son contrôle sur la mémoire, essentiels pour un moteur de rendu.
-    MiniLibX : une bibliothèque graphique développée à l'École 42, utilisée pour créer des fenêtres et dessiner des pixels à l'écran sous des environnements Unix/Linux.
+## Key Skills Acquired
 
-Défis et apprentissages :
+### Programming Language
+- Proficient in **C programming**, adhering to strict coding standards and best practices.
 
-    Mathématiques pour la 3D : approfondissement des connaissances en géométrie 3D, vecteurs et algèbre linéaire nécessaires pour le calcul des intersections rayon-objet et des effets d'illumination.
-    Optimisation des performances : exploration des techniques d'optimisation pour améliorer la vitesse de rendu, essentielle dans le ray tracing qui est naturellement gourmand en calculs.
-    Compréhension des principes de la lumière : étude des interactions entre la lumière et les matériaux pour produire des images réalistes.
+### Graphics Programming
+Gained hands-on experience with **Ray Tracing**, and how it works in creating highly realistic images.
+I was able to learn window management using `miniLibX` fluently with graphical windows, which includes handling window resizing and ensuring content adaptability of the entire window or
 
-MiniRT représente une étape fondamentale dans l'apprentissage de la synthèse d'images et de la programmation graphique, fournissant une base solide pour explorer des techniques de rendu plus avancées.
+### Mathematics and Physics Application
+These applications utilized sophisticated mathematical and physical formulas implemented in software for simulating realistic lighting and shadows, thereby giving more visual realism for computer-generated images.
+- Mastered the basics of geometric shapes rendering, including planes, spheres, and cylinders.
+
+### Software Development Best Practices
+Memory management in C has been understood, implemented, and ensured without any memory leaks, so as to make effective and efficient resource utilization.
+- Used **Makefile** in order to compile the source in this project, understanding the process of compilation, flags, and how important it is to have a clean code compilation practice.
+
+### Problem-Solving
+Improve problems-solving skills, develop and implement Ray Tracing algorithms, and investigate complex debugging issues of 3D rendering.
+
+### Team Collaboration
+
+Worked in a very productive team setting, learning how to integrate the different portions of the project seamlessly and support one another through tough aspects of the project.
+
+## Advanced Features and Bonuses
+- **Phong Reflection Model**: Added Specular Reflection, for the full Phong reflection model, giving it some way toward realistic images.
+- **Texture and Light Management**: Introduced texture disruptions such as checkerboards and managed colored and multi-spot lights and bumped map textures to improve the visual quality of images.
+- **Geometric Complexity**: This further advanced the already complex nature of our project: having more geometric objects in the scene, like cones, among others, to help the viewer understand how to render 3D objects better.
+
+## Conclusion
+It has given us great experience working with the miniRT project—much more than a strong foundation in graphics programming, mathematics, and team collaboration. And we would like very much to apply it in practice in the most useful for business and innovations for customers field of computer graphics at work.
+

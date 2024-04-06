@@ -6,11 +6,14 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 13:31:38 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:06:26 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 11:38:38 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "all.h"
+#ifndef GEOMETRY_H
+# define GEOMETRY_H
+
+# include "all.h"
 
 //*---------------------- 📐 Geometry 📐 ----------------------*//
 
@@ -36,8 +39,12 @@ double		dot(t_tuple a, t_tuple b);
 // todo               ~~~     Vectors     ~~~					*//
 typedef struct s_vector
 {
-	double x, y, z;
+	double	x;
+	double	y;
+	double	z;
 }			t_vector;
 
 t_vector	cross(t_tuple v, t_tuple w);
 t_vector	tuple_to_vector(t_tuple t);
+
+#endif

@@ -6,11 +6,14 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 13:53:07 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:03:34 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 11:36:13 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "all.h"
+#ifndef SHAPES_H
+# define SHAPES_H
+
+# include "all.h"
 
 //*----------------------- 🌀 Shapes 🌀 -----------------------*//
 
@@ -90,3 +93,5 @@ t_tuple			normal_at_cone(t_cone cone, t_tuple p);
 
 // todo               ~~~     Utils 	  ~~~                  *//
 t_ray			transform_ray(t_ray r, t_matrix id_matrix);
+
+#endif

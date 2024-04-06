@@ -6,11 +6,14 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 13:58:32 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/05 13:29:24 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 11:34:38 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "all.h"
+#ifndef WORLD_H
+# define WORLD_H
+
+# include "all.h"
 
 //*------------------------ 🌍 World 🌍 -----------------------*//
 typedef struct s_object
@@ -55,3 +58,5 @@ t_comps				comps_init(void);
 // todo               ~~~    Captain Hook 	~~~                  *//
 int					handle_close(t_vars *vars);
 int					key_hook(int keycode, t_vars *vars);
+
+#endif
