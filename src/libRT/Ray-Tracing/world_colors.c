@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   world_colors.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/05 10:22:28 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 08:05:30 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,11 @@ t_intersections intersect_world(t_world *world, t_ray r)
 		j = -1;
 		while (++j < temp_xs.count)
             add_intersection(&xs, temp_xs.intersections[j]);
+		if (temp_xs.intersections != NULL)
+		{
+            free(temp_xs.intersections);
+            temp_xs.intersections = NULL;
+		}
         current = current->next;
     }
 
@@ -70,6 +75,7 @@ t_color	color_at(t_world w, t_ray r)
 		return (color(0, 0, 0));
 	comps = prepare_computations(*i, r);
 	result = shade_hit(w, comps);
+	free(xs.intersections);
 	return (result);
 }
 
