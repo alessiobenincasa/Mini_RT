@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   matrix_advanced_operations.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/06 07:33:09 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/04/06 10:01:04 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ t_matrix	multiply_matrices(t_matrix a, t_matrix b)
 		}
 		i++;
 	}
-	register_matrix(c);
 	return (c);
 }
 

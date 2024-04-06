@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 13:20:54 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/05 13:52:12 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 10:13:00 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ int				add_extra_light(t_scene_data *scene_data, char *line);
 
 // todo              ~~~     frees      ~~~                  *//
 void			free_scene_data(t_scene_data *scene);
+void			free_s_motif(t_sphere *s, void *mlx_ptr);
 void			free_s(t_sphere *s);
 void			free_p(t_plane *p);
 void			free_cyl(t_cylinder *c);

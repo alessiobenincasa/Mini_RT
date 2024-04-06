@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   matrix_rotations.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/06 07:36:59 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/04/06 10:05:25 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ t_matrix rotation_z(float radians)
     m.elements[1 * m.cols + 1] = cosf(radians);
     m.elements[2 * m.cols + 2] = 1;
     m.elements[3 * m.cols + 3] = 1;
-    register_matrix(m);
 
-    return m;
+    return (m);
 }

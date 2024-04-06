@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   matrix_utility.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/06 07:37:17 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/04/06 10:03:41 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ t_matrix	submatrix(t_matrix matrix, int remove_row, int remove_col)
 		}
 		i++;
 	}
-	register_matrix(sub);
+	// register_matrix(sub);
 	return (sub);
 }
 
