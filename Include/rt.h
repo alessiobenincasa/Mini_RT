@@ -6,11 +6,14 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 13:32:25 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/05 09:20:44 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 11:36:07 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "all.h"
+#ifndef RT_H
+# define RT_H
+
+# include "all.h"
 
 //*--------------------- 🪩 Ray-Tracing 🪩 --------------------*//
 
@@ -96,3 +99,5 @@ typedef struct s_ambient
 	double			ratio;
 	t_color			color;
 }					t_ambient;
+
+#endif

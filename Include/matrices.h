@@ -6,11 +6,14 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 13:29:41 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/05 09:08:44 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 11:35:49 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "all.h"
+#ifndef MATRICES_H
+# define MATRICES_H
+
+# include "all.h"
 
 //*---------------------- 🧮 Matrices 🧮 ----------------------*//
 
@@ -44,3 +47,5 @@ t_tuple		mult_mat_tup(t_matrix m, t_tuple t);
 t_matrix	inverse(t_matrix A);
 int			is_invertible(t_matrix A);
 t_matrix	identity_matrix(void);
+
+#endif

@@ -6,11 +6,14 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 13:25:27 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/04 11:25:18 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 11:35:39 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "all.h"
+#ifndef COLORS_H
+# define COLORS_H
+
+# include "all.h"
 
 //*----------------------- 🎨 Colors 🎨 -----------------------*//
 
@@ -35,3 +38,5 @@ t_color		multiply_colors(t_color c1, t_color c2);
 t_color		add_three_colors(t_color one, t_color two, t_color three);
 
 int			is_shadowed(t_world world, t_tuple point, t_tuple light_pos);
+
+#endif

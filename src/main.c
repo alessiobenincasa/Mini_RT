@@ -6,26 +6,18 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/06 10:45:37 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 11:17:55 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.h"
-
-void	transfer_scene_data_to_world(t_scene_data *scene, t_world *world)
-{
-	world->objects = scene->shapes;
-	world->object_count = scene->shape_count;
-	world->extra_lights = scene->extra_lights;
-	if (scene->light)
-		world->light = *(scene->light);
-}
 
 typedef struct s_render
 {
 	int		final_color;
 	int		x;
 	int		y;
+	t_ray	r;
 }			t_render;
 
 t_render	set_render_values(void)
@@ -35,6 +27,7 @@ t_render	set_render_values(void)
 	render.final_color = 0;
 	render.x = -1;
 	render.y = -1;
+	render.r = ray(point(0, 0, 0), point(1, 1, 1));
 	return (render);
 }
 
@@ -43,7 +36,6 @@ void	render_scene(t_vars *vars, t_scene_data *scene)
 	t_render	render;
 	t_world		world;
 	t_camera	cam;
-	t_ray		r;
 	t_color		pix_color;
 
 	render = set_render_values();
@@ -57,8 +49,8 @@ void	render_scene(t_vars *vars, t_scene_data *scene)
 		render.x = -1;
 		while (++(render.x) < WIDTH)
 		{
-			r = ray_for_pixel(cam, render.x, render.y);
-			pix_color = color_at(world, r);
+			render.r = ray_for_pixel(cam, render.x, render.y);
+			pix_color = color_at(world, render.r);
 			render.final_color = convert_color_to_int(pix_color);
 			my_mlx_pixel_put(vars, render.x, render.y, render.final_color);
 		}

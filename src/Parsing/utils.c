@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:44:50 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/06 10:55:13 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 11:18:01 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,13 @@ void	get_next_value(char **value, char **line)
 			free(*value);
 		*value = NULL;
 	}
+}
+
+void	transfer_scene_data_to_world(t_scene_data *scene, t_world *world)
+{
+	world->objects = scene->shapes;
+	world->object_count = scene->shape_count;
+	world->extra_lights = scene->extra_lights;
+	if (scene->light)
+		world->light = *(scene->light);
 }

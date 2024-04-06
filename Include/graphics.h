@@ -6,11 +6,14 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 13:55:10 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:33:49 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 11:35:46 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "all.h"
+#ifndef GRAPHICS_H
+# define GRAPHICS_H
+
+# include "all.h"
 
 //*---------------------- 🖥️ Graphics 🖥️ ----------------------*//
 
@@ -33,3 +36,5 @@ typedef struct s_vars
 }					t_vars;
 
 void				my_mlx_pixel_put(t_vars *vars, int x, int y, int color);
+
+#endif
