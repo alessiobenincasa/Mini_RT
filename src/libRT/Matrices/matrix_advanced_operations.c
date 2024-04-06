@@ -3,20 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   matrix_advanced_operations.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/06 10:01:04 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 11:39:23 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.h"
 
-t_matrix	multiply_matrices(t_matrix a, t_matrix b);
-t_tuple		mult_mat_tup(t_matrix m, t_tuple t);
-t_matrix	inverse(t_matrix A);
-int			is_invertible(t_matrix A);
-t_matrix	identity_matrix(void);
+t_matrix				multiply_matrices(t_matrix a, t_matrix b);
+t_tuple					mult_mat_tup(t_matrix m, t_tuple t);
 
 void	register_matrix(t_matrix m)
 {
@@ -25,99 +22,81 @@ void	register_matrix(t_matrix m)
 
 	if (g_matrix_registry.count >= g_matrix_registry.capacity)
 	{
-		new_capacity = g_matrix_registry.capacity == 0 ? 1 : g_matrix_registry.capacity
-			* 2;
+		if (g_matrix_registry.capacity == 0)
+			new_capacity = 1;
+		else
+			new_capacity = g_matrix_registry.capacity * 2;
 		new_matrices = realloc(g_matrix_registry.matrices, new_capacity
 				* sizeof(t_matrix));
 		if (!new_matrices)
-		{
 			exit(EXIT_FAILURE);
-		}
 		g_matrix_registry.matrices = new_matrices;
 		g_matrix_registry.capacity = new_capacity;
 	}
 	g_matrix_registry.matrices[g_matrix_registry.count++] = m;
 }
+
+t_mult_matrices_info	init_mult_matrices_info(t_matrix *a, t_matrix *b,
+		t_matrix *c)
+{
+	t_mult_matrices_info	info;
+
+	info.a = a;
+	info.b = b;
+	info.c = c;
+	info.i = 0;
+	info.j = 0;
+	return (info);
+}
+
+void	calculate_cell_value(t_mult_matrices_info *info)
+{
+	float	sum;
+	int		k;
+
+	sum = 0;
+	k = 0;
+	while (k < info->a->cols)
+	{
+		sum += info->a->elements[info->i * info->a->cols + k]
+			* info->b->elements[k * info->b->cols + info->j];
+		k++;
+	}
+	info->c->elements[info->i * info->c->cols + info->j] = sum;
+}
+
 t_matrix	multiply_matrices(t_matrix a, t_matrix b)
 {
-	t_matrix	c;
-	int			i;
-	int			j;
-	float		sum;
-	int			k;
+	t_matrix				c;
+	t_mult_matrices_info	info;
 
 	if (a.cols != b.rows)
 		return (create_matrix(0, 0, NULL));
 	c = create_matrix(a.rows, b.cols, NULL);
-	i = 0;
-	while (i < a.rows)
+	info = init_mult_matrices_info(&a, &b, &c);
+	while (info.i < a.rows)
 	{
-		j = 0;
-		while (j < b.cols)
+		info.j = 0;
+		while (info.j < b.cols)
 		{
-			sum = 0;
-			k = 0;
-			while (k < a.cols)
-			{
-				sum += a.elements[i * a.cols + k] * b.elements[k * b.cols + j];
-				k++;
-			}
-			c.elements[i * c.cols + j] = sum;
-			j++;
+			calculate_cell_value(&info);
+			info.j++;
 		}
-		i++;
+		info.i++;
 	}
 	return (c);
 }
 
 t_tuple	mult_mat_tup(t_matrix m, t_tuple t)
 {
-	float		elements[4] = {t.x, t.y, t.z, t.w};
+	float		elements[4];
 	t_matrix	result;
 
+	elements[0] = t.x;
+	elements[1] = t.y;
+	elements[2] = t.z;
+	elements[3] = t.w;
 	result = multiply_matrices(m, create_matrix(4, 1, elements));
 	return (tuple(result.elements[0], result.elements[1], result.elements[2],
 			result.elements[3]));
-}
-
-t_matrix	inverse(t_matrix A)
-{
-	float		det;
-	t_matrix	B;
-	int			i;
-	int			j;
-	float		cof;
-
-	det = determinant(A);
-	if (det == 0)
-		exit(EXIT_FAILURE);
-	B.rows = A.rows;
-	B.cols = A.cols;
-	B.elements = ft_calloc(A.rows * A.cols, sizeof(float));
-	i = 0;
-	while (i < A.rows)
-	{
-		j = 0;
-		while (j < A.cols)
-		{
-			cof = cofactor(A, i, j);
-			B.elements[j * B.cols + i] = cof / det;
-			j++;
-		}
-		i++;
-	}
-	register_matrix(B);
-	return (B);
-}
-
-int	is_invertible(t_matrix A)
-{
-	return (determinant(A) != 0);
-}
-
-t_matrix	identity_matrix(void)
-{
-	float	elements[16] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
-
-	return (create_matrix(4, 4, elements));
 }
