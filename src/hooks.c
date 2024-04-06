@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hooks.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 13:28:39 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/06 10:15:24 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 12:35:21 by albeninc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@ t_matrix_registry	g_matrix_registry;
 
 int	handle_close(t_vars *vars)
 {
+	size_t	i;
+
+	i = -1;
 	free_scene_data(vars->scene);
 	if (vars->img.img_ptr)
 		mlx_destroy_image(vars->mlx, vars->img.img_ptr);
@@ -30,7 +33,7 @@ int	handle_close(t_vars *vars)
 		free(vars->mlx);
 	}
 	vars->mlx = NULL;
-	for (size_t i = 0; i < g_matrix_registry.count; i++)
+	while (++i < g_matrix_registry.count)
 	{
 		free(g_matrix_registry.matrices[i].elements);
 	}
