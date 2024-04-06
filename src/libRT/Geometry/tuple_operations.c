@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/05 12:36:32 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 10:47:08 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_tuple	multiply_tuple_scalar(t_tuple a, double scalar)
 {
 	t_tuple	result;
 
-	result = point(0,0,0);
+	result = point(0, 0, 0);
 	result.x = a.x * scalar;
 	result.y = a.y * scalar;
 	result.z = a.z * scalar;
@@ -34,7 +34,7 @@ t_tuple	divide_tuple_scalar(t_tuple a, double scalar)
 {
 	t_tuple	result;
 
-	result = point(0,0,0);
+	result = point(0, 0, 0);
 	result.x = a.x / scalar;
 	result.y = a.y / scalar;
 	result.z = a.z / scalar;
@@ -47,7 +47,7 @@ t_tuple	normalize(t_tuple v)
 	double	magnitude;
 	t_tuple	normalized_vector;
 
-	normalized_vector = vector(0,0,0);
+	normalized_vector = vector(0, 0, 0);
 	magnitude = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 	if (magnitude == 0.0)
 		return (v);

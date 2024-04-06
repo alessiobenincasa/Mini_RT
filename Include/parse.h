@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 13:20:54 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/06 10:13:00 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 10:55:23 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ int				get_float_val(char *value, char **line, double *save);
 int				get_char_val(char *value, char **line, char **save);
 
 // todo              ~~~     utils      ~~~                  *//
-double			ft_atof(const char *str);
 int				skip_spaces(char *str);
 char			*strdup_upto_whitespace(const char *s);
 void			get_next_value(char **value, char **line);

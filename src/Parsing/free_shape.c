@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 14:00:59 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/06 10:16:45 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 10:58:26 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	free_p(t_plane *p)
 {
 	free(p);
 }
+
 void	free_cyl(t_cylinder *c)
 {
 	free(c);

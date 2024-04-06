@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 09:40:41 by svolodin          #+#    #+#             */
-/*   Updated: 2023/12/17 16:31:52 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 10:51:36 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ static char	*make_line(char *stat_buf)
 	while (stat_buf[i] && stat_buf[i] != '\n')
 		i++;
 	line = ft_calloc(i + 2, sizeof(char));
+	if (!line)
+		return (NULL);
 	i = -1;
 	while (stat_buf[++i] && stat_buf[i] != '\n')
 		line[i] = stat_buf[i];
@@ -73,6 +75,8 @@ static char	*ft_read(int fd, char *stat_buf)
 	if (!stat_buf)
 		stat_buf = ft_calloc(1, sizeof(char));
 	temp = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	if (!temp)
+		return (NULL);
 	bytes_size = 1;
 	while (bytes_size > 0)
 	{

@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 15:28:23 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/05 09:40:59 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 10:43:43 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ t_color	lighting(t_material m, t_light light, t_comps comps, int in_shadow)
 {
 	t_lustre	l;
 	t_color		total_light;
-	
+
 	l = lustre_init(m, comps.point, light);
 	total_light = add_three_colors(l.amb, l.diff, l.spec);
 	if (in_shadow || no_world_light(light))

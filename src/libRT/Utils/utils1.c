@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:07:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/03 14:08:56 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 10:44:40 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,4 +16,3 @@ int	equal(double a, double b)
 {
 	return (fabs(a - b) < EPSILON);
 }
-

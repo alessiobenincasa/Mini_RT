@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 08:55:03 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/05 08:59:07 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 11:02:04 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	print_plane(const t_plane *p)
 	printf("---------------\n");
 	printf("\033[0m");
 }
+
 void	print_cylinder(const t_cylinder *cyl)
 {
 	printf("\033[36m");

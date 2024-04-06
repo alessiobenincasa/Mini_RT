@@ -6,15 +6,11 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/05 12:38:42 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 10:24:46 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.h"
-
-t_color	color(float red, float green, float blue);
-int		convert_color_to_int(t_color color);
-void	set_color(t_color *color, float red, float green, float blue);
 
 t_color	color(float red, float green, float blue)
 {

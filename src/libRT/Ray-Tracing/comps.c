@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 10:20:40 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/05 10:26:03 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 10:43:17 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ t_comps	comps_init(void)
 
 	c.t = 0.0;
 	c.type = NONE;
-	c.point = point(0,0,0);
-	c.eyev = vector(0,0,0);
-	c.normalv = vector(0,0,0);
-	c.over_point = point(0,0,0);
+	c.point = point(0, 0, 0);
+	c.eyev = vector(0, 0, 0);
+	c.normalv = vector(0, 0, 0);
+	c.over_point = point(0, 0, 0);
 	c.inside = 0;
 	return (c);
 }
@@ -52,12 +52,12 @@ t_comps	prepare_computations(t_intersection i, t_ray r)
 	comps.type = i.type;
 	comps.object = i.object;
 	comps.normalv = get_normalv(comps.type, &comps.object, comps.point);
-
 	if (dot(comps.normalv, comps.eyev) < -EPSILON)
 	{
 		comps.inside = 1;
 		comps.normalv = negate_tuple(comps.normalv);
 	}
-	comps.over_point = add_tuples(comps.point, multiply_tuple_scalar(comps.normalv, EPSILON));
+	comps.over_point = add_tuples(comps.point,
+			multiply_tuple_scalar(comps.normalv, EPSILON));
 	return (comps);
 }

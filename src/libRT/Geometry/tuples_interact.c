@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 11:01:51 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/04 09:15:16 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 10:47:23 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ t_tuple	subtract_tuples(t_tuple a, t_tuple b)
 	result.w = a.w - b.w;
 	return (result);
 }
+
 t_tuple	negate_tuple(t_tuple t)
 {
 	t_tuple	result;
@@ -67,6 +68,8 @@ int	tuple_equals(t_tuple a, t_tuple b)
 {
 	if (equal(a.x, b.x) && equal(a.y, b.y) && equal(a.z, b.z) && equal(a.w,
 			b.w))
+	{
 		return (1);
+	}
 	return (0);
 }

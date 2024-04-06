@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/06 10:19:44 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 10:24:07 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ void							intersect_cylinder_caps(t_cylinder *cyl,
 									t_ray tr_ray, t_intersections *xs,
 									double radius);
 void							register_matrix(t_matrix m);
+
 typedef struct s_matrix_registry
 {
 	t_matrix					*matrices;

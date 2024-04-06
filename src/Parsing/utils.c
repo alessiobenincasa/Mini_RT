@@ -6,48 +6,11 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:44:50 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/05 13:57:19 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/06 10:55:13 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.h"
-
-double	ft_atof(const char *str)
-{
-	double	result;
-	double	sign;
-	double	scale;
-
-	result = 0.0;
-	sign = 1.0;
-	scale = 1.0;
-	while (*str == ' ' || *str == '\t' || *str == '\n' || *str == '\v'
-		|| *str == '\f' || *str == '\r')
-		str++;
-	if (*str == '-')
-	{
-		sign = -1.0;
-		str++;
-	}
-	else if (*str == '+')
-		str++;
-	while (*str >= '0' && *str <= '9')
-	{
-		result = (result * 10.0) + (*str - '0');
-		str++;
-	}
-	if (*str == '.')
-	{
-		str++;
-		while (*str >= '0' && *str <= '9')
-		{
-			result = (result * 10.0) + (*str - '0');
-			scale *= 10.0;
-			str++;
-		}
-	}
-	return (sign * (result / scale));
-}
 
 char	*strdup_upto_whitespace(const char *s)
 {
@@ -79,6 +42,7 @@ int	skip_spaces(char *str)
 		i++;
 	return (i);
 }
+
 void	get_next_value(char **value, char **line)
 {
 	*value = strdup_upto_whitespace(*line);
