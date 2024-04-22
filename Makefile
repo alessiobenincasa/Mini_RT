@@ -2,15 +2,15 @@ NAME 				= miniRT
 CC 					= cc
 CFLAGS 				= -Wall -Wextra -Werror
 
-INCLUDES 			= -IInclude -IInclude/libft/srcs/includes -Iminilibx
+INCLUDES 			= -IInclude -IInclude/libft/srcs/includes -Iminilibx_macos
 
-LIB_MINILIBX 		= -Lminilibx -lmlx -lXext -lX11 -lm -lz
+LIB_MINILIBX 		= -Lminilibx_macos -lmlx -framework OpenGL -framework AppKit
 LIB_LIBFT 			= -LInclude/libft -lft
 
 SRCS_DIR			= ./src/
 OBJS_PATH			= ./objs/
 
-SRCS				= $(shell find $(SRCS_DIR) -name '*.c' ! -name 'unit-test.c')
+SRCS				= $(shell find $(SRCS_DIR) -name '*.c')
 OBJS				= $(SRCS:$(SRCS_DIR)%.c=$(OBJS_PATH)%.o)
 
 MAKEFLAGS 			+= --no-print-directory
@@ -31,12 +31,12 @@ $(OBJS_PATH)%.o: 	$(SRCS_DIR)%.c
 					@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 lib:
-					@make -C minilibx
+					@make -C minilibx_macos
 					@make -C Include/libft
 
 clean:
 					@echo "$(BOLD) [🗑️ ] $(YELLOW)$(REVERSED)Cleaning up$(RESET)"
-					@make -C minilibx clean
+					@make -C minilibx_macos clean
 					@make -C Include/libft clean
 					@echo "┗▷$(YELLOW)『Libraries cleaned』$(RESET)"
 					@rm -rf $(OBJS_PATH)

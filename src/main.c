@@ -6,7 +6,7 @@
 /*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 16:24:32 by albeninc          #+#    #+#             */
-/*   Updated: 2024/04/06 11:17:55 by svolodin         ###   ########.fr       */
+/*   Updated: 2024/04/21 10:28:13 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,15 +70,18 @@ int	main(int ac, char **av)
 			&vars.img.bits_per_pixel, &vars.img.line_length, &vars.img.endian);
 	vars.scene = NULL;
 	if (init_data(&scene_data, ac, av, vars.mlx) == NULL)
-		handle_close(&vars);
+	{
+		exit(EXIT_FAILURE);
+		// handle_close(&vars);
+	}
 	vars.scene = &scene_data;
 	scene_data.mlx = vars.mlx;
-	mlx_hook(vars.win, DestroyNotify, StructureNotifyMask, handle_close, &vars);
-	mlx_key_hook(vars.win, key_hook, &vars);
+	// mlx_hook(vars.win, DestroyNotify, StructureNotifyMask, handle_close, &vars);
+	// mlx_key_hook(vars.win, key_hook, &vars);
 	print_header();
 	render_scene(&vars, &scene_data);
 	mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img_ptr, 0, 0);
 	mlx_loop(vars.mlx);
-	handle_close(&vars);
+	// handle_close(&vars);
 	return (0);
 }

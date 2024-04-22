@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   all.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albeninc <albeninc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svolodin <svolodin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 13:53:00 by svolodin          #+#    #+#             */
-/*   Updated: 2024/04/06 12:35:49 by albeninc         ###   ########.fr       */
+/*   Updated: 2024/04/21 10:26:44 by svolodin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 
 //*--------------------- 📚 𝙇𝙄𝘽𝙍𝘼𝙍𝙄𝙀𝙎 📚------------------------*//
 
-# include "X11/X.h"
-# include "X11/keysym.h"
 # include "declarations.h"
+# include "libft/libft.h"
+# include "mlx.h"
 # include <errno.h>
 # include <fcntl.h>
 # include <math.h>
@@ -28,7 +28,7 @@
 
 //*---------------------- 📚 Headers 📚 -------------------------*//
 
-# include "../minilibx/mlx.h"
+# include "mlx.h"
 # include "camera.h"
 # include "colors.h"
 # include "geometry.h"
